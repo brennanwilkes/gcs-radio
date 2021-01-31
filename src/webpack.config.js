@@ -2,7 +2,7 @@ const path = require("path");
 module.exports = {
 	mode: "development",
 	devtool: "source-map",
-	entry: "./src/frontend/index.js",
+	entry: "./src/frontend/index.ts",
 	output: {
 		filename: "bundle.js",
 		path: path.resolve(__dirname, "..", "public-frontend")
@@ -27,8 +27,16 @@ module.exports = {
 				use: {
 					loader: "url-loader?limit=8192"
 				}
+			},
+			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
 			}
 		]
+	},
+	resolve: {
+		extensions: [ '.tsx', '.ts', '.js' ],
 	},
 	externals: {
 		jquery: "jQuery"
