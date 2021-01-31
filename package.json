@@ -4,7 +4,13 @@
   "description": "",
   "main": "src/backend/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+	"start": "node .",
+	"dev": "nodemon .",
+	"watch": "webpack --config src/webpack.config.js --watch",
+	"build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build:frontend ; sed -i 's/production/development/' src/webpack.config.js ;",
+	"build:frontend": "webpack --config src/webpack.config.js",
+	"test": "jest --colors --verbose",
+	"lint": "eslint \"src/**/*.js\" --fix"
   },
   "repository": {
     "type": "git",
