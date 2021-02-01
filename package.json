@@ -1,11 +1,11 @@
 {
 	"name": "gcs-radio",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "",
 	"main": "src/backend/index.ts",
 	"scripts": {
 		"start": "node build/index.js",
-		"dev:full":"npm-run-all --parallel watch dev",
+		"dev:full": "npm-run-all --parallel watch dev",
 		"dev": "nodemon --watch \"src/**/*.ts\" --exec \"node\" --inspect -r ts-node/register \"src/backend/index.ts\"",
 		"predev": "npm run clean",
 		"watch": "webpack --config src/webpack.config.js --watch",
