@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node build/index.js",
 		"dev:full": "npm-run-all --parallel watch dev",
-		"dev": "nodemon --watch \"src/**/*.ts\" --exec \"node\" --inspect -r ts-node/register \"src/backend/index.ts\"",
+		"dev": "nodemon --watch \"src/**/*.ts\" --exec \"node\" --inspect -r ts-node/register \"build/index.js\"",
 		"predev": "npm run clean",
 		"watch": "webpack --config src/webpack.config.js --watch",
 		"build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build ; sed -i 's/production/development/' src/webpack.config.js ;",
