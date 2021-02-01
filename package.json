@@ -15,6 +15,7 @@
 		"clean": "rimraf build",
 		"rebuild": "npm run build",
 		"prerebuild": "npm run clean",
+		"prebuild": "npm run lint",
 		"test": "jest --colors --verbose",
 		"lint": "eslint \"src/**/*.[jt]s\" --fix"
 	},
