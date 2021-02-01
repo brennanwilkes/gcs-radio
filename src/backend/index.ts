@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Static routing for public files
 app.use("/", express.static(path.join(__dirname, "..", "..", "public-frontend")));
 
+console.log(__dirname);
+console.log(path.join(__dirname, "..", "..", "public-frontend"));
+
 // 404 messages
 app.get("*", (req, res) => {
 	console.log("Received invalid GET request for", req.url);
