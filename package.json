@@ -8,7 +8,7 @@
 		"dev": "nodemon --watch \"src/**/*.ts\" --exec \"node\" --inspect -r ts-node/register \"src/backend/index.ts\"",
 		"predev": "npm run clean",
 		"watch": "webpack --config src/webpack.config.js --watch",
-		"build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build:frontend ; sed -i 's/production/development/' src/webpack.config.js ;",
+		"build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build ; sed -i 's/production/development/' src/webpack.config.js ;",
 		"build:frontend": "webpack --config src/webpack.config.js",
 		"build:backend": "tsc && mv build/backend/* build/ && rm -r build/backend/",
 		"build": "npm run build:frontend && npm run build:backend",
