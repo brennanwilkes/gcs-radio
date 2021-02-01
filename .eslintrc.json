@@ -5,9 +5,12 @@
     },
     "extends": [
         "plugin:react/recommended",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
         "standard"
     ],
-    "parserOptions": {
+	"parserOptions": {
         "ecmaFeatures": {
             "jsx": true
         },
@@ -15,7 +18,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+		"@typescript-eslint"
     ],
     "rules": {
 	    "no-tabs": 0,
