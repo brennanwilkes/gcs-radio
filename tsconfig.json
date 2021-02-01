@@ -1,7 +1,10 @@
 {
 	"compilerOptions":{
 		"target":"es5",
-		"lib":[ "ES2018" ],
+		"lib":[
+			"ES2018",
+			"dom"
+		],
 		"outDir": "build",
 		"rootDir": "src",
 		"sourceMap": true,
@@ -10,6 +13,8 @@
 		"noImplicitAny": true,
 		"noImplicitThis": true,
 		"esModuleInterop": true,
+		"jsx": "react",
+		"allowSyntheticDefaultImports": true,
 		"resolveJsonModule": true
 	},
 	"exclude": [
