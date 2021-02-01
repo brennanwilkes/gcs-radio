@@ -1,0 +1,19 @@
+default:
+    image: google/cloud-sdk:alpine
+    before_script:
+        - gcloud config set project $GOOGLE_CLOUD_PROJECT
+        - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
+
+build-beta:
+    stage: build
+    script:
+        - gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta
+    only:
+    - beta
+
+deploy-beta:
+    stage: deploy
+    script:
+        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated
+    only:
+    - beta
