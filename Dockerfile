@@ -14,5 +14,7 @@ COPY . ./
 RUN npm run build
 RUN npm prune --production
 
+RUN ls -al . [ps]*/
+
 # Run the web service on container startup.
 CMD [ "npm", "start" ]
