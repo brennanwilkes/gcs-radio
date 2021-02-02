@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "src/backend/index.ts",
 	"scripts": {
-		"start": "node build/backend/index.js",
+		"start": "node build/index.js",
 		"dev:full": "npm-run-all --parallel watch dev",
 		"dev": "nodemon -e ts --exec \"npm run build:backend:serve\"",
 		"watch": "webpack --config src/webpack.config.js --watch",
@@ -34,16 +34,23 @@
 		"@babel/core": "^7.12.10",
 		"@babel/preset-env": "^7.12.11",
 		"@babel/preset-react": "^7.12.10",
+		"@types/fluent-ffmpeg": "^2.1.16",
+		"@types/mongoose": "^5.10.3",
+		"@types/youtube-dl": "^3.0.0",
 		"babel-loader": "^8.2.2",
 		"css-loader": "^5.0.1",
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
 		"express-validator": "^6.9.2",
+		"fluent-ffmpeg": "^2.1.2",
+		"fs": "0.0.1-security",
+		"mongoose": "^5.11.14",
 		"prop-types": "^15.7.2",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-icons": "^4.1.0",
-		"style-loader": "^2.0.0"
+		"style-loader": "^2.0.0",
+		"youtube-dl": "^3.1.0"
 	},
 	"devDependencies": {
 		"@types/axios": "^0.14.0",

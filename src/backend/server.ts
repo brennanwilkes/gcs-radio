@@ -53,6 +53,7 @@ export default class RadioServer {
 		This method should be run last, after init and routing.
 	*/
 	start(): void {
+
 		// 404 messages
 		this.app.get("*", (req, res) => {
 			print("Received invalid GET request for", req.url);
