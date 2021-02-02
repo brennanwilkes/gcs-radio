@@ -5,20 +5,19 @@ export default function(url: string): Promise<VideoData>{
 	return new Promise((resolve, reject) => {
 		youtubedl.getInfo(url, [], function(err, info: any) {
 			if (err){
-				reject();
+				reject(err);
 			}
 			resolve(new VideoDataObj(
-				info.upload_date ?? "",
-				info.duration ?? "",
-				info.fulltitle ?? "",
-				info.album ?? "",
-				info.title ?? "",
-				info.creator ?? "",
-				info.id ?? "",
+				info.upload_date ?? "20200202",
+				info.duration ?? "0:00",
+				info.fulltitle ?? "Unknown",
+				info.album ?? "Unknown",
+				info.title ?? "Unknown",
+				info.id ?? "Unknown",
 				info.tags ?? [],
-				info.track ?? "",
+				info.track ?? "Unknown",
 				info.thumbnails ?? [],
-				info.artist ?? ""
+				info.artist ?? "Unknown"
 			));
 		})
 	});

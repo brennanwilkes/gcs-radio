@@ -11,7 +11,6 @@ export interface VideoData {
 	fulltitle: string;
 	album: string;
 	title: string;
-	creator: string;
 	id: string;
 	tags: string[];
 	track: string;
@@ -40,7 +39,6 @@ export default class VideoDataObj implements VideoData{
 	fulltitle: string;
 	album: string;
 	title: string;
-	creator: string;
 	id: string;
 	tags: string[];
 	track: string;
@@ -52,7 +50,6 @@ export default class VideoDataObj implements VideoData{
 		fulltitle: string,
 		album: string,
 		title: string,
-		creator: string,
 		id: string,
 		tags: string[],
 		track: string,
@@ -63,7 +60,6 @@ export default class VideoDataObj implements VideoData{
 		this.fulltitle = fulltitle;
 		this.album = album;
 		this.title = title;
-		this.creator = creator;
 		this.id = id;
 		this.tags = tags;
 		this.track = track;

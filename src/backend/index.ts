@@ -9,26 +9,36 @@ import streamToMongo from "./streamToMongo";
 import streamFromMongo from "./streamFromMongo";
 import dummyPipe from "./dummyPipe";
 import {mongoose} from "../database/connection";
-
+import Song, {SongFromInfo} from "../database/models/song";
 
 const server = new RadioServer();
 
-server.app.get("/audio", async (req, res) => {
+server.app.get("/audio/:v", async (req, res) => {
 
 	//https://www.youtube.com/watch?v=90AiXO1pAiA - short
 	//https://www.youtube.com/watch?v=y0nSDOiAHo0 - long
 	const dummy = dummyPipe();
 
-	const url = "https://www.youtube.com/watch?v=y0nSDOiAHo0";
+	//const url = "https://www.youtube.com/watch?v=y0nSDOiAHo0";
+	const url = `https://www.youtube.com/watch?v=${req.params.v}`;
 
 	const info = await downloadURLinfo(url);
 
 	streamVidToAudio(downloadURLToStream(url),dummy);
-	streamToMongo(`${info.track} - ${info.creator} - ${info.album}`, dummy).then(result => {
-		console.log("Uploaded!");
-		console.log(result);
-		res.send(result);
-		res.end();
+	streamToMongo(`${info.track} - ${info.artist} - ${info.album}`, dummy).then(audioId => {
+		const resp = {
+			title: info.track,
+			artist: info.artist,
+			albumn: info.album,
+			audioId:audioId
+		};
+		SongFromInfo(info, audioId).save().then(response => {
+			res.send(resp);
+			res.end();
+		}).catch(error => {
+			res.status(500).send(error);
+			res.end();
+		});
 	})
 	.catch(err => {
 		console.error(err);
