@@ -1,6 +1,7 @@
 import { print, CONFIG } from './util';
 
 test('Print integrity', () => {
+	
 	console.log = jest.fn()
 	CONFIG.verbose = true
 	print('TEST')
