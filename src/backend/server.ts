@@ -45,7 +45,7 @@ export default class RadioServer {
 		this.app.use(bodyParser.urlencoded({ extended: true }));
 
 		// Static routing for public files
-		this.app.use("/", express.static(path.join(__dirname, "..", "public-frontend")));
+		this.app.use("/", express.static(path.join(__dirname, "..", "..", "public-frontend")));
 	}
 
 	/**
