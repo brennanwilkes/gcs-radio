@@ -1,5 +1,5 @@
 import youtubedl from "youtube-dl";
-import VideoDataObj, { VideoData } from "./videoData";
+import VideoDataObj, { VideoData } from "../types/videoData";
 
 export default function (url: string): Promise<VideoData> {
 	return new Promise((resolve, reject) => {

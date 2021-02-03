@@ -1,5 +1,5 @@
 import ytsr from "ytsr";
-import SearchResultObj, { SearchResult } from "./searchResult";
+import SearchResultObj, { SearchResult } from "../types/searchResult";
 
 export default function (query: string): Promise<SearchResult[]> {
 	return new Promise((resolve, reject) => {

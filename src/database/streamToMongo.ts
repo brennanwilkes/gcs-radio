@@ -1,5 +1,5 @@
 import { Readable } from "stream";
-import { mongoose } from "../database/connection";
+import { mongoose } from "./connection";
 
 export default function (name:string, stdin: Readable): Promise<string> {
 	const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {

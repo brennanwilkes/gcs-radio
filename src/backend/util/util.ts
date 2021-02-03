@@ -1,6 +1,11 @@
 
 // Store all backend config vars here
-import CONFIG from "./gcs.config.json";
+import "dotenv/config";
+
+const CONFIG = {
+	port: process.env.PORT ?? 8080,
+	verbose: process.env.VERBOSE ?? false
+};
 export { CONFIG };
 
 /**

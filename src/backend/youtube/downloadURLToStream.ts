@@ -1,5 +1,5 @@
 import youtubedl from "youtube-dl";
-import dummyPipe from "./dummyPipe";
+import dummyPipe from "../util/dummyPipe";
 import { Transform } from "stream";
 
 export default function (url: string): Transform {

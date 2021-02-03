@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import bodyParser from "body-parser";
 import path from "path";
 
-import { CONFIG, print } from "./util";
+import { CONFIG, print } from "./util/util";
 
 /**
 	Server abstration object

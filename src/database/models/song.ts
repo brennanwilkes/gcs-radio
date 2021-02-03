@@ -2,7 +2,7 @@
 
 // Import and setup
 import { mongoose } from "../connection";
-import { VideoData } from "../../backend/videoData";
+import { VideoData } from "../../backend/types/videoData";
 const Schema = mongoose.Schema;
 
 const SongSchema = new Schema({

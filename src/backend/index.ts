@@ -1,16 +1,15 @@
 // Brennan Wilkes
 
 import RadioServer from "./server";
-import downloadURLToStream from "./downloadURLToStream";
-import downloadURLinfo from "./downloadURLinfo";
-// import {VideoData} from "./videoData";
-import streamVidToAudio from "./streamVidToAudio";
-import streamToMongo from "./streamToMongo";
-import streamFromMongo from "./streamFromMongo";
-import dummyPipe from "./dummyPipe";
+import downloadURLToStream from "./youtube/downloadURLToStream";
+import downloadURLinfo from "./youtube/downloadURLinfo";
+import streamVidToAudio from "./util/streamVidToAudio";
+import streamToMongo from "../database/streamToMongo";
+import streamFromMongo from "../database/streamFromMongo";
+import dummyPipe from "./util/dummyPipe";
 import { mongoose } from "../database/connection";
 import { SongFromInfo } from "../database/models/song";
-import searchYoutube from "./searchYoutube";
+import searchYoutube from "./youtube/searchYoutube";
 
 const server = new RadioServer();
 
