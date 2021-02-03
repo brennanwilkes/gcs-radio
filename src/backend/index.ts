@@ -31,7 +31,7 @@ server.app.get("/audio/:v", async (req, res) => {
 			albumn: info.album,
 			audioId: audioId
 		};
-		SongFromInfo(info, audioId).save().then(response => {
+		SongFromInfo(info, audioId).save().then(() => {
 			res.send(resp);
 			res.end();
 		}).catch(error => {

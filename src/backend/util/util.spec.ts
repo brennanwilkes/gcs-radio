@@ -11,3 +11,8 @@ test("Print integrity", () => {
 	print("TEST");
 	expect(console.log).not.toHaveBeenCalledWith("TEST");
 });
+
+test("config integrity", () => {
+	expect(CONFIG).toHaveProperty('port');
+	expect(CONFIG).toHaveProperty('verbose');
+});
