@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 
 const SongSchema = new Schema({
 	audioId: { type: mongoose.Schema.Types.ObjectId, ref: "songs.files" },
-	upload_date: { type: String },
+	uploadDate: { type: String },
 	duration: { type: String },
 	fullTitle: { type: String },
 	album: { type: String },
@@ -23,7 +23,7 @@ export default Song;
 export function SongFromInfo (info: VideoData, audioId: string): InstanceType<typeof Song> {
 	return new Song({
 		audioId: new mongoose.Types.ObjectId(audioId),
-		upload_date: info.upload_date,
+		uploadDate: info.uploadDate,
 		duration: info.duration,
 		fullTitle: info.fulltitle,
 		album: info.album,
