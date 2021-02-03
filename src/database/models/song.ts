@@ -1,9 +1,8 @@
 // Brennan Wilkes
 
 // Import and setup
-import {mongoose} from "../connection";
-import {VideoData} from "../../backend/videoData";
-import {ObjectId} from "mongoose";
+import { mongoose } from "../connection";
+import { VideoData } from "../../backend/videoData";
 const Schema = mongoose.Schema;
 
 const SongSchema = new Schema({
@@ -21,7 +20,7 @@ const SongSchema = new Schema({
 
 const Song = mongoose.model("song", SongSchema);
 export default Song;
-export function SongFromInfo(info: VideoData, audioId: string){
+export function SongFromInfo (info: VideoData, audioId: string): InstanceType<typeof Song> {
 	return new Song({
 		audioId: new mongoose.Types.ObjectId(audioId),
 		upload_date: info.upload_date,
@@ -33,5 +32,5 @@ export function SongFromInfo(info: VideoData, audioId: string){
 		tags: info.tags,
 		songTitle: info.track,
 		artist: info.artist
-	})
+	});
 }

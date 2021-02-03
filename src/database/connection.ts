@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 const mongoDB = `${process.env.DB_CONNECTION}?retryWrites=true&w=majority`;
 
 // Set timeout limit
-//mongoose.set("maxTimeMS", 25000);
+// mongoose.set("maxTimeMS", 25000);
 
 const connection = mongoose.connect(mongoDB, {
 	useUnifiedTopology: true,
@@ -15,4 +15,4 @@ const connection = mongoose.connect(mongoDB, {
 });
 
 // Export
-export {connection, mongoose};
+export { connection, mongoose };

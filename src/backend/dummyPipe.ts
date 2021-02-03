@@ -1,10 +1,10 @@
-import {Transform} from "stream";
+import { Transform } from "stream";
 
-export default function(){
+export default function (): Transform {
 	return new Transform({
-		transform(chunk, encoding, callback){
+		transform (chunk, encoding, callback) {
 			this.push(chunk);
 			callback();
 		}
-	})
+	});
 }

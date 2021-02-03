@@ -37,7 +37,6 @@
 		"@types/fluent-ffmpeg": "^2.1.16",
 		"@types/multer": "^1.4.5",
 		"@types/youtube-dl": "^3.0.0",
-		"@types/yt-search": "^2.3.0",
 		"babel-loader": "^8.2.2",
 		"css-loader": "^5.0.1",
 		"dotenv": "^8.2.0",
@@ -53,7 +52,7 @@
 		"react-icons": "^4.1.0",
 		"style-loader": "^2.0.0",
 		"youtube-dl": "^3.1.0",
-		"yt-search": "^2.6.0"
+		"ytsr": "^3.2.4"
 	},
 	"devDependencies": {
 		"@types/axios": "^0.14.0",

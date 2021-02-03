@@ -1,16 +1,16 @@
-//Brennan Wilkes
+// Brennan Wilkes
 
-import {connection, mongoose} from "./connection";
+import { connection, mongoose } from "./connection";
 
-test('Verifies mongo connection', () => {
+test("Verifies mongo connection", () => {
 	return connection.then(data => {
-		expect(data.connections[0].name).toBe('gcs-radio')
+		expect(data.connections[0].name).toBe("gcs-radio");
 	}, err => {
-		throw new Error(`Failed to connect to mongoDB: ${err}`)
-	})
-})
+		throw new Error(`Failed to connect to mongoDB: ${err}`);
+	});
+});
 
 afterAll(done => {
-	mongoose.connection.close()
-	done()
-})
+	mongoose.connection.close();
+	done();
+});

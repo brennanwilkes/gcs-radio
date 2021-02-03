@@ -1,10 +1,10 @@
 import youtubedl from "youtube-dl";
-import VideoDataObj, {VideoData} from "./videoData";
+import VideoDataObj, { VideoData } from "./videoData";
 
-export default function(url: string): Promise<VideoData>{
+export default function (url: string): Promise<VideoData> {
 	return new Promise((resolve, reject) => {
-		youtubedl.getInfo(url, [], function(err, info: any) {
-			if (err){
+		youtubedl.getInfo(url, [], function (err, info: any) {
+			if (err) {
 				reject(err);
 			}
 			resolve(new VideoDataObj(
@@ -19,6 +19,6 @@ export default function(url: string): Promise<VideoData>{
 				info.thumbnails ?? [],
 				info.artist ?? "Unknown"
 			));
-		})
+		});
 	});
 }

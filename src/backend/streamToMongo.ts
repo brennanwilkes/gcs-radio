@@ -1,10 +1,9 @@
-import {Readable} from "stream";
-import {mongoose} from "../database/connection";
+import { Readable } from "stream";
+import { mongoose } from "../database/connection";
 
-export default function(name:string, stdin: Readable): Promise<string>{
-
+export default function (name:string, stdin: Readable): Promise<string> {
 	const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-		bucketName: 'songs'
+		bucketName: "songs"
 	});
 
 	const uploadStream = bucket.openUploadStream(name);
@@ -12,10 +11,10 @@ export default function(name:string, stdin: Readable): Promise<string>{
 	stdin.pipe(uploadStream);
 
 	return new Promise((resolve, reject) => {
-		uploadStream.on('error', () => {
-			reject();
+		uploadStream.on("error", (err) => {
+			reject(err);
 		});
-		uploadStream.on('finish', () => {
+		uploadStream.on("finish", () => {
 			resolve(`${uploadStream.id}`);
 		});
 	});

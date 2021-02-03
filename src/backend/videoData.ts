@@ -6,7 +6,7 @@ export interface Thumbnail {
 	height: number;
 }
 export interface VideoData {
-	upload_date: string;
+	uploadDate: string;
 	duration: string;
 	fulltitle: string;
 	album: string;
@@ -18,13 +18,13 @@ export interface VideoData {
 	artist: string;
 }
 
-export class ThumbnailObj implements Thumbnail{
+export class ThumbnailObj implements Thumbnail {
 	url: string;
 	width: number;
 	resolution: string;
 	id: string;
 	height: number;
-	constructor(url: string,width: number,resolution: string,id: string,height: number){
+	constructor (url: string, width: number, resolution: string, id: string, height: number) {
 		this.url = url;
 		this.width = width;
 		this.resolution = resolution;
@@ -33,8 +33,8 @@ export class ThumbnailObj implements Thumbnail{
 	}
 }
 
-export default class VideoDataObj implements VideoData{
-	upload_date: string;
+export default class VideoDataObj implements VideoData {
+	uploadDate: string;
 	duration: string;
 	fulltitle: string;
 	album: string;
@@ -44,8 +44,8 @@ export default class VideoDataObj implements VideoData{
 	track: string;
 	thumbnails: Thumbnail[];
 	artist: string;
-	constructor(
-		upload_date: string,
+	constructor (
+		uploadDate: string,
 		duration: string,
 		fulltitle: string,
 		album: string,
@@ -54,8 +54,8 @@ export default class VideoDataObj implements VideoData{
 		tags: string[],
 		track: string,
 		thumbnails: Thumbnail[],
-		artist: string){
-		this.upload_date = upload_date;
+		artist: string) {
+		this.uploadDate = uploadDate;
 		this.duration = duration;
 		this.fulltitle = fulltitle;
 		this.album = album;

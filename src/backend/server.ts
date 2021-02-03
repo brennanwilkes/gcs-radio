@@ -1,15 +1,14 @@
-import express, {Express} from "express";
+import express, { Express } from "express";
 import bodyParser from "body-parser";
 import path from "path";
 
-import {CONFIG, print} from "./util";
+import { CONFIG, print } from "./util";
 
 /**
 	Server abstration object
 	@class
 */
 export default class RadioServer {
-
 	/**
 		Port to use. Defaults to a "PORT" env variable if set (For GCP Run and other deployment methods),
 		otherwise uses the port set in the config file. Defaults to 8080.
@@ -30,12 +29,11 @@ export default class RadioServer {
 		Sets JSON encoding, url encoded bodies and static routing.
 		Sets up routes from API config
 	*/
-	constructor() {
-
-		//Initialize port
+	constructor () {
+		// Initialize port
 		this.port = process.env.PORT ?? CONFIG.port ?? 8080;
 
-		//Initialize express
+		// Initialize express
 		this.app = express();
 
 		// support json encoded bodies
@@ -52,8 +50,7 @@ export default class RadioServer {
 		Starts the webserver.
 		This method should be run last, after init and routing.
 	*/
-	start(): void {
-
+	start (): void {
 		// 404 messages
 		this.app.get("*", (req, res) => {
 			print("Received invalid GET request for", req.url);
@@ -72,7 +69,7 @@ export default class RadioServer {
 	/**
 	 * Closes socket connection
 	 */
-	close(): void {
+	close (): void {
 		this.server.close();
 	}
-};
+}
