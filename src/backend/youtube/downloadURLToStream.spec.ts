@@ -4,10 +4,6 @@ import dummyPipe from "../util/dummyPipe";
 import youtubedl from "youtube-dl";
 import { mocked } from "ts-jest/utils";
 
-//const mockPipe = ;
-//const mockYoutubePipe = ;
-//const mockYoutubeDefault = ;
-
 jest.mock("../util/dummyPipe", () => ({
 	__esModule: true,
 	default: jest.fn(() => {} )
