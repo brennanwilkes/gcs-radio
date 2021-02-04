@@ -1,6 +1,6 @@
 
 import searchYoutube from "./searchYoutube";
-import ytsr, {Result} from "ytsr";
+import ytsr from "ytsr";
 import { mocked } from "ts-jest/utils";
 
 const query = "test";
@@ -23,11 +23,11 @@ jest.mock('ytsr', () => ({
 	__esModule: true,
 	default: jest.fn((query) => {
 		if(query === invalid){
-			return new Promise((resolve, reject) => {
+			return new Promise((_resolve, reject) => {
 				reject("error!");
 			})
 		}
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve, _reject) => {
 			resolve({
 				items: [
 					sampleData,
