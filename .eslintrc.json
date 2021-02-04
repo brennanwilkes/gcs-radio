@@ -25,7 +25,7 @@
 	    "no-tabs": 0,
 	    "indent": [2, "tab"],
         "semi": [2, "always"],
-        "quotes": ["error", "double", { "allowTemplateLiterals": true }]
+        "quotes": ["error", "double", { "allowTemplateLiterals": true, "avoidEscape": true }]
     },
     "overrides": [
     {

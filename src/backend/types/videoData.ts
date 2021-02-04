@@ -63,7 +63,10 @@ export default class VideoDataObj implements VideoData {
 		this.id = id;
 		this.tags = tags;
 		this.track = track;
-		this.thumbnails = thumbnails;
+		this.thumbnails = [];
+		thumbnails.forEach(thumb => {
+			this.thumbnails = [...this.thumbnails, new ThumbnailObj(thumb.url, thumb.width, thumb.resolution, thumb.id, thumb.height)];
+		});
 		this.artist = artist;
 	}
 }

@@ -1,6 +1,8 @@
 import { print, CONFIG } from "./util";
 
 test("Print integrity", () => {
+	expect.assertions(2);
+
 	console.log = jest.fn();
 	CONFIG.verbose = true;
 	print("TEST");
@@ -13,6 +15,8 @@ test("Print integrity", () => {
 });
 
 test("config integrity", () => {
-	expect(CONFIG).toHaveProperty('port');
-	expect(CONFIG).toHaveProperty('verbose');
+	expect.assertions(2);
+
+	expect(CONFIG).toHaveProperty("port");
+	expect(CONFIG).toHaveProperty("verbose");
 });
