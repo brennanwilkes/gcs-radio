@@ -5,6 +5,7 @@ export interface Thumbnail {
 	id: string;
 	height: number;
 }
+
 export interface VideoData {
 	uploadDate: string;
 	duration: string;
