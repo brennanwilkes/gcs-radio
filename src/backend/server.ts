@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Router } from "express";
 import bodyParser from "body-parser";
 import path from "path";
 
@@ -44,6 +44,11 @@ export default class RadioServer {
 
 		// Static routing for public files
 		this.app.use("/", express.static(path.join(__dirname, "..", "..", "public-frontend")));
+	}
+
+	route (path: string, router: Router): void {
+		this.app.use(path, router);
+		print(`Created route ${path}`);
 	}
 
 	/**

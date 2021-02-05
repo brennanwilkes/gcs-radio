@@ -15,6 +15,7 @@ const SongSchema = new Schema({
 	youtubeID: { type: String },
 	tags: [String],
 	songTitle: { type: String },
+	thumbnailUrl: { type: String },
 	artist: { type: String }
 });
 
@@ -31,6 +32,7 @@ export function SongFromInfo (info: VideoData, audioId: string): InstanceType<ty
 		youtubeID: info.id,
 		tags: info.tags,
 		songTitle: info.track,
+		thumbnailUrl: info.thumbnails[0]?.url ?? "none",
 		artist: info.artist
 	});
 }

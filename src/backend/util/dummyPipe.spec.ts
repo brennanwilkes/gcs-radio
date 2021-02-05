@@ -16,6 +16,5 @@ test("Pipe integrity", async (done) => {
 
 	dummy.pipe(stdout);
 	process.stdin.pipe(dummy);
-
 	process.stdin.push(str);
 });

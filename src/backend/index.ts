@@ -10,15 +10,15 @@ import dummyPipe from "./util/dummyPipe";
 import { mongoose } from "../database/connection";
 import { SongFromInfo } from "../database/models/song";
 import searchYoutube from "./youtube/searchYoutube";
+import mainRouter from "./routes/index";
 
 const server = new RadioServer();
 
+server.route("/", mainRouter);
+
 server.app.get("/audio/:v", async (req, res) => {
-	// https://www.youtube.com/watch?v=90AiXO1pAiA - short
-	// https://www.youtube.com/watch?v=y0nSDOiAHo0 - long
 	const dummy = dummyPipe();
 
-	// const url = "https://www.youtube.com/watch?v=y0nSDOiAHo0";
 	const url = `https://www.youtube.com/watch?v=${req.params.v}`;
 
 	const info = await downloadURLinfo(url);
@@ -48,7 +48,7 @@ server.app.get("/audio/:v", async (req, res) => {
 
 server.app.get("/song/:id", (req, res) => {
 	// 6019b506081dc540b0631483 - short
-	// 6019a614b156e929be44dba6 - long
+	// 6019f2dd96425aab1245c564 - long
 	res.setHeader("content-type", "audio/mpeg");
 	streamFromMongo(req.params.id, res);
 });
