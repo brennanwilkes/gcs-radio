@@ -1,3 +1,4 @@
-**/*.spec.js
+**/*.spec.[jt]s
 **/node_modules
 public-frontend/
+**/*.config.*

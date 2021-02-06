@@ -5,9 +5,12 @@
     },
     "extends": [
         "plugin:react/recommended",
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
         "standard"
     ],
-    "parserOptions": {
+	"parserOptions": {
         "ecmaFeatures": {
             "jsx": true
         },
@@ -15,13 +18,14 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+		"@typescript-eslint"
     ],
     "rules": {
 	    "no-tabs": 0,
 	    "indent": [2, "tab"],
         "semi": [2, "always"],
-        "quotes": ["error", "double", { "allowTemplateLiterals": true }]
+        "quotes": ["error", "double", { "allowTemplateLiterals": true, "avoidEscape": true }]
     },
     "overrides": [
     {
