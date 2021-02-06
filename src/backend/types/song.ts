@@ -41,6 +41,7 @@ export class SongObj implements Song {
 		songTitle: string,
 		thumbnailUrl: string,
 		artist: string) {
+		this.songId = songId;
 		this.audioId = audioId;
 		this.uploadDate = uploadDate;
 		this.duration = duration;
