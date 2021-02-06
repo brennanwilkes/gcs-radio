@@ -1,6 +1,7 @@
 import { VideoData } from "./videoData";
 
 export interface Song{
+	songId: string,
 	audioId: string,
 	uploadDate: string,
 	duration: string,
@@ -15,6 +16,7 @@ export interface Song{
 }
 
 export class SongObj implements Song {
+	songId: string
 	audioId: string
 	uploadDate: string
 	duration: string
@@ -27,6 +29,7 @@ export class SongObj implements Song {
 	thumbnailUrl: string
 	artist: string
 	constructor (
+		songId: string,
 		audioId: string,
 		uploadDate: string,
 		duration: string,
@@ -53,9 +56,10 @@ export class SongObj implements Song {
 }
 
 export class SongInfo extends SongObj {
-	constructor (video: VideoData, id: string) {
+	constructor (video: VideoData, songId: string, audioId: string) {
 		super(
-			id,
+			songId,
+			audioId,
 			video.uploadDate,
 			video.duration,
 			video.fulltitle,

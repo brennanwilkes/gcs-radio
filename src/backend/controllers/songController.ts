@@ -34,7 +34,7 @@ const postSong = async (req: Request, res: Response) => {
 		SongFromInfo(info, audioId).save().then((resp) => {
 			print(`Created song resource ${resp}`);
 			res.send({
-				song: new SongInfo(info, audioId)
+				song: new SongInfo(info, resp._id, audioId)
 			});
 			res.end();
 		}).catch(error => {
