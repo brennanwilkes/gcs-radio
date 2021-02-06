@@ -51,7 +51,6 @@
 		"react-dom": "^17.0.1",
 		"react-icons": "^4.1.0",
 		"style-loader": "^2.0.0",
-		"typescript-is": "^0.17.0",
 		"youtube-dl": "^3.1.0",
 		"ytsr": "^3.2.4"
 	},

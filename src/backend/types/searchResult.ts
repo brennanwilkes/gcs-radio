@@ -1,5 +1,4 @@
 import { Video } from "ytsr";
-import { is } from "typescript-is";
 
 export interface SearchResult {
 	title: string;
@@ -14,6 +13,6 @@ export default class SearchResultObj implements SearchResult {
 	constructor (result: Video | SearchResult) {
 		this.title = result.title;
 		this.id = result.id;
-		this.thumbnail = is<Video>(result) ? result.bestThumbnail.url : result.thumbnail;
+		this.thumbnail = "bestThumbnail" in result ? result.bestThumbnail.url : result.thumbnail;
 	}
 }
