@@ -1,4 +1,7 @@
 FROM node:12-alpine
+ARG DB_CONNECTION=$DB_CONNECTION
+
+RUN apk add  --no-cache ffmpeg
 
 WORKDIR /usr/src/app
 
