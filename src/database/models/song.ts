@@ -21,6 +21,7 @@ const SongSchema = new Schema({
 
 const Song = mongoose.model("song", SongSchema);
 export default Song;
+
 export function SongFromInfo (info: VideoData, audioId: string): InstanceType<typeof Song> {
 	return new Song({
 		audioId: new mongoose.Types.ObjectId(audioId),

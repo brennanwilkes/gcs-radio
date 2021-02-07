@@ -1,4 +1,4 @@
-export interface error{
+export interface Error{
 	status?: number,
 	timestamp?: Date,
 	error: string,
@@ -6,7 +6,7 @@ export interface error{
 	path: string
 }
 
-export class ErrorObj implements error {
+export class ErrorObj implements Error {
 	status?: number
 	timestamp?: Date
 	error: string
