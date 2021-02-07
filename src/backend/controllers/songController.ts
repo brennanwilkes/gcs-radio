@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SongFromInfo } from "../../database/models/song";
+import Song, { SongFromInfo } from "../../database/models/song";
 import streamToMongo from "../../database/streamToMongo";
 import dummyPipe from "../util/dummyPipe";
 import streamVidToAudio from "../util/streamVidToAudio";
@@ -7,13 +7,32 @@ import downloadURLinfo from "../youtube/downloadURLinfo";
 import downloadURLToStream from "../youtube/downloadURLToStream";
 import { SongInfo } from "../types/song";
 import { print } from "../util/util";
+import internalErrorHandler from "../util/internalErrorHandler";
+import { mongoose } from "../../database/connection";
 
 const getSongs = (req: Request, res: Response) => {
+	res.send({
+		suc: "suc"
+	});
 	res.end();
 };
 
 const getSong = (req: Request, res: Response) => {
-	res.end();
+	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
+		if (result) {
+			res.json({
+				song: result
+			});
+			res.end();
+		} else {
+			res.status(404).send({
+				errors: [
+					`Song ${req.params.id} not found`
+				]
+			});
+			res.end();
+		}
+	}).catch(internalErrorHandler(req, res));
 };
 
 const postSong = async (req: Request, res: Response) => {
@@ -21,32 +40,24 @@ const postSong = async (req: Request, res: Response) => {
 
 	const dummy = dummyPipe();
 	const url = `https://www.youtube.com/watch?v=${String(req.query.id)}`;
-	const info = await downloadURLinfo(url);
 
-	print(`Retrieved information for "${info.track}"`);
+	downloadURLinfo(url).then(info => {
+		print(`Retrieved information for "${info.track}"`);
+		streamVidToAudio(downloadURLToStream(url), dummy).catch(internalErrorHandler(req, res));
 
-	streamVidToAudio(downloadURLToStream(url), dummy);
+		print("Created audio conversion stream");
 
-	print("Created audio conversion stream");
-
-	streamToMongo(`${info.track} - ${info.artist} - ${info.album}`, dummy).then(audioId => {
-		print(`Created audio resource ${audioId}`);
-		SongFromInfo(info, audioId).save().then((resp) => {
-			print(`Created song resource ${resp}`);
-			res.send({
-				song: new SongInfo(info, resp._id, audioId)
-			});
-			res.end();
-		}).catch(error => {
-			print(error);
-			res.status(500).send(error);
-			res.end();
-		});
-	}).catch(err => {
-		print(err);
-		res.send(err);
-		res.end();
-	});
+		streamToMongo(`${info.track} - ${info.artist} - ${info.album}`, dummy).then(audioId => {
+			print(`Created audio resource ${audioId}`);
+			SongFromInfo(info, audioId).save().then((resp) => {
+				print(`Created song resource ${resp}`);
+				res.send({
+					song: new SongInfo(info, resp._id, audioId)
+				});
+				res.end();
+			}).catch(internalErrorHandler(req, res));
+		}).catch(internalErrorHandler(req, res));
+	}).catch(internalErrorHandler(req, res));
 };
 
 export { getSongs, getSong, postSong };

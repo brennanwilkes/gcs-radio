@@ -47,4 +47,7 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 	});
 };
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance };
+const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
+const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
+
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex };

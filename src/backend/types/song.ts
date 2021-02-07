@@ -8,7 +8,7 @@ export interface Song{
 	fullTitle: string,
 	album: string,
 	youtubeTitle: string,
-	youtubeID: string,
+	youtubeId: string,
 	tags: string[],
 	songTitle: string,
 	thumbnailUrl: string,
@@ -23,7 +23,7 @@ export class SongObj implements Song {
 	fullTitle: string
 	album: string
 	youtubeTitle: string
-	youtubeID: string
+	youtubeId: string
 	tags: string[]
 	songTitle: string
 	thumbnailUrl: string
@@ -36,7 +36,7 @@ export class SongObj implements Song {
 		fullTitle: string,
 		album: string,
 		youtubeTitle: string,
-		youtubeID: string,
+		youtubeId: string,
 		tags: string[],
 		songTitle: string,
 		thumbnailUrl: string,
@@ -48,7 +48,7 @@ export class SongObj implements Song {
 		this.fullTitle = fullTitle;
 		this.album = album;
 		this.youtubeTitle = youtubeTitle;
-		this.youtubeID = youtubeID;
+		this.youtubeId = youtubeId;
 		this.tags = tags;
 		this.songTitle = songTitle;
 		this.thumbnailUrl = thumbnailUrl;

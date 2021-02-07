@@ -1,11 +1,11 @@
 import { param } from "express-validator";
-import { validationErrorHandler, mongoVerifyBucketExistance } from "./validatorUtil";
+import { validationErrorHandler, mongoVerifyBucketExistance, mongoIdRegex } from "./validatorUtil";
 
 export default [
 	param("id")
 		.exists()
 		.trim()
-		.matches(/^[a-fA-F0-9]{24}$/)
+		.matches(mongoIdRegex)
 		.withMessage("audio ID is not a valid ID"),
 	param("id").custom(async id => {
 		const exists = await mongoVerifyBucketExistance(id, "songs");

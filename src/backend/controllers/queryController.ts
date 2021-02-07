@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import searchYoutube from "../youtube/searchYoutube";
 import { ApiSearchResultObj } from "../types/apiSearchResult";
 import { print } from "../util/util";
+import internalErrorHandler from "../util/internalErrorHandler";
 
 const query = (req: Request, res: Response) => {
 	print(`Handling request for query search "${req.query.query}"`);
@@ -11,14 +12,7 @@ const query = (req: Request, res: Response) => {
 		res.send({
 			songs: results.map(song => new ApiSearchResultObj(song, req))
 		});
-	}).catch(err => {
-		print(err);
-		res.status(500).send({
-			errors: [
-				err
-			]
-		});
-	});
+	}).catch(internalErrorHandler(req, res));
 };
 
 export { query };
