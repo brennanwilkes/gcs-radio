@@ -1,4 +1,5 @@
 import { VideoData } from "./videoData";
+import { SongDoc } from "../../database/models/song";
 
 export interface Song{
 	songId: string,
@@ -8,7 +9,7 @@ export interface Song{
 	fullTitle: string,
 	album: string,
 	youtubeTitle: string,
-	youtubeID: string,
+	youtubeId: string,
 	tags: string[],
 	songTitle: string,
 	thumbnailUrl: string,
@@ -23,7 +24,7 @@ export class SongObj implements Song {
 	fullTitle: string
 	album: string
 	youtubeTitle: string
-	youtubeID: string
+	youtubeId: string
 	tags: string[]
 	songTitle: string
 	thumbnailUrl: string
@@ -36,7 +37,7 @@ export class SongObj implements Song {
 		fullTitle: string,
 		album: string,
 		youtubeTitle: string,
-		youtubeID: string,
+		youtubeId: string,
 		tags: string[],
 		songTitle: string,
 		thumbnailUrl: string,
@@ -48,7 +49,7 @@ export class SongObj implements Song {
 		this.fullTitle = fullTitle;
 		this.album = album;
 		this.youtubeTitle = youtubeTitle;
-		this.youtubeID = youtubeID;
+		this.youtubeId = youtubeId;
 		this.tags = tags;
 		this.songTitle = songTitle;
 		this.thumbnailUrl = thumbnailUrl;
@@ -56,7 +57,7 @@ export class SongObj implements Song {
 	}
 }
 
-export class SongInfo extends SongObj {
+export class SongObjFromInfo extends SongObj {
 	constructor (video: VideoData, songId: string, audioId: string) {
 		super(
 			songId,
@@ -71,6 +72,25 @@ export class SongInfo extends SongObj {
 			video.track,
 			video.thumbnails[0]?.url ?? "none",
 			video.artist
+		);
+	}
+}
+
+export class SongObjFromQuery extends SongObj {
+	constructor (results: SongDoc) {
+		super(
+			results._id,
+			results.audioId.toString(),
+			results.uploadDate,
+			results.duration,
+			results.fullTitle,
+			results.album,
+			results.youtubeTitle,
+			results.id,
+			results.tags,
+			results.songTitle,
+			results.thumbnailUrl,
+			results.artist
 		);
 	}
 }
