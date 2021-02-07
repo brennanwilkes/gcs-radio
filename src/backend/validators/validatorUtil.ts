@@ -1,4 +1,4 @@
-import { Result, ValidationError, validationResult } from "express-validator";
+import { Result, ValidationChain, ValidationError, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import { ErrorObj, Error } from "../types/error";
 import { mongoose } from "../../database/connection";
@@ -41,8 +41,8 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 	return new Promise((resolve, reject) => {
 		axios.get(url).then(res => {
 			resolve(res.status === 200);
-		}).catch(_err => {
-			resolve(false);
+		}).catch(err => {
+			resolve(err);
 		});
 	});
 };
@@ -50,4 +50,14 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
 const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex };
+const youtubeIdValidator = (variable: ValidationChain) => variable.exists()
+	.trim()
+	.matches(youtubeIdRegex)
+	.withMessage("source ID is not valid");
+
+const mongoIdValidator = (variable: ValidationChain) => variable.exists()
+	.trim()
+	.matches(mongoIdRegex)
+	.withMessage("song ID is not valid");
+
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, youtubeIdValidator, mongoIdValidator };

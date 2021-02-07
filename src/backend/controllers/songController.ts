@@ -5,9 +5,10 @@ import dummyPipe from "../util/dummyPipe";
 import streamVidToAudio from "../util/streamVidToAudio";
 import downloadURLinfo from "../youtube/downloadURLinfo";
 import downloadURLToStream from "../youtube/downloadURLToStream";
-import { SongInfo } from "../types/song";
+import { SongObjFromQuery } from "../types/song";
 import { print } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
+import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 
 const getSongs = (req: Request, res: Response) => {
@@ -21,16 +22,11 @@ const getSong = (req: Request, res: Response) => {
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
 		if (result) {
 			res.json({
-				song: result
+				song: new SongObjFromQuery(result)
 			});
 			res.end();
 		} else {
-			res.status(404).send({
-				errors: [
-					`Song ${req.params.id} not found`
-				]
-			});
-			res.end();
+			notFoundErrorHandler(req, res)("song", req.params.id);
 		}
 	}).catch(internalErrorHandler(req, res));
 };
@@ -52,7 +48,7 @@ const postSong = async (req: Request, res: Response) => {
 			SongFromInfo(info, audioId).save().then((resp) => {
 				print(`Created song resource ${resp}`);
 				res.send({
-					song: new SongInfo(info, resp._id, audioId)
+					song: new SongObjFromQuery(resp)
 				});
 				res.end();
 			}).catch(internalErrorHandler(req, res));

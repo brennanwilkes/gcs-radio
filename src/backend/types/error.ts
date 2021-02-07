@@ -27,3 +27,9 @@ export class ErrorFromException extends ErrorObj implements Error {
 		super("Inernal Error", path, `${exception}`, 500);
 	}
 }
+
+export class NotFoundError extends ErrorObj implements Error {
+	constructor (exception: string, path: string) {
+		super("Not Found", path, exception, 404);
+	}
+}

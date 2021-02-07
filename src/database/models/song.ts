@@ -19,7 +19,21 @@ const SongSchema = new Schema({
 	artist: { type: String }
 });
 
-const Song = mongoose.model("song", SongSchema);
+export interface SongDoc extends mongoose.Document {
+	audioId: mongoose.Schema.Types.ObjectId,
+	uploadDate: string,
+	duration: string,
+	fullTitle: string,
+	album: string,
+	youtubeTitle: string,
+	youtubeId: string,
+	tags: string[],
+	songTitle: string,
+	thumbnailUrl: string,
+	artist: string
+}
+
+const Song = mongoose.model<SongDoc>("song", SongSchema);
 export default Song;
 
 export function SongFromInfo (info: VideoData, audioId: string): InstanceType<typeof Song> {
@@ -37,3 +51,5 @@ export function SongFromInfo (info: VideoData, audioId: string): InstanceType<ty
 		artist: info.artist
 	});
 }
+
+export { SongSchema };

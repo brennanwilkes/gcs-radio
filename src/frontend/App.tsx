@@ -58,7 +58,7 @@ class App extends React.Component {
 				else if(this.state.song){
 					const elem = document.getElementById("res");
 					if(elem) elem.innerHTML = "Loading...";
-					axios.get(`/api/v1/song/${encodeURIComponent(this.state.song)}`).then(res => {
+					axios.get(`/api/v1/songs/${encodeURIComponent(this.state.song)}`).then(res => {
 						if(elem) elem.innerHTML = `${JSON.stringify(res.data,null,2)}`;
 					}).catch(err => console.error(err));
 				}

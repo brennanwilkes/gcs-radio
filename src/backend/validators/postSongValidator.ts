@@ -1,30 +1,30 @@
 import { Request, Response, NextFunction } from "express";
 import { query } from "express-validator";
 import Song from "../../database/models/song";
-import { validationErrorHandler, verifyUrlExistance, youtubeIdRegex } from "./validatorUtil";
+import { validationErrorHandler, verifyUrlExistance, youtubeIdValidator } from "./validatorUtil";
+import { print } from "../util/util";
 
 export default [
-	query("id")
-		.exists()
-		.trim()
-		.matches(youtubeIdRegex)
-		.withMessage("source ID is not valid"),
+	youtubeIdValidator(query("id")),
 	query("id").custom(async id => {
-		const exists = await verifyUrlExistance(`https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}&format=json`);
-		if (!exists) {
-			return Promise.reject(new Error("source ID doesn't exist"));
-		}
+		verifyUrlExistance(`https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}&format=json`).then(exists => {
+			if (!exists) {
+				return Promise.reject(new Error("source ID doesn't exist"));
+			}
+		}).catch(err => {
+			return Promise.reject(err);
+		});
 	}).withMessage("source ID doesn't exist"),
 	validationErrorHandler,
 	async (req: Request, res: Response, next: NextFunction) => {
-		Song.findOne({ youtubeId: req.query.id }).then(result => {
+		Song.findOne({ youtubeId: String(req.query.id) }).then(result => {
 			if (result) {
 				res.redirect(303, `${req.baseUrl}/songs/${result._id.toString()}`);
 			} else {
 				next();
 			}
 		}).catch(err => {
-			console.error(err);
+			print(err);
 			next();
 		});
 	}
