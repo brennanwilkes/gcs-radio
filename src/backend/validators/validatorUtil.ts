@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { ErrorObj, Error } from "../types/error";
 import { mongoose } from "../../database/connection";
 import { Model, Document } from "mongoose";
+import axios from "axios";
 
 export class ValidationErrorJson extends ErrorObj implements Error {
 	constructor (errors: Result<ValidationError>, req: Request, status = 422) {
@@ -36,4 +37,14 @@ const mongoVerifyBucketExistance = async (id: string, bucketName: string): Promi
 	});
 };
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance };
+const verifyUrlExistance = async (url: string): Promise<boolean> => {
+	return new Promise((resolve, reject) => {
+		axios.get(url).then(res => {
+			resolve(res.status === 200);
+		}).catch(_err => {
+			resolve(false);
+		});
+	});
+};
+
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance };
