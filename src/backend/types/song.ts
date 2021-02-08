@@ -1,77 +1,89 @@
-import { VideoData } from "./videoData";
 import { SongDoc } from "../../database/models/song";
+import { YoutubeResult } from "./youtubeResult";
+import { SpotifyResult } from "./spotifyResult";
+import { Link } from "./link";
 
 export interface Song{
-	songId: string,
-	audioId: string,
-	uploadDate: string,
-	duration: string,
-	fullTitle: string,
-	album: string,
-	youtubeTitle: string,
-	youtubeId: string,
-	tags: string[],
-	songTitle: string,
-	thumbnailUrl: string,
+	title: string,
 	artist: string,
+	album: string,
+	duration: number,
+	explicit: boolean,
+	spotifyId: string,
+	artistSpotifyId: string,
+	albumSpotifyId: string,
+	youtubeId: string,
+	audioId?: string,
+	tags: string[],
+	thumbnailUrl: string,
+	releaseDate: string
+}
+
+export interface SongApi extends Song{
+	links: Link[]
 }
 
 export class SongObj implements Song {
-	songId: string
-	audioId: string
-	uploadDate: string
-	duration: string
-	fullTitle: string
-	album: string
-	youtubeTitle: string
-	youtubeId: string
-	tags: string[]
-	songTitle: string
-	thumbnailUrl: string
-	artist: string
+	title: string;
+	artist: string;
+	album: string;
+	duration: number;
+	explicit: boolean;
+	spotifyId: string;
+	artistSpotifyId: string;
+	albumSpotifyId: string;
+	youtubeId: string;
+	audioId?: string;
+	tags: string[];
+	thumbnailUrl: string;
+	releaseDate: string;
 	constructor (
-		songId: string,
-		audioId: string,
-		uploadDate: string,
-		duration: string,
-		fullTitle: string,
+		title: string,
+		artist: string,
 		album: string,
-		youtubeTitle: string,
+		duration: number,
+		explicit: boolean,
+		spotifyId: string,
+		artistSpotifyId: string,
+		albumSpotifyId: string,
 		youtubeId: string,
 		tags: string[],
-		songTitle: string,
 		thumbnailUrl: string,
-		artist: string) {
-		this.songId = songId;
-		this.audioId = audioId;
-		this.uploadDate = uploadDate;
-		this.duration = duration;
-		this.fullTitle = fullTitle;
+		releaseDate: string,
+		audioId?: string
+	) {
+		this.title = title;
+		this.artist = artist;
 		this.album = album;
-		this.youtubeTitle = youtubeTitle;
+		this.duration = duration;
+		this.explicit = explicit;
+		this.spotifyId = spotifyId;
+		this.artistSpotifyId = artistSpotifyId;
+		this.albumSpotifyId = albumSpotifyId;
 		this.youtubeId = youtubeId;
 		this.tags = tags;
-		this.songTitle = songTitle;
 		this.thumbnailUrl = thumbnailUrl;
-		this.artist = artist;
+		this.releaseDate = releaseDate;
+		if (audioId) this.audioId = audioId;
 	}
 }
 
-export class SongObjFromInfo extends SongObj {
-	constructor (video: VideoData, songId: string, audioId: string) {
+export class SongFromSearch extends SongObj {
+	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string) {
 		super(
-			songId,
-			audioId,
-			video.uploadDate,
-			video.duration,
-			video.fulltitle,
-			video.album,
-			video.title,
-			video.id,
-			video.tags,
-			video.track,
-			video.thumbnails[0]?.url ?? "none",
-			video.artist
+			spotifyResult.title,
+			spotifyResult.artist,
+			spotifyResult.album,
+			spotifyResult.duration,
+			spotifyResult.explicit,
+			spotifyResult.spotifyId,
+			spotifyResult.artistSpotifyId,
+			spotifyResult.albumSpotifyId,
+			youtubeResult.youtubeId,
+			youtubeResult.tags,
+			spotifyResult.thumbnailUrl,
+			spotifyResult.releaseDate,
+			audioId
 		);
 	}
 }
@@ -79,18 +91,41 @@ export class SongObjFromInfo extends SongObj {
 export class SongObjFromQuery extends SongObj {
 	constructor (results: SongDoc) {
 		super(
-			results._id,
-			results.audioId.toString(),
-			results.uploadDate,
-			results.duration,
-			results.fullTitle,
+			results.title,
+			results.artist,
 			results.album,
-			results.youtubeTitle,
-			results.id,
+			results.duration,
+			results.explicit,
+			results.spotifyId,
+			results.artistSpotifyId,
+			results.albumSpotifyId,
+			results.youtubeId,
 			results.tags,
-			results.songTitle,
 			results.thumbnailUrl,
-			results.artist
+			results.releaseDate,
+			String(results.audioId)
 		);
+	}
+}
+
+export class SongApiObj extends SongObj implements SongApi {
+	links: Link[]
+	constructor (songBase: Song, links: Link[]) {
+		super(
+			songBase.title,
+			songBase.artist,
+			songBase.album,
+			songBase.duration,
+			songBase.explicit,
+			songBase.spotifyId,
+			songBase.artistSpotifyId,
+			songBase.albumSpotifyId,
+			songBase.youtubeId,
+			songBase.tags,
+			songBase.thumbnailUrl,
+			songBase.releaseDate,
+			songBase.audioId
+		);
+		this.links = links;
 	}
 }

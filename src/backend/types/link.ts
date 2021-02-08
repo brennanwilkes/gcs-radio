@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { SearchResult } from "./searchResult";
+import { Song } from "./song";
 
 export interface Link {
 	rel: string;
@@ -22,18 +22,35 @@ export class LinkObj implements Link {
 	}
 }
 
-export class DownloadLink implements Link {
-	rel: string
-	action: string
-	href: string
-	types: string[]
+export class DownloadLink extends LinkObj implements Link {
+	constructor (req: Request, song: Song) {
+		super(
+			"Download",
+			"POST",
+			`${req.baseUrl}/songs?youtubeId=${song.youtubeId}&spotifyId=${song.spotifyId}`,
+			["application/json"]
+		);
+	}
+}
 
-	constructor (req: Request, song: SearchResult) {
-		this.rel = "Download";
-		this.action = "POST";
-		this.href = `${req.baseUrl}/songs?id=${song.id}`;
-		this.types = [
-			"application/json"
-		];
+export class PlayAudioLink extends LinkObj implements Link {
+	constructor (req: Request, song: Song) {
+		super(
+			"Play Audio",
+			"GET",
+			`${req.baseUrl}/audio/${song.audioId}`,
+			["audio/mpeg"]
+		);
+	}
+}
+
+export class SelfSongLink extends LinkObj implements Link {
+	constructor (req: Request, id: string) {
+		super(
+			"self",
+			"GET",
+			`${req.baseUrl}/songs/${id}`,
+			["application/json"]
+		);
 	}
 }

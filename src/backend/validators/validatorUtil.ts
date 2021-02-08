@@ -49,15 +49,21 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 
 const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
 const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
+const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;
 
 const youtubeIdValidator = (variable: ValidationChain) => variable.exists()
 	.trim()
 	.matches(youtubeIdRegex)
-	.withMessage("source ID is not valid");
+	.withMessage("youtube ID is not valid");
 
 const mongoIdValidator = (variable: ValidationChain) => variable.exists()
 	.trim()
 	.matches(mongoIdRegex)
 	.withMessage("song ID is not valid");
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, youtubeIdValidator, mongoIdValidator };
+const spotifyIdValidator = (variable: ValidationChain) => variable.exists()
+	.trim()
+	.matches(spotifyIdRegex)
+	.withMessage("spotify ID is not valid");
+
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator };
