@@ -59,7 +59,7 @@ const youtubeIdValidator = (variable: ValidationChain) => variable.exists()
 const mongoIdValidator = (variable: ValidationChain) => variable.exists()
 	.trim()
 	.matches(mongoIdRegex)
-	.withMessage("song ID is not valid");
+	.withMessage("internal ID is not valid");
 
 const spotifyIdValidator = (variable: ValidationChain) => variable.exists()
 	.trim()
