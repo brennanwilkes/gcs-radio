@@ -1,5 +1,7 @@
 FROM node:12-alpine
 ARG DB_CONNECTION=$DB_CONNECTION
+ARG SPOTIFY_ID=$SPOTIFY_ID
+ARG SPOTIFY_SECRET=$SPOTIFY_SECRET
 
 RUN apk add --no-cache python py-pip
 RUN apk add  --no-cache ffmpeg
