@@ -1,4 +1,4 @@
-import SpotifyApi from "spotify-api";
+import SpotifyApi from "spotify-web-api-node";
 
 export interface SpotifyResult{
 	title: string,

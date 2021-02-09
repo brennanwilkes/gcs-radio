@@ -14,17 +14,33 @@ import { getSpotify } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfSongLink } from "../types/link";
 
 const getSongs = (req: Request, res: Response) => {
-	res.send({
-		suc: "suc"
-	});
-	res.end();
+	Song.find({}).then(result => {
+		if (result) {
+			res.send({
+				songs: result.map(result => {
+					const song = new SongObjFromQuery(result);
+					return new SongApiObj(song, [
+						new PlayAudioLink(req, song),
+						new SelfSongLink(req, result._id)
+					]);
+				})
+			});
+			res.end();
+		} else {
+			notFoundErrorHandler(req, res)("song", req.params.id);
+		}
+	}).catch(internalErrorHandler(req, res));
 };
 
 const getSong = (req: Request, res: Response) => {
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
 		if (result) {
-			res.json({
-				song: new SongObjFromQuery(result)
+			const song = new SongObjFromQuery(result);
+			res.send({
+				songs: [new SongApiObj(song, [
+					new PlayAudioLink(req, song),
+					new SelfSongLink(req, result._id)
+				])]
 			});
 			res.end();
 		} else {
@@ -34,6 +50,8 @@ const getSong = (req: Request, res: Response) => {
 };
 
 const postSong = async (req: Request, res: Response) => {
+	const errorHandler = internalErrorHandler(req, res);
+
 	const youtubeId = String(req.query.youtubeId);
 	const spotifyId = String(req.query.spotifyId);
 	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
@@ -47,7 +65,7 @@ const postSong = async (req: Request, res: Response) => {
 
 		getSpotify(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
-			streamVidToAudio(downloadURLToStream(url), dummy).catch(internalErrorHandler(req, res));
+			streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);
 
 			print("Created audio conversion stream");
 
@@ -62,10 +80,10 @@ const postSong = async (req: Request, res: Response) => {
 						new SelfSongLink(req, resp._id)
 					]));
 					res.end();
-				}).catch(internalErrorHandler(req, res));
-			}).catch(internalErrorHandler(req, res));
-		}).catch(internalErrorHandler(req, res));
-	}).catch(internalErrorHandler(req, res));
+				}).catch(errorHandler);
+			}).catch(errorHandler);
+		}).catch(errorHandler);
+	}).catch(errorHandler);
 };
 
 export { getSongs, getSong, postSong };
