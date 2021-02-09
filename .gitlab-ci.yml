@@ -14,6 +14,6 @@ build-beta:
 deploy-beta:
     stage: deploy
     script:
-        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --set-env-vars=DB_CONNECTION=$DB_CONNECTION --set-env-vars=SPOTIFY_ID=$SPOTIFY_ID --set-env-vars=SPOTIFY_SECRET=$SPOTIFY_SECRET
+        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET"
     only:
     - beta
