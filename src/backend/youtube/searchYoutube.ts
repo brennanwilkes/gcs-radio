@@ -1,20 +1,27 @@
-import ytsr from "ytsr";
-import SearchResultObj, { SearchResult } from "../types/searchResult";
+import ytsr, { Item, Video } from "ytsr";
+import ytdl from "ytdl-core";
+import { YoutubeResult, YoutubeResultFromApi } from "../types/youtubeResult";
 
-export default function (query: string): Promise<SearchResult[]> {
+export function itemIsVideo (obj: Item): obj is Video {
+	return obj.type === "video";
+}
+
+export function searchYoutubeSimple (query: string, limit = 5): Promise<string[]> {
 	return new Promise((resolve, reject) => {
-		ytsr(query, { limit: 15 }).then(res => {
-			res.items = res.items.filter(item => item.type === "video");
-			let filtered: SearchResult[] = [];
-
-			const items: any[] = res.items.slice(0, 5);
-			items.forEach(item => {
-				filtered = [...filtered, new SearchResultObj(item)];
-			});
-
-			resolve(filtered);
+		ytsr(query, { limit: limit }).then(res => {
+			resolve(res.items.filter(itemIsVideo).map(item => item.id));
 		}).catch(err => {
 			reject(err);
 		});
+	});
+}
+
+export function searchYoutubeDetailed (id: string): Promise<YoutubeResult> {
+	return new Promise((resolve, reject) => {
+		ytdl.getInfo(`https://www.youtube.com/watch?v=${id}`)
+			.then(res => {
+				resolve(new YoutubeResultFromApi(res.videoDetails));
+			})
+			.catch(reject);
 	});
 }

@@ -2,53 +2,59 @@
 
 // Import and setup
 import { mongoose } from "../connection";
-import { VideoData } from "../../backend/types/videoData";
+import { Song } from "../../backend/types/song";
 const Schema = mongoose.Schema;
 
 const SongSchema = new Schema({
-	audioId: { type: mongoose.Schema.Types.ObjectId, ref: "songs.files" },
-	uploadDate: { type: String },
-	duration: { type: String },
-	fullTitle: { type: String },
+	title: { type: String },
+	artist: { type: String },
 	album: { type: String },
-	youtubeTitle: { type: String },
+	duration: { type: Number },
+	explicit: { type: Boolean },
+	spotifyId: { type: String },
+	artistSpotifyId: { type: String },
+	albumSpotifyId: { type: String },
 	youtubeId: { type: String },
+	audioId: { type: mongoose.Schema.Types.ObjectId, ref: "songs.files" },
 	tags: [String],
-	songTitle: { type: String },
 	thumbnailUrl: { type: String },
-	artist: { type: String }
+	releaseDate: { type: String }
 });
 
 export interface SongDoc extends mongoose.Document {
-	audioId: mongoose.Schema.Types.ObjectId,
-	uploadDate: string,
-	duration: string,
-	fullTitle: string,
+	title: string,
+	artist: string,
 	album: string,
-	youtubeTitle: string,
+	duration: number,
+	explicit: boolean,
+	spotifyId: string,
+	artistSpotifyId: string,
+	albumSpotifyId: string,
 	youtubeId: string,
+	audioId: mongoose.Schema.Types.ObjectId,
 	tags: string[],
-	songTitle: string,
 	thumbnailUrl: string,
-	artist: string
+	releaseDate: string
 }
 
-const Song = mongoose.model<SongDoc>("song", SongSchema);
-export default Song;
+const SongModel = mongoose.model<SongDoc>("song", SongSchema);
+export default SongModel;
 
-export function SongFromInfo (info: VideoData, audioId: string): InstanceType<typeof Song> {
-	return new Song({
-		audioId: new mongoose.Types.ObjectId(audioId),
-		uploadDate: info.uploadDate,
-		duration: info.duration,
-		fullTitle: info.fulltitle,
-		album: info.album,
-		youtubeTitle: info.title,
-		youtubeId: info.id,
-		tags: info.tags,
-		songTitle: info.track,
-		thumbnailUrl: info.thumbnails[0]?.url ?? "none",
-		artist: info.artist
+export function SongModelFromSong (song: Song): InstanceType<typeof SongModel> {
+	return new SongModel({
+		title: song.title,
+		artist: song.artist,
+		album: song.album,
+		duration: song.duration,
+		explicit: song.explicit,
+		spotifyId: song.spotifyId,
+		artistSpotifyId: song.artistSpotifyId,
+		albumSpotifyId: song.albumSpotifyId,
+		youtubeId: song.youtubeId,
+		tags: song.tags,
+		thumbnailUrl: song.thumbnailUrl,
+		releaseDate: song.releaseDate,
+		audioId: song.audioId
 	});
 }
 

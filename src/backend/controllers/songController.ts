@@ -1,28 +1,50 @@
 import { Request, Response } from "express";
-import Song, { SongFromInfo } from "../../database/models/song";
+import Song, { SongModelFromSong } from "../../database/models/song";
 import streamToMongo from "../../database/streamToMongo";
 import dummyPipe from "../util/dummyPipe";
 import streamVidToAudio from "../util/streamVidToAudio";
-import downloadURLinfo from "../youtube/downloadURLinfo";
 import downloadURLToStream from "../youtube/downloadURLToStream";
-import { SongObjFromQuery } from "../types/song";
+import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../types/song";
 import { print } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
 import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
+import { searchYoutubeDetailed } from "../youtube/searchYoutube";
+import { getSpotify } from "../spotify/searchSpotify";
+import { PlayAudioLink, SelfSongLink } from "../types/link";
 
 const getSongs = (req: Request, res: Response) => {
-	res.send({
-		suc: "suc"
-	});
-	res.end();
+	print(`Handling request for song resources`);
+
+	Song.find({}).then(result => {
+		if (result) {
+			res.send({
+				songs: result.map(result => {
+					const song = new SongObjFromQuery(result);
+					return new SongApiObj(song, [
+						new PlayAudioLink(req, song),
+						new SelfSongLink(req, result._id)
+					]);
+				})
+			});
+			res.end();
+		} else {
+			notFoundErrorHandler(req, res)("song", req.params.id);
+		}
+	}).catch(internalErrorHandler(req, res));
 };
 
 const getSong = (req: Request, res: Response) => {
+	print(`Handling request for song resource ${req.params.id}`);
+
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
 		if (result) {
-			res.json({
-				song: new SongObjFromQuery(result)
+			const song = new SongObjFromQuery(result);
+			res.send({
+				songs: [new SongApiObj(song, [
+					new PlayAudioLink(req, song),
+					new SelfSongLink(req, result._id)
+				])]
 			});
 			res.end();
 		} else {
@@ -32,28 +54,40 @@ const getSong = (req: Request, res: Response) => {
 };
 
 const postSong = async (req: Request, res: Response) => {
-	print(`Handling request for audio cache id="${req.query.id}"`);
+	const errorHandler = internalErrorHandler(req, res);
+
+	const youtubeId = String(req.query.youtubeId);
+	const spotifyId = String(req.query.spotifyId);
+	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
+
+	print(`Handling request for audio cache ${youtubeId} - ${spotifyId}`);
 
 	const dummy = dummyPipe();
-	const url = `https://www.youtube.com/watch?v=${String(req.query.id)}`;
 
-	downloadURLinfo(url).then(info => {
-		print(`Retrieved information for "${info.track}"`);
-		streamVidToAudio(downloadURLToStream(url), dummy).catch(internalErrorHandler(req, res));
+	searchYoutubeDetailed(youtubeId).then(youtubeInfo => {
+		print(`Retrieved youtube information for "${youtubeInfo.title}"`);
 
-		print("Created audio conversion stream");
+		getSpotify(spotifyId).then(spotifyInfo => {
+			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
+			streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);
 
-		streamToMongo(`${info.track} - ${info.artist} - ${info.album}`, dummy).then(audioId => {
-			print(`Created audio resource ${audioId}`);
-			SongFromInfo(info, audioId).save().then((resp) => {
-				print(`Created song resource ${resp}`);
-				res.send({
-					song: new SongObjFromQuery(resp)
-				});
-				res.end();
-			}).catch(internalErrorHandler(req, res));
-		}).catch(internalErrorHandler(req, res));
-	}).catch(internalErrorHandler(req, res));
+			print("Created audio conversion stream");
+
+			streamToMongo(`${spotifyInfo.title} - ${spotifyInfo.artist} - ${spotifyInfo.album}`, dummy).then(audioId => {
+				print(`Created audio resource ${audioId}`);
+
+				const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
+				SongModelFromSong(newSong).save().then((resp) => {
+					print(`Created song resource ${resp}`);
+					res.send(new SongApiObj(new SongObjFromQuery(resp), [
+						new PlayAudioLink(req, newSong),
+						new SelfSongLink(req, resp._id)
+					]));
+					res.end();
+				}).catch(errorHandler);
+			}).catch(errorHandler);
+		}).catch(errorHandler);
+	}).catch(errorHandler);
 };
 
 export { getSongs, getSong, postSong };
