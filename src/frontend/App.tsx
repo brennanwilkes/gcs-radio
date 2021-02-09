@@ -18,6 +18,7 @@ class App extends React.Component {
 	state = {
 		search: "",
 		download: "",
+		download2: "",
 		song: "",
 		audio: ""
 	}
@@ -28,6 +29,7 @@ class App extends React.Component {
 		this.state = {
 			search: "",
 			download: "",
+			download2: "",
 			song: "",
 			audio: ""
 		}
@@ -48,10 +50,10 @@ class App extends React.Component {
 						if(elem) elem.innerHTML = `${JSON.stringify(res.data,null,2)}`;
 					}).catch(err => console.error(err));
 				}
-				else if(this.state.download){
+				else if(this.state.download && this.state.download2){
 					const elem = document.getElementById("res");
 					if(elem) elem.innerHTML = "Loading...";
-					axios.post(`/api/v1/songs?id=${encodeURIComponent(this.state.download)}`).then(res => {
+					axios.post(`/api/v1/songs?youtubeId=${encodeURIComponent(this.state.download)}&spotifyId=${encodeURIComponent(this.state.download2)}`).then(res => {
 						if(elem) elem.innerHTML = `${JSON.stringify(res.data,null,2)}`;
 					}).catch(err => console.error(err));
 				}
@@ -73,12 +75,13 @@ class App extends React.Component {
 				this.setState({
 					search: "",
 					download: "",
+					download2: "",
 					song: "",
 					audio: ""
 				});
 			}}>
 				<h3>Search: <input id="search" type="text" value={this.state.search} onChange={(e) => this.setState({search:e.target.value})} /></h3><br />
-				<h3>Download: <input id="download" type="text" value={this.state.download} onChange={(e) => this.setState({download:e.target.value})} /></h3><br />
+				<h3>Download: <input id="download" type="text" value={this.state.download} onChange={(e) => this.setState({download:e.target.value})} /><input id="download2" type="text" value={this.state.download2} onChange={(e) => this.setState({download2:e.target.value})} /></h3><br />
 				<h3>Get Song: <input id="song" type="text" value={this.state.song}  onChange={(e) => this.setState({song:e.target.value})} /></h3><br />
 				<h3>Play song: <input id="audio" type="text" value={this.state.audio} onChange={(e) => this.setState({audio:e.target.value})} /></h3><br />
 

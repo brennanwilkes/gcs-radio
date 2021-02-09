@@ -14,6 +14,8 @@ import { getSpotify } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfSongLink } from "../types/link";
 
 const getSongs = (req: Request, res: Response) => {
+	print(`Handling request for song resources`);
+
 	Song.find({}).then(result => {
 		if (result) {
 			res.send({
@@ -33,6 +35,8 @@ const getSongs = (req: Request, res: Response) => {
 };
 
 const getSong = (req: Request, res: Response) => {
+	print(`Handling request for song resource ${req.params.id}`);
+
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
 		if (result) {
 			const song = new SongObjFromQuery(result);
