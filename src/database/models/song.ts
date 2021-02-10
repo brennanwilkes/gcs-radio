@@ -15,7 +15,7 @@ const SongSchema = new Schema({
 	artistSpotifyId: { type: String },
 	albumSpotifyId: { type: String },
 	youtubeId: { type: String },
-	audioId: { type: mongoose.Schema.Types.ObjectId, ref: "songs.files" },
+	audioId: { type: mongoose.Schema.Types.ObjectId, ref: "audio.files" },
 	tags: [String],
 	thumbnailUrl: { type: String },
 	releaseDate: { type: String }

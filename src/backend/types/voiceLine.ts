@@ -1,5 +1,6 @@
 import { VoiceLineRenderDoc } from "../../database/models/voiceLineRender";
 import { protos } from "@google-cloud/text-to-speech";
+import { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
 
 /* eslint-disable no-unused-vars */
 export enum ConditionType{
@@ -126,17 +127,17 @@ export class VoiceLineRenderObjFromQuery extends VoiceLineRenderObj {
 	}
 }
 
-/*
 export class VoiceLineTemplateObjFromQuery extends VoiceLineTemplateObj {
-	constructor (results: VoiceLineDoc) {
-		const conds = results.conditions;
+	constructor (results: VoiceLineTemplateDoc) {
 		super(
-			conds.map(cond => new VoiceConditionObj(cond.appliesTo, cond.variable as VoiceVariable, cond.condition as ConditionType, cond.operand)),
+			results.conditions.map(cond => new VoiceConditionObj(
+				cond.appliesTo,
+				cond.variable as VoiceVariable,
+				cond.condition as ConditionType,
+				cond.operand
+			)),
 			results.text,
-			results.type as VoiceLineType,
-			results.voice as Voice,
-			String(results.audioId)
+			results.type as VoiceLineType
 		);
 	}
 }
-*/

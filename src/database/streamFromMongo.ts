@@ -3,7 +3,7 @@ import { mongoose } from "./connection";
 
 export default function (id:string, stdout: Writable): void {
 	const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-		bucketName: "songs"
+		bucketName: "audio"
 	});
 
 	const downloadStream = bucket.openDownloadStream(mongoose.Types.ObjectId(id));

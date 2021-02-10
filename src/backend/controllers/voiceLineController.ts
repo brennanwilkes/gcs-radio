@@ -38,7 +38,6 @@ const postVoiceLine = async (req: Request, res: Response) => {
 		}
 		while (!validateVoiceLine(template, prevSong, nextSong));
 
-		// Render it
 		const render = renderVoiceLineFromTemplate(template, prevSong, nextSong, voice);
 		print(`Rendered voice line "${render.text}"`);
 
