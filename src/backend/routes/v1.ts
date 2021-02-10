@@ -9,7 +9,7 @@ import audioValidator from "../validators/audioValidator";
 import postSongValidator from "../validators/postSongValidator";
 import postVoiceLineValidator from "../validators/postVoiceLineValidator";
 import getSongValidator from "../validators/getSongValidator";
-import { postVoiceLine } from "../controllers/voiceLineController";
+import { postVoiceLine, getVoiceLine } from "../controllers/voiceLineController";
 
 const apiV1Router = Router();
 
@@ -21,6 +21,7 @@ apiV1Router.get("/songs/:id", getSongValidator, getSong);
 apiV1Router.post("/songs", postSongValidator, postSong);
 
 apiV1Router.post("/voiceLines", postVoiceLineValidator, postVoiceLine);
+apiV1Router.get("/voiceLines/:id", getVoiceLine);
 
 apiV1Router.get("/audio/:id", audioValidator, getAudio);
 apiV1Router.get("/search", query);

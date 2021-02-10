@@ -1,5 +1,6 @@
 import { Request } from "express";
 import { Song } from "./song";
+import { VoiceLineRender } from "./voiceLine";
 
 export interface Link {
 	rel: string;
@@ -34,22 +35,22 @@ export class DownloadLink extends LinkObj implements Link {
 }
 
 export class PlayAudioLink extends LinkObj implements Link {
-	constructor (req: Request, song: Song) {
+	constructor (req: Request, audio: Song | VoiceLineRender) {
 		super(
 			"Play Audio",
 			"GET",
-			`${req.baseUrl}/audio/${song.audioId}`,
+			`${req.baseUrl}/audio/${audio.audioId}`,
 			["audio/mpeg"]
 		);
 	}
 }
 
-export class SelfSongLink extends LinkObj implements Link {
-	constructor (req: Request, id: string) {
+export class SelfLink extends LinkObj implements Link {
+	constructor (req: Request, id: string, resourcePath: string) {
 		super(
 			"self",
 			"GET",
-			`${req.baseUrl}/songs/${id}`,
+			`${req.baseUrl}/${resourcePath}/${id}`,
 			["application/json"]
 		);
 	}

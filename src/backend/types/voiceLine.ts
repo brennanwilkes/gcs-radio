@@ -1,6 +1,7 @@
 import { VoiceLineRenderDoc } from "../../database/models/voiceLineRender";
 import { protos } from "@google-cloud/text-to-speech";
 import { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
+import { Link } from "./link";
 
 /* eslint-disable no-unused-vars */
 export enum ConditionType{
@@ -139,5 +140,23 @@ export class VoiceLineTemplateObjFromQuery extends VoiceLineTemplateObj {
 			results.text,
 			results.type as VoiceLineType
 		);
+	}
+}
+
+export interface VoiceLineRenderApi extends VoiceLineRender{
+	links: Link[]
+}
+
+export class VoiceLineRenderApiObj extends VoiceLineRenderObj implements VoiceLineRenderApi {
+	links: Link[]
+	constructor (base: VoiceLineRender, links: Link[]) {
+		super(
+			base.voice,
+			base.gender,
+			base.text,
+			base.type,
+			base.audioId
+		);
+		this.links = links;
 	}
 }

@@ -70,7 +70,7 @@ export default class RadioServer {
 		this.server = this.app.listen(this.port, () => {
 			if (this.server) {
 				const address = this.server?.address();
-				print("server is listening", (address && !(typeof address === "string")) ? ` on port ${address.port}` : "");
+				print("server is listening", (address && !(typeof address === "string")) ? `on port ${address.port}` : "");
 			}
 		});
 	}

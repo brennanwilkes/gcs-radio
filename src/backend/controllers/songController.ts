@@ -11,7 +11,7 @@ import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotify } from "../spotify/searchSpotify";
-import { PlayAudioLink, SelfSongLink } from "../types/link";
+import { PlayAudioLink, SelfLink } from "../types/link";
 
 const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
@@ -23,7 +23,7 @@ const getSongs = (req: Request, res: Response): void => {
 					const song = new SongObjFromQuery(result);
 					return new SongApiObj(song, [
 						new PlayAudioLink(req, song),
-						new SelfSongLink(req, result._id)
+						new SelfLink(req, result._id, "songs")
 					]);
 				})
 			});
@@ -43,7 +43,7 @@ const getSong = (req: Request, res: Response): void => {
 			res.send({
 				songs: [new SongApiObj(song, [
 					new PlayAudioLink(req, song),
-					new SelfSongLink(req, result._id)
+					new SelfLink(req, result._id, "songs")
 				])]
 			});
 			res.end();
@@ -81,7 +81,7 @@ const postSong = (req: Request, res: Response): void => {
 					print(`Created song resource ${resp}`);
 					res.send(new SongApiObj(new SongObjFromQuery(resp), [
 						new PlayAudioLink(req, newSong),
-						new SelfSongLink(req, resp._id)
+						new SelfLink(req, resp._id, "songs")
 					]));
 					res.end();
 				}).catch(errorHandler);
