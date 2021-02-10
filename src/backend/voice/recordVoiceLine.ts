@@ -13,7 +13,7 @@ const client = new TextToSpeechClient({
 	keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
 });
 
-export async function recordVoiceLine (voiceLine: VoiceLineRender) {
+export async function recordVoiceLine (voiceLine: VoiceLineRender): Promise<Transform> {
 	return new Promise<Transform>((resolve, reject) => {
 		const dummy = DummyPipe();
 		const voiceSplit = voiceLine.voice.split("-");

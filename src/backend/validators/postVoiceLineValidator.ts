@@ -9,7 +9,7 @@ export default [
 	mongoIdValidator(query("prevId")),
 	mongoIdValidator(query("nextId")),
 	validationErrorHandler,
-	async (req: Request, res: Response, next: NextFunction) => {
+	(req: Request, res: Response, next: NextFunction): void => {
 		const errorHandler = notFoundErrorHandler(req, res);
 		Song.exists({ _id: new mongoose.Types.ObjectId(String(req.query.prevId)) }).then(res => {
 			if (res) {
@@ -19,10 +19,10 @@ export default [
 					} else {
 						errorHandler("song", String(req.query.nextId));
 					}
-				}).catch(_err => errorHandler("song", String(req.query.nextId)));
+				}).catch(() => errorHandler("song", String(req.query.nextId)));
 			} else {
 				errorHandler("song", String(req.query.prevId));
 			}
-		}).catch(_err => errorHandler("song", String(req.query.prevId)));
+		}).catch(() => errorHandler("song", String(req.query.prevId)));
 	}
 ];

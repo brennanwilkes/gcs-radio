@@ -13,7 +13,7 @@ import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotify } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfSongLink } from "../types/link";
 
-const getSongs = (req: Request, res: Response) => {
+const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
 
 	Song.find({}).then(result => {
@@ -34,7 +34,7 @@ const getSongs = (req: Request, res: Response) => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-const getSong = (req: Request, res: Response) => {
+const getSong = (req: Request, res: Response): void => {
 	print(`Handling request for song resource ${req.params.id}`);
 
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
@@ -53,7 +53,7 @@ const getSong = (req: Request, res: Response) => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-const postSong = async (req: Request, res: Response) => {
+const postSong = (req: Request, res: Response): void => {
 	const errorHandler = internalErrorHandler(req, res);
 
 	const youtubeId = String(req.query.youtubeId);

@@ -42,7 +42,7 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 		axios.get(url).then(res => {
 			resolve(res.status === 200);
 		}).catch(err => {
-			resolve(err);
+			reject(err);
 		});
 	});
 };
@@ -51,17 +51,17 @@ const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
 const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
 const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;
 
-const youtubeIdValidator = (variable: ValidationChain) => variable.exists()
+const youtubeIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(youtubeIdRegex)
 	.withMessage("youtube ID is not valid");
 
-const mongoIdValidator = (variable: ValidationChain) => variable.exists()
+const mongoIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(mongoIdRegex)
 	.withMessage("internal ID is not valid");
 
-const spotifyIdValidator = (variable: ValidationChain) => variable.exists()
+const spotifyIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(spotifyIdRegex)
 	.withMessage("spotify ID is not valid");

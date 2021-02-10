@@ -1,6 +1,7 @@
 import express, { Express, Router } from "express";
 import bodyParser from "body-parser";
 import path from "path";
+import { Server } from "http";
 
 import { CONFIG, print } from "./util/util";
 
@@ -22,7 +23,7 @@ export default class RadioServer {
 	*/
 	app: Express
 
-	server: any
+	server: Server | undefined
 
 	/**
 		Basic express setup.
@@ -67,7 +68,10 @@ export default class RadioServer {
 
 		// Socket init
 		this.server = this.app.listen(this.port, () => {
-			print("server is listening on port", this.server.address().port);
+			if (this.server) {
+				const address = this.server?.address();
+				print("server is listening", (address && !(typeof address === "string")) ? ` on port ${address.port}` : "");
+			}
 		});
 	}
 
@@ -75,6 +79,8 @@ export default class RadioServer {
 	 * Closes socket connection
 	 */
 	close (): void {
-		this.server.close();
+		if (this.server) {
+			this.server.close();
+		}
 	}
 }

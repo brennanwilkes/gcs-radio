@@ -17,7 +17,7 @@ const testingVoiceLine = new VoiceLineTemplateObj(
 	VoiceLineType.normal
 );
 
-const postVoiceLine = async (req: Request, res: Response) => {
+const postVoiceLine = async (req: Request, res: Response): Promise<void> => {
 	const errorHandler = internalErrorHandler(req, res);
 
 	const prevId = String(req.query.prevId);
