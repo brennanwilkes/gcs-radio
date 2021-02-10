@@ -15,11 +15,4 @@ export default async function (prev: Song, next: Song): Promise<VoiceLineTemplat
 	}
 	while (!template || !validateVoiceLine(template, prev, next));
 	return template;
-	/*
-	VoiceLineTemplateModelFromVoiceLineTemplate(testingVoiceLine).save().then(res => {
-		console.dir(res);
-	}).catch(err => {
-		console.error(err);
-	});
-	*/
 }

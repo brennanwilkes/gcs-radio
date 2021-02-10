@@ -39,10 +39,10 @@ export enum VoiceGender{
 }
 
 export enum VoiceVariable{
-	name = "NAME",
-	artist = "ARTIST",
-	albumn = "ALBUM",
-	releaseDate = "RELEASEDATE"
+	title = "title",
+	artist = "artist",
+	albumn = "album",
+	releaseDate = "releaseDate"
 }
 
 /* eslint-enable no-unused-vars */
@@ -90,7 +90,7 @@ export interface VoiceLineTemplate extends VoiceLine{
 
 export class VoiceLineTemplateObj extends VoiceLineObj implements VoiceLineTemplate {
 	conditions: VoiceCondition[];
-	constructor (conditions: VoiceCondition[], text: string, type: VoiceLineType) {
+	constructor (conditions: VoiceCondition[], text: string, type: VoiceLineType = VoiceLineType.normal) {
 		super(text, type);
 		this.conditions = conditions;
 	}
