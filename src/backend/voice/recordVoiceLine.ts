@@ -39,7 +39,6 @@ export async function recordVoiceLine (voiceLine: VoiceLineRender) {
 
 		client.synthesizeSpeech(request).then(response => {
 			if (response[0].audioContent) {
-				// fs.writeFileSync(`output.mp3`, response[0].audioContent, `binary`);
 				Readable.from(response[0].audioContent).pipe(dummy);
 				resolve(dummy);
 			} else {
