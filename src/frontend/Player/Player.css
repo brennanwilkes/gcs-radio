@@ -1,0 +1,25 @@
+.Player button{
+	border: none;
+	color: grey;
+	background-color: inherit;
+}
+
+.Player button:hover{
+	color: black;
+}
+
+.Player{
+	display: flex;
+	flex-direction: row;
+}
+.Player img{
+	width: 50px;
+	height: 50px;
+}
+
+.Player > h2, .Player > img, .Player > button{
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
