@@ -23,8 +23,8 @@ export class ErrorObj implements Error {
 }
 
 export class ErrorFromException extends ErrorObj implements Error {
-	constructor (exception: any, path: string) {
-		super("Inernal Error", path, `${exception}`, 500);
+	constructor (exception: string, path: string) {
+		super("Inernal Error", path, exception, 500);
 	}
 }
 

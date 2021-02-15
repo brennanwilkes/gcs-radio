@@ -7,7 +7,7 @@ import { Song, SongApiObj, SongFromSearch } from "../types/song";
 import { DownloadLink } from "../types/link";
 import resultMatches from "../util/resultMatches";
 
-const query = (req: Request, res: Response) => {
+const query = (req: Request, res: Response): void => {
 	const errorHandler = internalErrorHandler(req, res);
 
 	print(`Handling request for query search "${req.query.query}"`);

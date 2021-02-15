@@ -14,6 +14,7 @@ export interface Song{
 	albumSpotifyId: string,
 	youtubeId: string,
 	audioId?: string,
+	id?: string,
 	tags: string[],
 	thumbnailUrl: string,
 	releaseDate: string
@@ -34,6 +35,7 @@ export class SongObj implements Song {
 	albumSpotifyId: string;
 	youtubeId: string;
 	audioId?: string;
+	id?:string;
 	tags: string[];
 	thumbnailUrl: string;
 	releaseDate: string;
@@ -50,7 +52,8 @@ export class SongObj implements Song {
 		tags: string[],
 		thumbnailUrl: string,
 		releaseDate: string,
-		audioId?: string
+		audioId?: string,
+		id?: string
 	) {
 		this.title = title;
 		this.artist = artist;
@@ -65,11 +68,12 @@ export class SongObj implements Song {
 		this.thumbnailUrl = thumbnailUrl;
 		this.releaseDate = releaseDate;
 		if (audioId) this.audioId = audioId;
+		if (id) this.id = id;
 	}
 }
 
 export class SongFromSearch extends SongObj {
-	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string) {
+	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string, id?: string) {
 		super(
 			spotifyResult.title,
 			spotifyResult.artist,
@@ -83,7 +87,8 @@ export class SongFromSearch extends SongObj {
 			youtubeResult.tags,
 			spotifyResult.thumbnailUrl,
 			spotifyResult.releaseDate,
-			audioId
+			audioId,
+			id
 		);
 	}
 }
@@ -103,7 +108,8 @@ export class SongObjFromQuery extends SongObj {
 			results.tags,
 			results.thumbnailUrl,
 			results.releaseDate,
-			String(results.audioId)
+			String(results.audioId),
+			String(results._id)
 		);
 	}
 }
@@ -124,7 +130,8 @@ export class SongApiObj extends SongObj implements SongApi {
 			songBase.tags,
 			songBase.thumbnailUrl,
 			songBase.releaseDate,
-			songBase.audioId
+			songBase.audioId,
+			songBase.id
 		);
 		this.links = links;
 	}

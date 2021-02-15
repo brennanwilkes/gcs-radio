@@ -17,7 +17,7 @@ export default [
 	}).withMessage("youtube ID doesn't exist"),
 	spotifyIdValidator(query("spotifyId")),
 	validationErrorHandler,
-	async (req: Request, res: Response, next: NextFunction) => {
+	(req: Request, res: Response, next: NextFunction): void => {
 		Song.findOne({ youtubeId: String(req.query.youtubeId), spotifyId: String(req.query.spotifyId) }).then(result => {
 			if (result) {
 				res.redirect(303, `${req.baseUrl}/songs/${result._id.toString()}`);

@@ -11,9 +11,9 @@ import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotify } from "../spotify/searchSpotify";
-import { PlayAudioLink, SelfSongLink } from "../types/link";
+import { PlayAudioLink, SelfLink } from "../types/link";
 
-const getSongs = (req: Request, res: Response) => {
+const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
 
 	Song.find({}).then(result => {
@@ -23,7 +23,7 @@ const getSongs = (req: Request, res: Response) => {
 					const song = new SongObjFromQuery(result);
 					return new SongApiObj(song, [
 						new PlayAudioLink(req, song),
-						new SelfSongLink(req, result._id)
+						new SelfLink(req, result._id, "songs")
 					]);
 				})
 			});
@@ -34,7 +34,7 @@ const getSongs = (req: Request, res: Response) => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-const getSong = (req: Request, res: Response) => {
+const getSong = (req: Request, res: Response): void => {
 	print(`Handling request for song resource ${req.params.id}`);
 
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
@@ -43,7 +43,7 @@ const getSong = (req: Request, res: Response) => {
 			res.send({
 				songs: [new SongApiObj(song, [
 					new PlayAudioLink(req, song),
-					new SelfSongLink(req, result._id)
+					new SelfLink(req, result._id, "songs")
 				])]
 			});
 			res.end();
@@ -53,7 +53,7 @@ const getSong = (req: Request, res: Response) => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-const postSong = async (req: Request, res: Response) => {
+const postSong = (req: Request, res: Response): void => {
 	const errorHandler = internalErrorHandler(req, res);
 
 	const youtubeId = String(req.query.youtubeId);
@@ -81,7 +81,7 @@ const postSong = async (req: Request, res: Response) => {
 					print(`Created song resource ${resp}`);
 					res.send(new SongApiObj(new SongObjFromQuery(resp), [
 						new PlayAudioLink(req, newSong),
-						new SelfSongLink(req, resp._id)
+						new SelfLink(req, resp._id, "songs")
 					]));
 					res.end();
 				}).catch(errorHandler);
