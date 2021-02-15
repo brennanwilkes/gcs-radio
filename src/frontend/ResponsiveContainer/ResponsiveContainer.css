@@ -1,5 +1,7 @@
 .ResponsiveContainer{
 
+	background-color: #EEE;
+
 	margin: auto;
 	position: absolute;
 	top: 0;
@@ -8,45 +10,17 @@
 	right: 0;
 
 	/*box-shadow: -5px -5px 30px 5px red, 5px 5px 30px 5px blue;*/
-	animation: rainbow 5s infinite;
+	animation: rainbowInset 5s infinite;
 
-}
-
-@keyframes rainbow {
-	from, to {
-		box-shadow: -5px 0px 30px -5px red,
-					0px -5px 30px -5px red,
-					5px 0px 15px 5px blue,
-					0px 5px 30px -5px blue;
-	}
-	25% {
-		box-shadow: -5px 0px 30px -5px blue,
-					0px -5px 30px -5px red,
-					5px 0px 30px 5px red,
-					0px 5px 15px -5px blue;
-	}
-	50% {
-		box-shadow: -5px 0px 15px -5px blue,
-					0px -5px 30px -5px blue,
-					5px 0px 30px -5px red,
-					0px 5px 30px 5px red;
-	}
-	75% {
-		box-shadow: -5px 0px 30px 5px red,
-					0px -5px 15px -5px blue,
-					5px 0px 30px -5px blue,
-					0px 5px 30px -5px red;
-	}
 }
 
 
 @media only screen and (min-width: 1024px) {
-
 	.ResponsiveContainer{
 		width: 90vw;
 		max-width: 67.5vh;
 		height: 120vw;
 		max-height: 90vh;
+		animation: rainbow 5s infinite;
 	}
-
 }

@@ -44,8 +44,10 @@ export default class App extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
-			<h1>GCS Radio</h1>
-			<Player songs={this.state.songs} transitions={this.state.transitions} />
+			<div className="App">
+				<h1>GCS Radio</h1>
+				<Player songs={this.state.songs} transitions={this.state.transitions} />
+			</div>
 		</>
 	}
 }
