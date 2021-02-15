@@ -3,13 +3,17 @@ import {Song} from '../../backend/types/song';
 import { FaRegPlayCircle, FaRegPauseCircle } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
+import { VoiceLineRender } from "../../backend/types/voiceLine";
+import {Howl} from "howler";
 
 interface IProps {
 	songs: Song[],
+	transitions: VoiceLineRender[],
 }
 interface IState {
 	paused: boolean,
-	queue: HTMLAudioElement[],
+	queue: Howl[],
+	transitions: Howl[],
 	progress: number,
 	index: number,
 	ready: boolean
@@ -24,6 +28,7 @@ export default class App extends React.Component<IProps, IState> {
 
 		this.state = {
 			queue: [],
+			transitions: [],
 			paused: true,
 			progress: 0,
 			index: 0,
@@ -34,29 +39,59 @@ export default class App extends React.Component<IProps, IState> {
 
 
 	componentDidUpdate(prevProps: IProps){
-		if(prevProps !== this.props){
-			const queue: HTMLAudioElement[] = this.props.songs.map((song: Song) => new Audio(`/api/audio/${song?.audioId}`));
+		if(prevProps.songs !== this.props.songs){
+			console.log("DIFF SONGS")
+			const queue: Howl[] = this.props.songs.map(
+				(song: Song) => new Howl({
+					src: `/api/audio/${song?.audioId}`,
+					format: ["mp3"]
+			}));
+
 			queue.forEach(audio => {
-				audio.ontimeupdate = () => this.setState({progress: Math.floor(audio.currentTime)});
+				audio.on("end", this.transitionSong);
+				/*audio.ontimeupdate = () => this.setState({progress: Math.floor(audio.currentTime)});
 				audio.onended = this.transitionSong;
+				audio.preload = "auto";*/
 			});
-			queue[0].oncanplay = () => this.setState({ready:true});
+
+			if(queue.length >= 1){
+				queue[0].once("load", () => this.setState({ready:true}));
+			}
 
 			this.setState({
 				queue : queue,
 			});
 		}
+		if(prevProps.transitions !== this.props.transitions){
+			console.log("DIFF TRANS")
+			const transitions: Howl[] = this.props.transitions.map(
+				(voice: VoiceLineRender) => new Howl({
+					src: `/api/audio/${voice?.audioId}`,
+					format: ["mp3"]
+			}));
+
+			transitions.forEach(audio => {
+				audio.on("end", () => audio.stop());
+			});
+
+			this.setState({
+				transitions : transitions,
+			});
+		}
 	}
 
 	transitionSong(){
-		if(this.state.index + 1 < this.state.queue.length){
-			this.state.queue[this.state.index].pause();
-			this.state.queue[this.state.index].currentTime = 0;
+		if(this.state.index + 1 < this.state.queue.length && this.state.index + 1 < this.state.transitions.length){
 
-			this.state.queue[this.state.index + 1].currentTime = 0;
+			//Reset current audio
+			this.state.queue[this.state.index].stop();
+
+
+			//Play transition audio
+			this.state.transitions[this.state.index].play();
 			this.state.queue[this.state.index + 1].play();
-
-			this.setState({index: this.state.index + 1})
+			this.setState({index: this.state.index + 1});
+			
 		}
 		else{
 			console.error("Playlist empty!!");
@@ -66,6 +101,9 @@ export default class App extends React.Component<IProps, IState> {
 
 	togglePause(){
 		if(this.state.queue[this.state.index]){
+			if(this.state.index - 1 >= 0 && this.state.transitions[this.state.index - 1].playing()){
+				this.state.transitions[this.state.index - 1][this.state.paused ? "play" : "pause"]();
+			}
 			this.state.queue[this.state.index][this.state.paused ? "play" : "pause"]();
 		}
 		this.setState({paused: !this.state.paused});

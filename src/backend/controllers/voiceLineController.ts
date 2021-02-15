@@ -71,7 +71,12 @@ const postVoiceLine = async (req: Request, res: Response): Promise<void> => {
 							render.audioId = audioId;
 							VoiceLineRenderModelFromVoiceLineRender(render).save().then(resp => {
 								print(`Saved Voice line to cache - ${resp._id}`);
-								res.status(200).json(render);
+								res.status(200).send({
+									voiceLines: [new VoiceLineRenderApiObj(render, [
+										new PlayAudioLink(req, render),
+										new SelfLink(req, resp._id, "voiceLines")
+									])]
+								});
 								res.end();
 							}).catch(errorHandler);
 						}).catch(errorHandler);

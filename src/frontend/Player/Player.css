@@ -8,6 +8,10 @@
 	color: black;
 }
 
+.Player button:disabled{
+	color: lightgrey;
+}
+
 .Player{
 	display: flex;
 	flex-direction: row;
