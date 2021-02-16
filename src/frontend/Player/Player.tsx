@@ -32,6 +32,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.togglePause = this.togglePause.bind(this);
 		this.transitionSong = this.transitionSong.bind(this);
 		this.updateProgress = this.updateProgress.bind(this);
+		this.setProgress = this.setProgress.bind(this);
 
 		this.state = {
 			queue: [],
@@ -69,21 +70,22 @@ export default class App extends React.Component<IProps, IState> {
 				})
 			);
 
-			//Preload first two
-			queue.slice(0,2).forEach(h => {
-				h.load()
-			});
-
-			queue.forEach(audio => {
+			queue.forEach((audio,i) => {
 				audio.on("end", this.transitionSong);
+				audio.on("load", () =>{
+					if(i === 0){
+						this.setState({
+							ready: true,
+							maxProgress: queue[0].duration()
+						})
+					}
+					if(i + 1 < queue.length){
+						console.log(`Loading song ${i + 1}/${queue.length - 1}`);
+						queue[i + 1].load();
+					}
+				})
 			});
-
-			if(queue.length >= 1){
-				queue[0].once("load", () => this.setState({
-					ready: true,
-					maxProgress: this.state.queue[0].duration()
-				}));
-			}
+			queue[0].load();
 
 			this.setState({
 				queue : queue,
@@ -98,14 +100,17 @@ export default class App extends React.Component<IProps, IState> {
 					preload: false
 			}));
 
-			//Preload first two
-			transitions.slice(0,2).forEach(h => {
-				h.load()
-			});
 
-			transitions.forEach(audio => {
-				audio.on("end", () => audio.stop());
+			transitions.forEach((trans, i) => {
+				trans.on("end", () => trans.stop());
+				trans.on("load", () =>{
+					if(i + 1 < transitions.length){
+						console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
+						transitions[i + 1].load();
+					}
+				})
 			});
+			transitions[0].load();
 
 			this.setState({
 				transitions : transitions,
@@ -117,12 +122,6 @@ export default class App extends React.Component<IProps, IState> {
 
 		this.setState({seekLock: true});
 		setTimeout(() => this.setState({seekLock: false}), 150);
-
-		if(this.state.index + 2 < this.state.queue.length){
-			this.state.queue[this.state.index + 2].load();
-			this.state.transitions[this.state.index + 1].load();
-		}
-
 
 		if(this.state.index + 1 < this.state.queue.length && this.state.index + 1 < this.state.transitions.length){
 
@@ -143,8 +142,13 @@ export default class App extends React.Component<IProps, IState> {
 			console.error("Playlist empty!!");
 			this.togglePause();
 		}
+	}
 
-
+	setProgress(value: number){
+		if(this.state.index < this.state.queue.length && !this.state.seekLock){
+			this.state.queue[this.state.index].seek(value);
+			this.updateProgress();
+		}
 	}
 
 	togglePause(){
@@ -168,11 +172,7 @@ export default class App extends React.Component<IProps, IState> {
 					<h2>{this.props.songs[this.state.index]?.title}</h2>
 					<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					<div>
-						<button disabled={!this.state.ready} onClick={() => {
-							if(this.state.index < this.state.queue.length && !this.state.seekLock){
-								this.state.queue[this.state.index].seek(0);
-							}
-						}}><FaStepBackward /></button>
+						<button disabled={!this.state.ready} onClick={() => this.setProgress(0)}><FaStepBackward /></button>
 						<button disabled={!this.state.ready} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
@@ -186,12 +186,7 @@ export default class App extends React.Component<IProps, IState> {
 						}}
 						className="songProgressBar"
 						value={this.state.progress}
-						onChange={(value) => {
-							if(this.state.index < this.state.queue.length && !this.state.seekLock){
-								this.state.queue[this.state.index].seek(value);
-								this.updateProgress();
-							}
-						}}
+						onChange={this.setProgress}
 					/>
 				</div>
 			</IconContext.Provider>
