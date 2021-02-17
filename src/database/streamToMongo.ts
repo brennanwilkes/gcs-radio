@@ -3,7 +3,8 @@ import { mongoose } from "./connection";
 
 export default function (name:string, stdin: Readable): Promise<string> {
 	const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-		bucketName: "audio"
+		bucketName: "audio",
+		chunkSizeBytes: Math.pow(2, 20) * 8
 	});
 
 	const uploadStream = bucket.openUploadStream(name);

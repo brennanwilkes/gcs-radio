@@ -4,7 +4,8 @@ import { mongoose } from "./connection";
 export default function async (id:string, stdout: Writable): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-			bucketName: "audio"
+			bucketName: "audio",
+			chunkSizeBytes: Math.pow(2, 20) * 8
 		});
 
 		const bufs: Uint8Array[] = [];

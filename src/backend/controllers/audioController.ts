@@ -21,7 +21,7 @@ const getAudio = async (req: Request, res: Response): Promise<void> => {
 					print(`${err}`);
 					errorHandler(`${err}`);
 				} else {
-					print(`Creating buffer of size ${Math.floor(audioFile[0].length / (1024 * 1024) * 100) / 100} mB`);
+					print(`Streaming audio resource of size ${Math.floor(audioFile[0].length / (1024 * 1024) * 100) / 100} mB`);
 					res.setHeader("content-length", audioFile[0].length);
 
 					streamFromMongo(req.params.id, res).then(() => {

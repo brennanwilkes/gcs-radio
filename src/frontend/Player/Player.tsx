@@ -22,7 +22,8 @@ interface IState {
 	maxProgress: number,
 	index: number,
 	ready: boolean,
-	seekLock: boolean
+	seekLock: boolean,
+	lastTransition: number
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -32,6 +33,8 @@ export default class App extends React.Component<IProps, IState> {
 		this.togglePause = this.togglePause.bind(this);
 		this.transitionSong = this.transitionSong.bind(this);
 		this.updateProgress = this.updateProgress.bind(this);
+		this.setProgress = this.setProgress.bind(this);
+		this.rewind = this.rewind.bind(this);
 
 		this.state = {
 			queue: [],
@@ -41,7 +44,8 @@ export default class App extends React.Component<IProps, IState> {
 			maxProgress: 0,
 			index: 0,
 			ready: false,
-			seekLock: false
+			seekLock: false,
+			lastTransition: 0
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -69,21 +73,22 @@ export default class App extends React.Component<IProps, IState> {
 				})
 			);
 
-			//Preload first two
-			queue.slice(0,2).forEach(h => {
-				h.load()
+			queue.forEach((audio,i) => {
+				audio.on("end", () => this.transitionSong(1));
+				audio.on("load", () =>{
+					if(i === 0){
+						this.setState({
+							ready: true,
+							maxProgress: queue[0].duration()
+						})
+					}
+					if(i + 1 < queue.length){
+						console.log(`Loading song ${i + 1}/${queue.length - 1}`);
+						queue[i + 1].load();
+					}
+				})
 			});
-
-			queue.forEach(audio => {
-				audio.on("end", this.transitionSong);
-			});
-
-			if(queue.length >= 1){
-				queue[0].once("load", () => this.setState({
-					ready: true,
-					maxProgress: this.state.queue[0].duration()
-				}));
-			}
+			queue[0].load();
 
 			this.setState({
 				queue : queue,
@@ -98,14 +103,17 @@ export default class App extends React.Component<IProps, IState> {
 					preload: false
 			}));
 
-			//Preload first two
-			transitions.slice(0,2).forEach(h => {
-				h.load()
-			});
 
-			transitions.forEach(audio => {
-				audio.on("end", () => audio.stop());
+			transitions.forEach((trans, i) => {
+				trans.on("end", () => trans.stop());
+				trans.on("load", () =>{
+					if(i + 1 < transitions.length){
+						console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
+						transitions[i + 1].load();
+					}
+				})
 			});
+			transitions[0].load();
 
 			this.setState({
 				transitions : transitions,
@@ -113,38 +121,56 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
-	transitionSong(){
+	transitionSong(direction: number = 1){
 
 		this.setState({seekLock: true});
 		setTimeout(() => this.setState({seekLock: false}), 150);
 
-		if(this.state.index + 2 < this.state.queue.length){
-			this.state.queue[this.state.index + 2].load();
-			this.state.transitions[this.state.index + 1].load();
-		}
-
-
-		if(this.state.index + 1 < this.state.queue.length && this.state.index + 1 < this.state.transitions.length){
+		if(
+			this.state.index + direction < this.state.queue.length &&
+			this.state.index + direction < this.state.transitions.length &&
+			this.state.index + direction >= 0 &&
+			this.state.index + direction >= 0){
 
 			//Reset current audio
 			this.state.queue[this.state.index].stop();
+			this.state.transitions[this.state.lastTransition].stop();
 
 			//Play transition audio
 			if(!this.state.paused){
-				this.state.transitions[this.state.index].play();
-				this.state.queue[this.state.index + 1].play();
+				if(this.state.index + (direction - 1) >= 0){
+					this.state.transitions[this.state.index + (direction - 1)].play();
+					this.setState({
+						lastTransition : this.state.index + (direction - 1)
+					});
+				}
+				this.state.queue[this.state.index + direction].play();
 			}
 			this.setState({
-				index: this.state.index + 1,
-				maxProgress: this.state.queue[this.state.index + 1].duration()
+				index: this.state.index + direction,
+				maxProgress: this.state.queue[this.state.index + direction].duration()
 			});
 		}
 		else{
-			console.error("Playlist empty!!");
+			console.error("Can't transition to song!!");
 			this.togglePause();
 		}
+	}
 
+	rewind(){
+		if(this.state.progress > 3 || this.state.index === 0){
+			this.setProgress(0);
+		}
+		else{
+			this.transitionSong(-1);
+		}
+	}
 
+	setProgress(value: number){
+		if(this.state.index < this.state.queue.length && !this.state.seekLock){
+			this.state.queue[this.state.index].seek(value);
+			this.updateProgress();
+		}
 	}
 
 	togglePause(){
@@ -165,18 +191,16 @@ export default class App extends React.Component<IProps, IState> {
 			}}>
 				<div className="Player">
 					<img src={this.props.songs[this.state.index]?.thumbnailUrl} />
-					<h2>{this.props.songs[this.state.index]?.title}</h2>
-					<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					<div>
-						<button disabled={!this.state.ready} onClick={() => {
-							if(this.state.index < this.state.queue.length && !this.state.seekLock){
-								this.state.queue[this.state.index].seek(0);
-							}
-						}}><FaStepBackward /></button>
+						<h2>{this.props.songs[this.state.index]?.title}</h2>
+						<h4>{this.props.songs[this.state.index]?.artist}</h4>
+					</div>
+					<div>
+						<button disabled={!this.state.ready} onClick={this.rewind}><FaStepBackward /></button>
 						<button disabled={!this.state.ready} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
-						<button disabled={!this.state.ready} onClick={this.transitionSong}><FaStepForward /></button>
+						<button disabled={!this.state.ready} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 					</div>
 					<Slider
 						min={0}
@@ -186,12 +210,7 @@ export default class App extends React.Component<IProps, IState> {
 						}}
 						className="songProgressBar"
 						value={this.state.progress}
-						onChange={(value) => {
-							if(this.state.index < this.state.queue.length && !this.state.seekLock){
-								this.state.queue[this.state.index].seek(value);
-								this.updateProgress();
-							}
-						}}
+						onChange={this.setProgress}
 					/>
 				</div>
 			</IconContext.Provider>
