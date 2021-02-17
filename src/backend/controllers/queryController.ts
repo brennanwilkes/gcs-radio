@@ -36,7 +36,9 @@ const query = (req: Request, res: Response): void => {
 				}
 			});
 
-			res.send(filtered.map(song => new SongApiObj(song, [new DownloadLink(req, song)])));
+			res.send({
+				songs: filtered.map(song => new SongApiObj(song, [new DownloadLink(req, song)]))
+			});
 		}).catch(errorHandler);
 	}).catch(errorHandler);
 };

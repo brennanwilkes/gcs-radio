@@ -1,0 +1,17 @@
+.Builder{
+	padding: 2.5vmin;
+	height: 100%;
+	position: relative;
+}
+
+.Builder .searchResults{
+	position: absolute;
+}
+
+.Builder ul{
+	width: calc(100% - 5vmin);
+}
+
+.Builder > .floating-label{
+	margin-bottom: 1.5vh;
+}

@@ -47,7 +47,7 @@ class App extends React.Component {
 					const elem = document.getElementById("res");
 					if(elem) elem.innerHTML = "Loading...";
 					axios.get(`/api/v1/search?query=${encodeURIComponent(this.state.search)}`).then(res => {
-						if(elem) elem.innerHTML = `${JSON.stringify(res.data,null,2)}`;
+						if(elem) elem.innerHTML = `${JSON.stringify(res.data.songs,null,2)}`;
 					}).catch(err => console.error(err));
 				}
 				else if(this.state.download && this.state.download2){
