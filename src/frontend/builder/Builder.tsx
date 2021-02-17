@@ -1,10 +1,12 @@
 import * as React from "react";
 import axios from "axios";
 import {Song} from '../../types/song';
+import {PlaylistObj} from "../../types/playlist";
 
 import "./Builder.css";
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
+import HrWrapper from "../HrWrapper/HrWrapper";
 
 interface IProps {}
 interface IState {
@@ -16,11 +18,24 @@ export default class Builder extends React.Component<IProps, IState> {
 
 	constructor(props: IProps) {
 		super(props);
+		this.renderPlaylist = this.renderPlaylist.bind(this);
 
 		this.state = {
 			queriedSongs: [],
 			songs: []
 		}
+	}
+
+	renderPlaylist(){
+		const playlist = new PlaylistObj(this.state.songs);
+
+		playlist.render(song => {
+			console.log("Loaded song:");
+			console.dir(song);
+		}).then(complete => {
+			console.log("Complete!");
+			console.dir(complete);
+		});
 	}
 
 	render(){
@@ -41,7 +56,12 @@ export default class Builder extends React.Component<IProps, IState> {
 
 		return <>
 			<div className="Builder">
-				<FloatingLabel label="Search Songs" onChange={(event) => {
+				<HrWrapper style={{
+					borderBottomColor: "#CCC"
+				}} children={
+					<h2>Search</h2>
+				} />
+				<FloatingLabel label="Search Text" onChange={(event) => {
 					const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
 
 					if(query){
@@ -58,11 +78,20 @@ export default class Builder extends React.Component<IProps, IState> {
 					}
 
 				}} onChangeDelay={500}/>
-				<ul className="searchResults">{querySongsDisplay}</ul>
-				<h2>Songs</h2>
-				<ul>{songsDisplay}</ul>
-			</div>
 
+				<FloatingLabel label="Load Spotify URL" />
+				<FloatingLabel label="Load YouTube URL" />
+
+				<ul className="searchResults">{querySongsDisplay}</ul>
+				<HrWrapper style={{
+					borderBottomColor: "#CCC"
+				}} children={
+					<h2>Selected Songs</h2>
+				} />
+				<ul>{songsDisplay}</ul>
+
+				<button onClick={this.renderPlaylist} className="btn btn-success">Build Playlist</button>
+			</div>
 		</>
 	}
 }

@@ -9,8 +9,8 @@ export interface Playlist{
 
 export class PlaylistObj implements Playlist {
 	songs: Song[];
-	constructor () {
-		this.songs = [];
+	constructor (songs: Song[] = []) {
+		this.songs = songs;
 	}
 
 	add (song: Song): PlaylistObj {
@@ -30,7 +30,7 @@ export class PlaylistObj implements Playlist {
 			});
 
 			Promise.all(requests).then(responses => {
-				const converted: Song[] = responses.map(responses => responses.data.songs);
+				const converted: Song[] = responses.map(responses => responses.data.songs[0]);
 				this.songs = converted;
 
 				resolve(this);

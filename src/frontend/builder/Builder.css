@@ -12,6 +12,16 @@
 	width: calc(100% - 5vmin);
 }
 
-.Builder > .floating-label{
+.Builder > *{
 	margin-bottom: 1.5vh;
+}
+
+.HrWrapper > *{
+	margin: 0;
+}
+
+.Builder > :last-child{
+	width: calc(100% - 5vmin);
+	position: absolute;
+	bottom: 0;
 }

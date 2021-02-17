@@ -79,10 +79,14 @@ const postSong = (req: Request, res: Response): void => {
 				const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
 				SongModelFromSong(newSong).save().then((resp) => {
 					print(`Created song resource ${resp}`);
-					res.send(new SongApiObj(new SongObjFromQuery(resp), [
-						new PlayAudioLink(req, newSong),
-						new SelfLink(req, resp._id, "songs")
-					]));
+					res.send({
+						songs: [
+							new SongApiObj(new SongObjFromQuery(resp), [
+								new PlayAudioLink(req, newSong),
+								new SelfLink(req, resp._id, "songs")
+							])
+						]
+					});
 					res.end();
 				}).catch(errorHandler);
 			}).catch(errorHandler);
