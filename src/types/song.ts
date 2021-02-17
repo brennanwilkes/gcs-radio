@@ -1,4 +1,4 @@
-import { SongDoc } from "../../database/models/song";
+import { SongDoc } from "../database/models/song";
 import { YoutubeResult } from "./youtubeResult";
 import { SpotifyResult } from "./spotifyResult";
 import { Link } from "./link";

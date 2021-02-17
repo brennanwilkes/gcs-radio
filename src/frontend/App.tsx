@@ -1,9 +1,9 @@
 import * as React from "react";
 import axios, { AxiosResponse } from "axios";
-import {Song} from '../backend/types/song';
+import {Song} from '../types/song';
 import Player from "./Player/Player";
 import arrayShuffle from "array-shuffle";
-import { VoiceLineRender } from "../backend/types/voiceLine";
+import { VoiceLineRender } from "../types/voiceLine";
 //import $ from "jquery";
 
 interface IProps {}

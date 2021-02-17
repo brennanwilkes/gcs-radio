@@ -2,16 +2,16 @@ import { Request, Response } from "express";
 import internalErrorHandler from "../util/internalErrorHandler";
 import { mongoose } from "../../database/connection";
 import { print } from "../util/util";
-import { SongObjFromQuery } from "../types/song";
+import { SongObjFromQuery } from "../../types/song";
 import Song from "../../database/models/song";
-import { Voice, VoiceLineRenderApiObj, VoiceLineRenderObjFromQuery } from "../types/voiceLine";
+import { Voice, VoiceLineRenderApiObj, VoiceLineRenderObjFromQuery } from "../../types/voiceLine";
 import { renderVoiceLineFromTemplate } from "../voice/renderVoiceLineFromTemplate";
 import { recordVoiceLine } from "../voice/recordVoiceLine";
 import streamToMongo from "../../database/streamToMongo";
 import VoiceLineRenderModel, { VoiceLineRenderModelFromVoiceLineRender } from "../../database/models/voiceLineRender";
 import selectVoiceLine from "../voice/selectVoiceLine";
 import notFoundErrorHandler from "../util/notFoundErrorHandler";
-import { PlayAudioLink, SelfLink } from "../types/link";
+import { PlayAudioLink, SelfLink } from "../../types/link";
 
 const getVoiceLine = (req: Request, res: Response): void => {
 	const id = String(req.params.id);

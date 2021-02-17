@@ -1,4 +1,4 @@
-import { SpotifyResult, SpotifyResultFromApi } from "../types/spotifyResult";
+import { SpotifyResult, SpotifyResultFromApi } from "../../types/spotifyResult";
 import connection from "./connection";
 
 export default async (query: string): Promise<SpotifyResult[]> => {

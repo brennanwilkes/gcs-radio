@@ -1,5 +1,5 @@
-import { YoutubeResult } from "../types/youtubeResult";
-import { SpotifyResult } from "../types/spotifyResult";
+import { YoutubeResult } from "../../types/youtubeResult";
+import { SpotifyResult } from "../../types/spotifyResult";
 import levenshtein from "fast-levenshtein";
 
 const sani = (inp: string): string => {

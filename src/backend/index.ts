@@ -11,7 +11,7 @@ server.route("/", mainRouter);
 /*
 
 import { VoiceLineTemplateModelFromVoiceLineTemplate } from "../database/models/voiceLineTemplate";
-import { ConditionAppliesTo, VoiceConditionObj, VoiceLineTemplateObj, VoiceVariable, ConditionType } from "./types/voiceLine";
+import { ConditionAppliesTo, VoiceConditionObj, VoiceLineTemplateObj, VoiceVariable, ConditionType } from "../types/voiceLine";
 
 const testingVoiceLine = new VoiceLineTemplateObj(
 	[

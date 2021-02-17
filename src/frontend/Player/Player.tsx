@@ -1,9 +1,9 @@
 import * as React from "react";
-import {Song} from '../../backend/types/song';
+import {Song} from '../../types/song';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
-import { VoiceLineRender } from "../../backend/types/voiceLine";
+import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 
 import Slider from 'rc-slider';

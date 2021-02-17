@@ -3,7 +3,7 @@ import { TextToSpeechClient, protos } from "@google-cloud/text-to-speech";
 
 // Import other required libraries
 import "dotenv/config";
-import { VoiceLineRender } from "../types/voiceLine";
+import { VoiceLineRender } from "../../types/voiceLine";
 import DummyPipe from "../util/dummyPipe";
 import { Readable, Transform } from "stream";
 
