@@ -22,7 +22,8 @@ interface IState {
 	maxProgress: number,
 	index: number,
 	ready: boolean,
-	seekLock: boolean
+	seekLock: boolean,
+	lastTransition: number
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -33,6 +34,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.transitionSong = this.transitionSong.bind(this);
 		this.updateProgress = this.updateProgress.bind(this);
 		this.setProgress = this.setProgress.bind(this);
+		this.rewind = this.rewind.bind(this);
 
 		this.state = {
 			queue: [],
@@ -42,7 +44,8 @@ export default class App extends React.Component<IProps, IState> {
 			maxProgress: 0,
 			index: 0,
 			ready: false,
-			seekLock: false
+			seekLock: false,
+			lastTransition: 0
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -71,7 +74,7 @@ export default class App extends React.Component<IProps, IState> {
 			);
 
 			queue.forEach((audio,i) => {
-				audio.on("end", this.transitionSong);
+				audio.on("end", () => this.transitionSong(1));
 				audio.on("load", () =>{
 					if(i === 0){
 						this.setState({
@@ -118,29 +121,48 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
-	transitionSong(){
+	transitionSong(direction: number = 1){
 
 		this.setState({seekLock: true});
 		setTimeout(() => this.setState({seekLock: false}), 150);
 
-		if(this.state.index + 1 < this.state.queue.length && this.state.index + 1 < this.state.transitions.length){
+		if(
+			this.state.index + direction < this.state.queue.length &&
+			this.state.index + direction < this.state.transitions.length &&
+			this.state.index + direction >= 0 &&
+			this.state.index + direction >= 0){
 
 			//Reset current audio
 			this.state.queue[this.state.index].stop();
+			this.state.transitions[this.state.lastTransition].stop();
 
 			//Play transition audio
 			if(!this.state.paused){
-				this.state.transitions[this.state.index].play();
-				this.state.queue[this.state.index + 1].play();
+				if(this.state.index + (direction - 1) >= 0){
+					this.state.transitions[this.state.index + (direction - 1)].play();
+					this.setState({
+						lastTransition : this.state.index + (direction - 1)
+					});
+				}
+				this.state.queue[this.state.index + direction].play();
 			}
 			this.setState({
-				index: this.state.index + 1,
-				maxProgress: this.state.queue[this.state.index + 1].duration()
+				index: this.state.index + direction,
+				maxProgress: this.state.queue[this.state.index + direction].duration()
 			});
 		}
 		else{
-			console.error("Playlist empty!!");
+			console.error("Can't transition to song!!");
 			this.togglePause();
+		}
+	}
+
+	rewind(){
+		if(this.state.progress > 3 || this.state.index === 0){
+			this.setProgress(0);
+		}
+		else{
+			this.transitionSong(-1);
 		}
 	}
 
@@ -169,14 +191,16 @@ export default class App extends React.Component<IProps, IState> {
 			}}>
 				<div className="Player">
 					<img src={this.props.songs[this.state.index]?.thumbnailUrl} />
-					<h2>{this.props.songs[this.state.index]?.title}</h2>
-					<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					<div>
-						<button disabled={!this.state.ready} onClick={() => this.setProgress(0)}><FaStepBackward /></button>
+						<h2>{this.props.songs[this.state.index]?.title}</h2>
+						<h4>{this.props.songs[this.state.index]?.artist}</h4>
+					</div>
+					<div>
+						<button disabled={!this.state.ready} onClick={this.rewind}><FaStepBackward /></button>
 						<button disabled={!this.state.ready} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
-						<button disabled={!this.state.ready} onClick={this.transitionSong}><FaStepForward /></button>
+						<button disabled={!this.state.ready} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 					</div>
 					<Slider
 						min={0}

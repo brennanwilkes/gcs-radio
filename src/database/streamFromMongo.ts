@@ -13,7 +13,6 @@ export default function async (id:string, stdout: Writable): Promise<void> {
 			.on("error", err => {
 				reject(err);
 			}).on("data", data => {
-				console.log("Chunk");
 				bufs.push(data);
 			}).on("end", () => {
 				stdout.write(Buffer.concat(bufs), "binary");
