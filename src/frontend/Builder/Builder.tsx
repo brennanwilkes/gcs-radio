@@ -7,13 +7,15 @@ import "./Builder.css";
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
+import LoadingCog from "../LoadingCog/LoadingCog";
 
 interface IProps {
 	loadSongsCallback: ((songs: Song[]) => void)
 }
 interface IState {
 	queriedSongs: Song[],
-	songs: Song[]
+	songs: Song[],
+	rotateInterval?: number
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -67,23 +69,48 @@ export default class Builder extends React.Component<IProps, IState> {
 				}} children={
 					<h2>Search</h2>
 				} />
-				<FloatingLabel label="Search Text" onChange={(event) => {
-					const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
+				<div className="searchWrapper">
+					<FloatingLabel label="Search Text" onChange={(event) => {
 
-					if(query){
-						axios.get(`/api/v1/search?query=${query}`).then(res => {
-							this.setState({
-								queriedSongs:res.data.songs
-							});
-						}).catch(err => console.error(err));
-					}
-					else{
+
+
+						let rot = 0;
+						if (this.state.rotateInterval) {
+							window.clearInterval(this.state.rotateInterval);
+						}
+						const id = window.setInterval(() => {
+							$(".loadingCog").css({ transform: `rotate(${rot}deg)` });
+							rot += 1;
+						}, 10);
+
 						this.setState({
-							queriedSongs: []
-						});
-					}
+							rotateInterval: id
+						})
 
-				}} onChangeDelay={500}/>
+
+
+						const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
+
+						if(query){
+							axios.get(`/api/v1/search?query=${query}`).then(res => {
+								if (this.state.rotateInterval) {
+									window.clearInterval(this.state.rotateInterval);
+									this.setState({rotateInterval: undefined});
+								}
+								this.setState({
+									queriedSongs:res.data.songs
+								});
+							}).catch(err => console.error(err));
+						}
+						else{
+							this.setState({
+								queriedSongs: []
+							});
+						}
+
+					}} onChangeDelay={500}/>
+					<LoadingCog size={30} />
+				</div>
 
 				<FloatingLabel label="Load Spotify URL (Coming soon)" />
 				<FloatingLabel label="Load YouTube URL (Coming soon)" />
