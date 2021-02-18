@@ -8,7 +8,9 @@ import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
 
-interface IProps {}
+interface IProps {
+	loadSongsCallback: ((songs: Song[]) => void)
+}
 interface IState {
 	queriedSongs: Song[],
 	songs: Song[]
@@ -34,7 +36,15 @@ export default class Builder extends React.Component<IProps, IState> {
 			console.dir(song);
 		}).then(complete => {
 			console.log("Complete!");
-			console.dir(complete);
+			axios.post('/api/v1/playlists', {
+				songs: complete.songs.map(song => song.id)
+			}).then(resp => {
+				console.log("success");
+				console.dir(resp.data);
+				if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
+					this.props.loadSongsCallback(resp.data.playlists[0].songs);
+				}
+			}).catch(console.error);
 		});
 	}
 
