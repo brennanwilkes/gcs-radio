@@ -65,7 +65,6 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	initializeSongs(){
-		console.log("song update");
 		const queue: Howl[] = this.props.songs.map(
 			(song: Song) => new Howl({
 				src: `/api/audio/${song?.audioId}`,
@@ -98,7 +97,6 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	initializeTransitions(){
-		console.log("transitions update");
 		const transitions: Howl[] = this.props.transitions.map(
 			(voice: VoiceLineRender) => new Howl({
 				src: `/api/audio/${voice?.audioId}`,

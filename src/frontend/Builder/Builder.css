@@ -8,10 +8,6 @@
 	position: absolute;
 }
 
-.Builder ul{
-	width: calc(100% - 5vmin);
-}
-
 .Builder > *{
 	margin-bottom: 1.5vh;
 }
@@ -21,7 +17,12 @@
 }
 
 .Builder > :last-child{
-	width: calc(100% - 5vmin);
 	position: absolute;
+	width: 100%;
 	bottom: 0;
+}
+
+.Builder ul:last-of-type{
+	overflow-y: auto;
+	max-height: 40vh;
 }

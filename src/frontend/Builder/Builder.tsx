@@ -32,15 +32,11 @@ export default class Builder extends React.Component<IProps, IState> {
 		const playlist = new PlaylistObj(this.state.songs);
 
 		playlist.render(song => {
-			console.log("Loaded song:");
-			console.dir(song);
+			console.log(`Loaded "${song.title}"`);
 		}).then(complete => {
-			console.log("Complete!");
 			axios.post('/api/v1/playlists', {
 				songs: complete.songs.map(song => song.id)
 			}).then(resp => {
-				console.log("success");
-				console.dir(resp.data);
 				if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
 					this.props.loadSongsCallback(resp.data.playlists[0].songs);
 				}
@@ -89,8 +85,8 @@ export default class Builder extends React.Component<IProps, IState> {
 
 				}} onChangeDelay={500}/>
 
-				<FloatingLabel label="Load Spotify URL" />
-				<FloatingLabel label="Load YouTube URL" />
+				<FloatingLabel label="Load Spotify URL (Coming soon)" />
+				<FloatingLabel label="Load YouTube URL (Coming soon)" />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>
 				<HrWrapper style={{
@@ -100,7 +96,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				} />
 				<ul>{songsDisplay}</ul>
 
-				<button onClick={this.renderPlaylist} className="btn btn-success">Build Playlist</button>
+				<button onClick={this.renderPlaylist} className="btn btn-success">Build Playlist{this.state.songs.length > 0 ? ` (This may take up to ${this.state.songs.length * 7 + 5}s)` : ""}</button>
 			</div>
 		</>
 	}
