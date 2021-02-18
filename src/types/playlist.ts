@@ -1,16 +1,22 @@
 import { Song } from "./song";
 import axios from "axios";
+import { Link } from "./link";
 
 export interface Playlist{
 	songs: Song[],
+	id?: string,
 	add(song: Song): Playlist,
 	render(songResponseCallback?: (song: Song) => void): Promise<Playlist>,
 }
 
 export class PlaylistObj implements Playlist {
 	songs: Song[];
-	constructor (songs: Song[] = []) {
+	id?: string;
+	constructor (songs: Song[] = [], id?: string) {
 		this.songs = songs;
+		if (id) {
+			this.id = id;
+		}
 	}
 
 	add (song: Song): PlaylistObj {
@@ -36,5 +42,17 @@ export class PlaylistObj implements Playlist {
 				resolve(this);
 			}).catch(reject);
 		});
+	}
+}
+
+export interface PlaylistApi extends Playlist{
+	links: Link[]
+}
+
+export class PlaylistApiObj extends PlaylistObj implements PlaylistApi {
+	links: Link[]
+	constructor (playlistBase: Playlist, links: Link[]) {
+		super(playlistBase.songs, playlistBase.id);
+		this.links = links;
 	}
 }

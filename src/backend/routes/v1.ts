@@ -10,6 +10,9 @@ import postSongValidator from "../validators/postSongValidator";
 import postVoiceLineValidator from "../validators/postVoiceLineValidator";
 import getSongValidator from "../validators/getSongValidator";
 import { postVoiceLine, getVoiceLine } from "../controllers/voiceLineController";
+import { getPlaylist, getPlaylists, postPlaylist } from "../controllers/playlistController";
+import getPlaylistValidator from "../validators/getPlaylistValidator";
+import postPlaylistValidator from "../validators/postPlaylistValidator";
 
 const apiV1Router = Router();
 
@@ -19,6 +22,10 @@ apiV1Router.get("/", (_req, res) => res.send({
 apiV1Router.get("/songs", getSongs);
 apiV1Router.get("/songs/:id", getSongValidator, getSong);
 apiV1Router.post("/songs", postSongValidator, postSong);
+
+apiV1Router.get("/playlists", getPlaylists);
+apiV1Router.get("/playlists/:id", getPlaylistValidator, getPlaylist);
+apiV1Router.post("/playlists", postPlaylistValidator, postPlaylist);
 
 apiV1Router.post("/voiceLines", postVoiceLineValidator, postVoiceLine);
 apiV1Router.get("/voiceLines/:id", getVoiceLine);
