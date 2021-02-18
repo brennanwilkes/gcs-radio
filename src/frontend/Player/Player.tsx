@@ -1,9 +1,9 @@
 import * as React from "react";
-import {Song} from '../../backend/types/song';
+import {Song} from '../../types/song';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
-import { VoiceLineRender } from "../../backend/types/voiceLine";
+import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 
 import Slider from 'rc-slider';
@@ -35,6 +35,8 @@ export default class App extends React.Component<IProps, IState> {
 		this.updateProgress = this.updateProgress.bind(this);
 		this.setProgress = this.setProgress.bind(this);
 		this.rewind = this.rewind.bind(this);
+		this.initializeSongs = this.initializeSongs.bind(this);
+		this.initializeTransitions = this.initializeTransitions.bind(this);
 
 		this.state = {
 			queue: [],
@@ -62,63 +64,76 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
+	initializeSongs(){
+		const queue: Howl[] = this.props.songs.map(
+			(song: Song) => new Howl({
+				src: `/api/audio/${song?.audioId}`,
+				format: ["mp3"],
+				autoplay: false,
+				preload: false
+			})
+		);
+
+		queue.forEach((audio,i) => {
+			audio.on("end", () => this.transitionSong(1));
+			audio.on("load", () =>{
+				if(i === 0){
+					this.setState({
+						ready: true,
+						maxProgress: queue[0].duration()
+					})
+				}
+				if(i + 1 < queue.length){
+					console.log(`Loading song ${i + 1}/${queue.length - 1}`);
+					queue[i + 1].load();
+				}
+			})
+		});
+		queue[0].load();
+
+		this.setState({
+			queue : queue,
+		});
+	}
+
+	initializeTransitions(){
+		const transitions: Howl[] = this.props.transitions.map(
+			(voice: VoiceLineRender) => new Howl({
+				src: `/api/audio/${voice?.audioId}`,
+				format: ["mp3"],
+				autoplay: false,
+				preload: false
+		}));
+
+
+		transitions.forEach((trans, i) => {
+			trans.on("end", () => trans.stop());
+			trans.on("load", () =>{
+				if(i + 1 < transitions.length){
+					console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
+					transitions[i + 1].load();
+				}
+			})
+		});
+		transitions[0].load();
+
+		this.setState({
+			transitions : transitions,
+		});
+	}
+
 	componentDidUpdate(prevProps: IProps){
 		if(prevProps.songs !== this.props.songs){
-			const queue: Howl[] = this.props.songs.map(
-				(song: Song) => new Howl({
-					src: `/api/audio/${song?.audioId}`,
-					format: ["mp3"],
-					autoplay: false,
-					preload: false
-				})
-			);
-
-			queue.forEach((audio,i) => {
-				audio.on("end", () => this.transitionSong(1));
-				audio.on("load", () =>{
-					if(i === 0){
-						this.setState({
-							ready: true,
-							maxProgress: queue[0].duration()
-						})
-					}
-					if(i + 1 < queue.length){
-						console.log(`Loading song ${i + 1}/${queue.length - 1}`);
-						queue[i + 1].load();
-					}
-				})
-			});
-			queue[0].load();
-
-			this.setState({
-				queue : queue,
-			});
+			this.initializeSongs();
 		}
 		if(prevProps.transitions !== this.props.transitions){
-			const transitions: Howl[] = this.props.transitions.map(
-				(voice: VoiceLineRender) => new Howl({
-					src: `/api/audio/${voice?.audioId}`,
-					format: ["mp3"],
-					autoplay: false,
-					preload: false
-			}));
-
-
-			transitions.forEach((trans, i) => {
-				trans.on("end", () => trans.stop());
-				trans.on("load", () =>{
-					if(i + 1 < transitions.length){
-						console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
-						transitions[i + 1].load();
-					}
-				})
-			});
-			transitions[0].load();
-
-			this.setState({
-				transitions : transitions,
-			});
+			this.initializeTransitions();
 		}
+	}
+
+	componentDidMount(){
+		this.initializeSongs();
+		this.initializeTransitions();
 	}
 
 	transitionSong(direction: number = 1){

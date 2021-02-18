@@ -1,4 +1,4 @@
-import { SpotifyResult, SpotifyResultFromApi } from "../types/spotifyResult";
+import { SpotifyResult, SpotifyResultFromApi } from "../../types/spotifyResult";
 import connection from "./connection";
 
 export default async (query: string): Promise<SpotifyResult[]> => {
@@ -6,7 +6,7 @@ export default async (query: string): Promise<SpotifyResult[]> => {
 		connection.then(spotifyApi => {
 			spotifyApi.searchTracks(query).then(data => {
 				if (data.body?.tracks?.items) {
-					resolve(data.body.tracks.items.map(item => new SpotifyResultFromApi(item)));
+					resolve(data.body.tracks.items.filter(item => !!item).map(item => new SpotifyResultFromApi(item)));
 				} else {
 					reject(new Error("Spotify returned invalid data"));
 				}

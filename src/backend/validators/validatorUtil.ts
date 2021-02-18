@@ -1,6 +1,6 @@
 import { Result, ValidationChain, ValidationError, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
-import { ErrorObj, Error } from "../types/error";
+import { ErrorObj, Error } from "../../types/error";
 import { mongoose } from "../../database/connection";
 import { Model, Document } from "mongoose";
 import axios from "axios";

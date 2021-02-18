@@ -2,7 +2,7 @@
 
 // Import and setup
 import { mongoose } from "../connection";
-import { VoiceLineTemplate as VoiceLineTemplateType } from "../../backend/types/voiceLine";
+import { VoiceLineTemplate as VoiceLineTemplateType } from "../../types/voiceLine";
 const Schema = mongoose.Schema;
 
 const VoiceLineTemplateSchema = new Schema({

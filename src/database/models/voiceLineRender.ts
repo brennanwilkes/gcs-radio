@@ -2,7 +2,7 @@
 
 // Import and setup
 import { mongoose } from "../connection";
-import { VoiceLineRender as VoiceLineRenderType } from "../../backend/types/voiceLine";
+import { VoiceLineRender as VoiceLineRenderType } from "../../types/voiceLine";
 const Schema = mongoose.Schema;
 
 const VoiceLineRenderSchema = new Schema({

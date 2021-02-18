@@ -1,6 +1,6 @@
 import ytsr, { Item, Video } from "ytsr";
 import ytdl from "ytdl-core";
-import { YoutubeResult, YoutubeResultFromApi } from "../types/youtubeResult";
+import { YoutubeResult, YoutubeResultFromApi } from "../../types/youtubeResult";
 
 export function itemIsVideo (obj: Item): obj is Video {
 	return obj.type === "video";

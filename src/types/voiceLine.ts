@@ -1,6 +1,6 @@
-import { VoiceLineRenderDoc } from "../../database/models/voiceLineRender";
+import { VoiceLineRenderDoc } from "../database/models/voiceLineRender";
 import { protos } from "@google-cloud/text-to-speech";
-import { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
+import { VoiceLineTemplateDoc } from "../database/models/voiceLineTemplate";
 import { Link } from "./link";
 
 /* eslint-disable no-unused-vars */

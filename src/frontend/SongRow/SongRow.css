@@ -1,0 +1,41 @@
+.songRow{
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0.5vmin;
+
+	border-radius: 1vmin;
+	border: 2px solid #C0C0C000;
+
+	transition: transform 0.25s, border-color 0.25s, background-color 0.25s;
+	background-color: #EEEEEEE8;
+	width: 100%;
+}
+
+.songRowHoverable:hover{
+	transform: scale(1.05);
+	cursor: pointer;
+	z-index: 2;
+	overflow: visible;
+	background-color: #FFFFFFF0;
+	border-color: #CCCCCCFF;
+}
+
+.songRow > :nth-child(2){
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.songRow img{
+	height: 4rem;
+	width: auto;
+}
+
+.songRow h4{
+	color: grey;
+}
+
+.songRow h4, .songRow h3{
+	margin: 0;
+}

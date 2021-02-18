@@ -3,8 +3,8 @@ import { print } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
 import searchSpotify from "../spotify/searchSpotify";
 import { searchYoutubeSimple, searchYoutubeDetailed } from "../youtube/searchYoutube";
-import { Song, SongApiObj, SongFromSearch } from "../types/song";
-import { DownloadLink } from "../types/link";
+import { Song, SongApiObj, SongFromSearch } from "../../types/song";
+import { DownloadLink } from "../../types/link";
 import resultMatches from "../util/resultMatches";
 
 const query = (req: Request, res: Response): void => {
@@ -36,7 +36,9 @@ const query = (req: Request, res: Response): void => {
 				}
 			});
 
-			res.send(filtered.map(song => new SongApiObj(song, [new DownloadLink(req, song)])));
+			res.send({
+				songs: filtered.map(song => new SongApiObj(song, [new DownloadLink(req, song)]))
+			});
 		}).catch(errorHandler);
 	}).catch(errorHandler);
 };

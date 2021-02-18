@@ -1,6 +1,6 @@
-import { Song } from "../types/song";
+import { Song } from "../../types/song";
 import { validateVoiceLine } from "../voice/validateVoiceLine";
-import { VoiceLineTemplate, VoiceLineTemplateObjFromQuery } from "../types/voiceLine";
+import { VoiceLineTemplate, VoiceLineTemplateObjFromQuery } from "../../types/voiceLine";
 import VoiceLineTemplateModel, { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
 import { print } from "../util/util";
 

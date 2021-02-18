@@ -1,5 +1,5 @@
-import { Song } from "../types/song";
-import { VoiceLineTemplate, ConditionType, VoiceVariable } from "../types/voiceLine";
+import { Song } from "../../types/song";
+import { VoiceLineTemplate, ConditionType, VoiceVariable } from "../../types/voiceLine";
 import { print } from "../util/util";
 
 export function validateVoiceLine (template: VoiceLineTemplate, prev: Song, next: Song): boolean {

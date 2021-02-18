@@ -1,0 +1,22 @@
+.HrWrapper {
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+
+.HrWrapper::before,
+.HrWrapper::after {
+	content: '';
+	flex: 1;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: inherit;
+}
+
+.HrWrapper:not(:empty)::before {
+	margin-right: .25em;
+}
+
+.HrWrapper:not(:empty)::after {
+	margin-left: .25em;
+}

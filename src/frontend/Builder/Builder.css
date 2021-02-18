@@ -1,0 +1,39 @@
+.Builder{
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+.Builder .searchResults{
+	position: absolute;
+}
+
+.Builder > *{
+	margin-bottom: 1.5vh;
+}
+
+.HrWrapper > *{
+	margin: 0;
+}
+
+.Builder > :last-child{
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+}
+
+.Builder ul:last-of-type{
+	overflow-y: auto;
+	max-height: 40vh;
+}
+
+.Builder .loadingCog{
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 1.25%;
+}
+
+.Builder .searchWrapper{
+	position: relative;
+}

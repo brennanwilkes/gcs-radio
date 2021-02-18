@@ -2,7 +2,7 @@
 
 // Import and setup
 import { mongoose } from "../connection";
-import { Song } from "../../backend/types/song";
+import { Song } from "../../types/song";
 const Schema = mongoose.Schema;
 
 const SongSchema = new Schema({

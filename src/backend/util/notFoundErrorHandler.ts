@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { NotFoundError, Error } from "../types/error";
+import { NotFoundError, Error } from "../../types/error";
 import { print } from "./util";
 
 export default (req: Request, res: Response) => (resource: string, id: string): void => {

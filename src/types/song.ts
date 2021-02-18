@@ -1,4 +1,4 @@
-import { SongDoc } from "../../database/models/song";
+import { SongDoc } from "../database/models/song";
 import { YoutubeResult } from "./youtubeResult";
 import { SpotifyResult } from "./spotifyResult";
 import { Link } from "./link";
@@ -72,7 +72,7 @@ export class SongObj implements Song {
 	}
 }
 
-export class SongFromSearch extends SongObj {
+export class SongFromSearch extends SongObj implements Song {
 	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string, id?: string) {
 		super(
 			spotifyResult.title,
@@ -93,7 +93,7 @@ export class SongFromSearch extends SongObj {
 	}
 }
 
-export class SongObjFromQuery extends SongObj {
+export class SongObjFromQuery extends SongObj implements Song {
 	constructor (results: SongDoc) {
 		super(
 			results.title,
