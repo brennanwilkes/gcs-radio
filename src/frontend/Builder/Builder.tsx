@@ -14,8 +14,7 @@ interface IProps {
 }
 interface IState {
 	queriedSongs: Song[],
-	songs: Song[],
-	rotateInterval?: number
+	songs: Song[]
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -48,27 +47,9 @@ export default class Builder extends React.Component<IProps, IState> {
 
 	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
 		return new Promise<Song[]>((resolve, reject) => {
-			let rot = 0;
-			if (this.state.rotateInterval) {
-				window.clearInterval(this.state.rotateInterval);
-			}
-			const id = window.setInterval(() => {
-				$(".loadingCog").css({ transform: `rotate(${rot}deg)` });
-				rot += 1;
-			}, 10);
-
-			this.setState({
-				rotateInterval: id
-			})
-
 			const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
-
 			if(query){
 				axios.get(`/api/v1/search?${queryParam}=${query}`).then(res => {
-					if (this.state.rotateInterval) {
-						window.clearInterval(this.state.rotateInterval);
-						this.setState({rotateInterval: undefined});
-					}
 					resolve(res.data.songs);
 				}).catch(reject);
 			}
@@ -111,8 +92,10 @@ export default class Builder extends React.Component<IProps, IState> {
 								})
 							}).catch(console.error);
 						}}
-						onChangeDelay={500} />
-					<LoadingCog size={30} />
+						onChangeDelay={500}
+						loadingCog={true}
+						loadingCogSpinning={true}
+						loadingCogSize={30} />
 				</div>
 
 				<FloatingLabel
@@ -124,8 +107,15 @@ export default class Builder extends React.Component<IProps, IState> {
 							})
 						}).catch(console.error);
 					}}
-					onChangeDelay={250} />
-				<FloatingLabel label="Load YouTube URL (Coming soon)" />
+					onChangeDelay={250}
+					loadingCog={true}
+					loadingCogSpinning={true}
+					loadingCogSize={30} />
+				<FloatingLabel
+					label="Load YouTube URL (Coming soon)"
+					loadingCog={true}
+					loadingCogSpinning={true}
+					loadingCogSize={30} />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>
 				<HrWrapper style={{
