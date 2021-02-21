@@ -28,13 +28,6 @@
 	max-height: 40vh;
 }
 
-.Builder .loadingCog{
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 1.25%;
-}
-
 .Builder .searchWrapper{
 	position: relative;
 }

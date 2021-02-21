@@ -50,6 +50,8 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
 const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
 const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;
+const spotifyWebRegex = /^https?:\/\/open.spotify.com\/[a-zA-Z]+\/([0-9A-Za-z]{22})\?si=.*$/;
+const spotifyURIRegex = /^spotify:[a-zA-Z]+:([0-9A-Za-z]{22})$/;
 
 const youtubeIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
@@ -66,4 +68,4 @@ const spotifyIdValidator = (variable: ValidationChain): ValidationChain => varia
 	.matches(spotifyIdRegex)
 	.withMessage("spotify ID is not valid");
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator };
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex };

@@ -109,15 +109,14 @@ export default class Builder extends React.Component<IProps, IState> {
 						}}
 						onChangeDelay={500}
 						loadingCog={this.state.cogs[0]}
-						loadingCogSpinning={this.state.cogs[0]}
-						loadingCogSize={30} />
+						loadingCogSpinning={this.state.cogs[0]} />
 				</div>
 
 				<FloatingLabel
 					label="Load Spotify Playlist URL"
 					onChange={(event) => {
 						this.setCog(1,true);
-						this.handleSearch(event, "playlistId").then(songs => {
+						this.handleSearch(event, "spotifyId").then(songs => {
 							this.setCog(1,false);
 							this.setState({
 								songs: [...this.state.songs, ...songs]
@@ -129,13 +128,11 @@ export default class Builder extends React.Component<IProps, IState> {
 					}}
 					onChangeDelay={250}
 					loadingCog={this.state.cogs[1]}
-					loadingCogSpinning={this.state.cogs[1]}
-					loadingCogSize={30} />
+					loadingCogSpinning={this.state.cogs[1]} />
 				<FloatingLabel
 					label="Load YouTube URL (Coming soon)"
 					loadingCog={this.state.cogs[2]}
-					loadingCogSpinning={this.state.cogs[2]}
-					loadingCogSize={30} />
+					loadingCogSpinning={this.state.cogs[2]} />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>
 				<HrWrapper style={{

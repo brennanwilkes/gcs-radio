@@ -9,7 +9,7 @@ import resolveSpotifySongs from "../spotify/resolveSpotifySongs";
 const search = (req: Request, res: Response): void => {
 	if (req.query.query) {
 		query(req, res);
-	} else if (req.query.playlistId) {
+	} else if (req.query.spotifyId) {
 		loadPlaylist(req, res);
 	}
 };
@@ -28,12 +28,22 @@ const query = (req: Request, res: Response): void => {
 	}).catch(errorHandler);
 };
 
+/*
+	https://open.spotify.com/playlist/2oSL2GUCioG5YYivCntakb?si=a5LJnxfkSIi7mE5keuLATg
+	spotify:playlist:2oSL2GUCioG5YYivCntakb
+	2oSL2GUCioG5YYivCntakb
+
+	https://open.spotify.com/playlist/1s0IdWaELhzqWb3wrxfW7Q?si=aq8zZRXXR16sjPiyJQedVA
+	spotify:playlist:1s0IdWaELhzqWb3wrxfW7Q
+	1s0IdWaELhzqWb3wrxfW7Q
+*/
+
 const loadPlaylist = (req: Request, res: Response): void => {
 	const errorHandler = internalErrorHandler(req, res);
 
-	print(`Handling request for spotify playlist "${req.query.playlistId}"`);
+	print(`Handling request for spotify resource "${req.query.spotifyId}"`);
 
-	getSpotifyPlaylist(String(req.query.playlistId)).then(spotifyResults => {
+	getSpotifyPlaylist(String(req.query.spotifyId)).then(spotifyResults => {
 		resolveSpotifySongs(spotifyResults).then(songs => {
 			res.send({
 				songs: songs.map(song => new SongApiObj(song, [new DownloadLink(req, song)]))
