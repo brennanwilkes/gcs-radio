@@ -9,7 +9,7 @@
 	border: 2px solid #C0C0C000;
 
 	transition: transform 0.25s, border-color 0.25s, background-color 0.25s;
-	background-color: #EEEEEEE8;
+	background-color: #D0D0D0;
 	width: 100%;
 }
 
@@ -18,7 +18,7 @@
 	cursor: pointer;
 	z-index: 2;
 	overflow: visible;
-	background-color: #FFFFFFF0;
+	background-color: #DDD;
 	border-color: #CCCCCCFF;
 }
 
