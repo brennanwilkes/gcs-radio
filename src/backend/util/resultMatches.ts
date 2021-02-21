@@ -7,9 +7,15 @@ const sani = (inp: string): string => {
 		.toLowerCase()
 		.replace(/[Vv][Ee][Vv][Oo]/g, "")
 		.replace(/ - topic/g, "")
-		.replace(/[^a-zA-Z .0-9-]/g, "")
+		.replace(/[^a-zA-Z .0-9-()]/g, "")
 		.replace(/video ?/g, "")
-		.replace(/lyric ?/, "");
+		.replace(/lyric ?/, "")
+		.replace(/with ?/g, "")
+		.replace(/feature?i?n?g? ?/g, "")
+		.replace(/official ?/g, "")
+		.replace(/audio ?/g, "")
+		.replace(/performance ?/g, "")
+		.replace(/feat ?/g, "");
 };
 
 export default function matches (spotify: SpotifyResult, youtube: YoutubeResult): boolean {

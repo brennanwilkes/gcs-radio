@@ -7,7 +7,6 @@ import "./Builder.css";
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
-import LoadingCog from "../LoadingCog/LoadingCog";
 
 interface IProps {
 	loadSongsCallback: ((songs: Song[]) => void)
@@ -15,7 +14,9 @@ interface IProps {
 interface IState {
 	queriedSongs: Song[],
 	songs: Song[],
-	rotateInterval?: number
+	cogs: boolean[],
+	loadedProgress: number,
+	rendering: boolean
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -23,18 +24,26 @@ export default class Builder extends React.Component<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.renderPlaylist = this.renderPlaylist.bind(this);
+		this.setCog = this.setCog.bind(this);
 
 		this.state = {
 			queriedSongs: [],
-			songs: []
+			songs: [],
+			cogs: [false, false, false],
+			loadedProgress: 0,
+			rendering: false
 		}
 	}
 
 	renderPlaylist(){
-		const playlist = new PlaylistObj(this.state.songs);
-
-		playlist.render(song => {
+		this.setState({
+			rendering: true
+		});
+		new PlaylistObj(this.state.songs).render(song => {
 			console.log(`Loaded "${song.title}"`);
+			this.setState({
+				loadedProgress: this.state.loadedProgress + 1
+			})
 		}).then(complete => {
 			axios.post('/api/v1/playlists', {
 				songs: complete.songs.map(song => song.id)
@@ -48,33 +57,23 @@ export default class Builder extends React.Component<IProps, IState> {
 
 	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
 		return new Promise<Song[]>((resolve, reject) => {
-			let rot = 0;
-			if (this.state.rotateInterval) {
-				window.clearInterval(this.state.rotateInterval);
-			}
-			const id = window.setInterval(() => {
-				$(".loadingCog").css({ transform: `rotate(${rot}deg)` });
-				rot += 1;
-			}, 10);
-
-			this.setState({
-				rotateInterval: id
-			})
-
 			const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
-
 			if(query){
 				axios.get(`/api/v1/search?${queryParam}=${query}`).then(res => {
-					if (this.state.rotateInterval) {
-						window.clearInterval(this.state.rotateInterval);
-						this.setState({rotateInterval: undefined});
-					}
 					resolve(res.data.songs);
 				}).catch(reject);
 			}
 			else {
 				resolve([])
 			}
+		});
+	}
+
+	setCog(cog: number, setting: boolean){
+		let cogs = this.state.cogs;
+		cogs[cog] = setting;
+		this.setState({
+			cogs: cogs
 		});
 	}
 
@@ -105,27 +104,43 @@ export default class Builder extends React.Component<IProps, IState> {
 					<FloatingLabel
 						label="Search Text"
 						onChange={(event) => {
+							this.setCog(0,true);
 							this.handleSearch(event, "query").then(songs => {
+								this.setCog(0,false);
 								this.setState({
 									queriedSongs: songs
 								})
-							}).catch(console.error);
+							}).catch(err => {
+								this.setCog(0,false);
+								console.error(err);
+							});
 						}}
-						onChangeDelay={500} />
-					<LoadingCog size={30} />
+						onChangeDelay={500}
+						loadingCog={this.state.cogs[0]}
+						loadingCogSpinning={this.state.cogs[0]} />
 				</div>
 
 				<FloatingLabel
-					label="Load Spotify Playlist URL"
+					label="Load Spotify URL"
 					onChange={(event) => {
-						this.handleSearch(event, "playlistId").then(songs => {
+						this.setCog(1,true);
+						this.handleSearch(event, "spotifyId").then(songs => {
+							this.setCog(1,false);
 							this.setState({
 								songs: [...this.state.songs, ...songs]
 							})
-						}).catch(console.error);
+						}).catch(err => {
+							this.setCog(1,false);
+							console.error(err);
+						});
 					}}
-					onChangeDelay={250} />
-				<FloatingLabel label="Load YouTube URL (Coming soon)" />
+					onChangeDelay={250}
+					loadingCog={this.state.cogs[1]}
+					loadingCogSpinning={this.state.cogs[1]} />
+				<FloatingLabel
+					label="Load YouTube URL (Coming soon)"
+					loadingCog={this.state.cogs[2]}
+					loadingCogSpinning={this.state.cogs[2]} />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>
 				<HrWrapper style={{
@@ -135,7 +150,14 @@ export default class Builder extends React.Component<IProps, IState> {
 				} />
 				<ul>{songsDisplay}</ul>
 
-				<button onClick={this.renderPlaylist} className="btn btn-success">Build Playlist{this.state.songs.length > 0 ? ` (This may take up to ${this.state.songs.length * 7 + 5}s)` : ""}</button>
+				<button
+					disabled={this.state.rendering || this.state.cogs.reduce((prev, cur) => prev || cur)}
+					onClick={this.renderPlaylist}
+					className={`btn btn-${this.state.rendering ? "warning" : "success"}`}>{
+					this.state.rendering
+					? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
+					: "Build Playlist"
+				}</button>
 			</div>
 		</>
 	}

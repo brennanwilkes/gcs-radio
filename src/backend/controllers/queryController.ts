@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { print } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
-import searchSpotify, { getSpotifyPlaylist } from "../spotify/searchSpotify";
+import searchSpotify, { getSpotify } from "../spotify/searchSpotify";
 import { SongApiObj } from "../../types/song";
 import { DownloadLink } from "../../types/link";
 import resolveSpotifySongs from "../spotify/resolveSpotifySongs";
@@ -9,8 +9,8 @@ import resolveSpotifySongs from "../spotify/resolveSpotifySongs";
 const search = (req: Request, res: Response): void => {
 	if (req.query.query) {
 		query(req, res);
-	} else if (req.query.playlistId) {
-		loadPlaylist(req, res);
+	} else if (req.query.spotifyId) {
+		loadResource(req, res);
 	}
 };
 
@@ -28,12 +28,26 @@ const query = (req: Request, res: Response): void => {
 	}).catch(errorHandler);
 };
 
-const loadPlaylist = (req: Request, res: Response): void => {
+/*
+	https://open.spotify.com/playlist/2oSL2GUCioG5YYivCntakb?si=a5LJnxfkSIi7mE5keuLATg
+	spotify:playlist:2oSL2GUCioG5YYivCntakb
+	2oSL2GUCioG5YYivCntakb
+
+	https://open.spotify.com/playlist/1s0IdWaELhzqWb3wrxfW7Q?si=aq8zZRXXR16sjPiyJQedVA
+	spotify:playlist:1s0IdWaELhzqWb3wrxfW7Q
+	1s0IdWaELhzqWb3wrxfW7Q
+
+	https://open.spotify.com/track/1fDtoTPDyzkNOfFIRXxsC5?si=hoVKHnT_SyK94agIGZiauA
+	spotify:track:1fDtoTPDyzkNOfFIRXxsC5
+	1fDtoTPDyzkNOfFIRXxsC5
+*/
+
+const loadResource = (req: Request, res: Response): void => {
 	const errorHandler = internalErrorHandler(req, res);
 
-	print(`Handling request for spotify playlist "${req.query.playlistId}"`);
+	print(`Handling request for spotify resource "${req.query.spotifyId}"`);
 
-	getSpotifyPlaylist(String(req.query.playlistId)).then(spotifyResults => {
+	getSpotify(String(req.query.spotifyId)).then(spotifyResults => {
 		resolveSpotifySongs(spotifyResults).then(songs => {
 			res.send({
 				songs: songs.map(song => new SongApiObj(song, [new DownloadLink(req, song)]))
@@ -42,4 +56,4 @@ const loadPlaylist = (req: Request, res: Response): void => {
 	}).catch(errorHandler);
 };
 
-export { search, query, loadPlaylist };
+export { search, query, loadResource };
