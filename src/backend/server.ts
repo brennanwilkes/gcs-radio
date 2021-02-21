@@ -73,6 +73,9 @@ export default class RadioServer {
 				print("server is listening", (address && !(typeof address === "string")) ? `on port ${address.port}` : "");
 			}
 		});
+
+		// Up server timeout
+		this.server.setTimeout(0);
 	}
 
 	/**
