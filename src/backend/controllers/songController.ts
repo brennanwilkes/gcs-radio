@@ -10,7 +10,7 @@ import internalErrorHandler from "../util/internalErrorHandler";
 import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
-import { getSpotify } from "../spotify/searchSpotify";
+import { getSpotifyTrack } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfLink } from "../../types/link";
 
 const getSongs = (req: Request, res: Response): void => {
@@ -67,7 +67,7 @@ const postSong = (req: Request, res: Response): void => {
 	searchYoutubeDetailed(youtubeId).then(youtubeInfo => {
 		print(`Retrieved youtube information for "${youtubeInfo.title}"`);
 
-		getSpotify(spotifyId).then(spotifyInfo => {
+		getSpotifyTrack(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
 
 			// streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);

@@ -113,7 +113,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				</div>
 
 				<FloatingLabel
-					label="Load Spotify Playlist URL"
+					label="Load Spotify URL"
 					onChange={(event) => {
 						this.setCog(1,true);
 						this.handleSearch(event, "spotifyId").then(songs => {
