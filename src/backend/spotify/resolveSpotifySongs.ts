@@ -1,0 +1,36 @@
+import { Song, SongFromSearch } from "../../types/song";
+import { SpotifyResult } from "../../types/spotifyResult";
+import resultMatches from "../util/resultMatches";
+import { print } from "../util/util";
+import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
+
+export default function (spotifyResults: SpotifyResult[], searchAttempts = 6): Promise<Song[]> {
+	return new Promise<Song[]>((resolve, reject) => {
+		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, songNumber) => {
+			print(`Querying youtube for ${spotifySong.title} by ${spotifySong.artist}`);
+			const youtubeIds = await searchYoutubeSimple(`${spotifySong.title} by ${spotifySong.artist} on ${spotifySong.album} official audio song`, searchAttempts - songNumber);
+
+			for (let i = 0; i < youtubeIds.length; i++) {
+				print(`Querying youtube for ${youtubeIds[i]} metadata`);
+				const youtubeDetails = await searchYoutubeDetailed(youtubeIds[i]).catch(reject);
+
+				if (youtubeDetails && resultMatches(spotifySong, youtubeDetails)) {
+					print(`Success finding match on try ${i + 1} for ${spotifySong.title}`);
+					return new SongFromSearch(youtubeDetails, spotifySong);
+				}
+			}
+			print(`Failure finding match for ${spotifySong.title}`);
+		});
+
+		Promise.all(songResults).then(results => {
+			const filtered: Song[] = [];
+			results.forEach(res => {
+				if (res) {
+					filtered.push(res);
+				}
+			});
+
+			resolve(filtered);
+		}).catch(reject);
+	});
+}

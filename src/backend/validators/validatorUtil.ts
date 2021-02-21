@@ -66,4 +66,4 @@ const spotifyIdValidator = (variable: ValidationChain): ValidationChain => varia
 	.matches(spotifyIdRegex)
 	.withMessage("spotify ID is not valid");
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator };
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator };

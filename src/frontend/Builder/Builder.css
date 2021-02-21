@@ -6,6 +6,7 @@
 
 .Builder .searchResults{
 	position: absolute;
+	width: 100%;
 }
 
 .Builder > *{

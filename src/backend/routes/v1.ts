@@ -4,11 +4,12 @@
 import { Router } from "express";
 import { getSong, getSongs, postSong } from "../controllers/songController";
 import { getAudio } from "../controllers/audioController";
-import { query } from "../controllers/queryController";
+import { search } from "../controllers/queryController";
 import audioValidator from "../validators/audioValidator";
 import postSongValidator from "../validators/postSongValidator";
 import postVoiceLineValidator from "../validators/postVoiceLineValidator";
 import getSongValidator from "../validators/getSongValidator";
+import searchValidator from "../validators/searchValidator";
 import { postVoiceLine, getVoiceLine } from "../controllers/voiceLineController";
 import { getPlaylist, getPlaylists, postPlaylist } from "../controllers/playlistController";
 import getPlaylistValidator from "../validators/getPlaylistValidator";
@@ -31,6 +32,6 @@ apiV1Router.post("/voiceLines", postVoiceLineValidator, postVoiceLine);
 apiV1Router.get("/voiceLines/:id", getVoiceLine);
 
 apiV1Router.get("/audio/:id", audioValidator, getAudio);
-apiV1Router.get("/search", query);
+apiV1Router.get("/search", searchValidator, search);
 
 export default apiV1Router;
