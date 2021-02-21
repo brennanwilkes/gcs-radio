@@ -46,6 +46,38 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
+	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
+		return new Promise<Song[]>((resolve, reject) => {
+			let rot = 0;
+			if (this.state.rotateInterval) {
+				window.clearInterval(this.state.rotateInterval);
+			}
+			const id = window.setInterval(() => {
+				$(".loadingCog").css({ transform: `rotate(${rot}deg)` });
+				rot += 1;
+			}, 10);
+
+			this.setState({
+				rotateInterval: id
+			})
+
+			const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
+
+			if(query){
+				axios.get(`/api/v1/search?${queryParam}=${query}`).then(res => {
+					if (this.state.rotateInterval) {
+						window.clearInterval(this.state.rotateInterval);
+						this.setState({rotateInterval: undefined});
+					}
+					resolve(res.data.songs);
+				}).catch(reject);
+			}
+			else {
+				resolve([])
+			}
+		});
+	}
+
 	render(){
 
 		const querySongsDisplay = this.state.queriedSongs.map((song) => <SongRow
@@ -70,49 +102,29 @@ export default class Builder extends React.Component<IProps, IState> {
 					<h2>Search</h2>
 				} />
 				<div className="searchWrapper">
-					<FloatingLabel label="Search Text" onChange={(event) => {
-
-
-
-						let rot = 0;
-						if (this.state.rotateInterval) {
-							window.clearInterval(this.state.rotateInterval);
-						}
-						const id = window.setInterval(() => {
-							$(".loadingCog").css({ transform: `rotate(${rot}deg)` });
-							rot += 1;
-						}, 10);
-
-						this.setState({
-							rotateInterval: id
-						})
-
-
-
-						const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
-
-						if(query){
-							axios.get(`/api/v1/search?query=${query}`).then(res => {
-								if (this.state.rotateInterval) {
-									window.clearInterval(this.state.rotateInterval);
-									this.setState({rotateInterval: undefined});
-								}
+					<FloatingLabel
+						label="Search Text"
+						onChange={(event) => {
+							this.handleSearch(event, "query").then(songs => {
 								this.setState({
-									queriedSongs:res.data.songs
-								});
-							}).catch(err => console.error(err));
-						}
-						else{
-							this.setState({
-								queriedSongs: []
-							});
-						}
-
-					}} onChangeDelay={500}/>
+									queriedSongs: songs
+								})
+							}).catch(console.error);
+						}}
+						onChangeDelay={500} />
 					<LoadingCog size={30} />
 				</div>
 
-				<FloatingLabel label="Load Spotify URL (Coming soon)" />
+				<FloatingLabel
+					label="Load Spotify Playlist URL"
+					onChange={(event) => {
+						this.handleSearch(event, "playlistId").then(songs => {
+							this.setState({
+								songs: [...this.state.songs, ...songs]
+							})
+						}).catch(console.error);
+					}}
+					onChangeDelay={250} />
 				<FloatingLabel label="Load YouTube URL (Coming soon)" />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>

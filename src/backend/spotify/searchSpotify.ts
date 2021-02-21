@@ -28,3 +28,17 @@ export async function getSpotify (id: string): Promise<SpotifyResult> {
 		}).catch(err => reject(new Error(err)));
 	});
 }
+
+export async function getSpotifyPlaylist (id: string): Promise<SpotifyResult[]> {
+	return new Promise<SpotifyResult[]>((resolve, reject) => {
+		connection.then(spotifyApi => {
+			spotifyApi.getPlaylist(id).then(data => {
+				if (data.body?.tracks?.items) {
+					resolve(data.body.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
+				} else {
+					reject(new Error("Spotify returned invalid data"));
+				}
+			}).catch(err => reject(new Error(err)));
+		}).catch(err => reject(new Error(err)));
+	});
+}
