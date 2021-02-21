@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Song, { SongModelFromSong } from "../../database/models/song";
 import streamToMongo from "../../database/streamToMongo";
 import dummyPipe from "../util/dummyPipe";
-import streamVidToAudio from "../util/streamVidToAudio";
+// import streamVidToAudio from "../util/streamVidToAudio";
 import downloadURLToStream from "../youtube/downloadURLToStream";
 import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../../types/song";
 import { print } from "../util/util";
@@ -69,7 +69,9 @@ const postSong = (req: Request, res: Response): void => {
 
 		getSpotify(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
-			streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);
+
+			// streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);
+			downloadURLToStream(url).pipe(dummy);
 
 			print("Created audio conversion stream");
 
