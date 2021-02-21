@@ -14,7 +14,9 @@ interface IProps {
 interface IState {
 	queriedSongs: Song[],
 	songs: Song[],
-	cogs: boolean[]
+	cogs: boolean[],
+	loadedProgress: number,
+	rendering: boolean
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -27,15 +29,21 @@ export default class Builder extends React.Component<IProps, IState> {
 		this.state = {
 			queriedSongs: [],
 			songs: [],
-			cogs: [false, false, false]
+			cogs: [false, false, false],
+			loadedProgress: 0,
+			rendering: false
 		}
 	}
 
 	renderPlaylist(){
-		const playlist = new PlaylistObj(this.state.songs);
-
-		playlist.render(song => {
+		this.setState({
+			rendering: true
+		});
+		new PlaylistObj(this.state.songs).render(song => {
 			console.log(`Loaded "${song.title}"`);
+			this.setState({
+				loadedProgress: this.state.loadedProgress + 1
+			})
 		}).then(complete => {
 			axios.post('/api/v1/playlists', {
 				songs: complete.songs.map(song => song.id)
@@ -142,7 +150,14 @@ export default class Builder extends React.Component<IProps, IState> {
 				} />
 				<ul>{songsDisplay}</ul>
 
-				<button onClick={this.renderPlaylist} className="btn btn-success">Build Playlist{this.state.songs.length > 0 ? ` (This may take up to ${this.state.songs.length * 7 + 5}s)` : ""}</button>
+				<button
+					disabled={this.state.rendering || this.state.cogs.reduce((prev, cur) => prev || cur)}
+					onClick={this.renderPlaylist}
+					className={`btn btn-${this.state.rendering ? "warning" : "success"}`}>{
+					this.state.rendering
+					? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
+					: "Build Playlist"
+				}</button>
 			</div>
 		</>
 	}

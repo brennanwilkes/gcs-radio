@@ -18,9 +18,9 @@ export default async (query: string): Promise<SpotifyResult[]> => {
 export async function getSpotify (id: string): Promise<SpotifyResult[]> {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
 		getSpotifyTrack(id).then(track => resolve([track])).catch(() => {
-			getSpotifyTracksByAlbum(id).then(resolve).catch(() => {
-				getSpotifyTracksByArtist(id).then(resolve).catch(() => {
-					getSpotifyTracksByPlaylist(id).then(resolve).catch(reject);
+			getSpotifyTracksByPlaylist(id).then(resolve).catch(() => {
+				getSpotifyTracksByAlbum(id).then(resolve).catch(() => {
+					getSpotifyTracksByArtist(id).then(resolve).catch(reject);
 				});
 			});
 		});
