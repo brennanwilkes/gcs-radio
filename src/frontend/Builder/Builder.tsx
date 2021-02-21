@@ -7,14 +7,14 @@ import "./Builder.css";
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
-import LoadingCog from "../LoadingCog/LoadingCog";
 
 interface IProps {
 	loadSongsCallback: ((songs: Song[]) => void)
 }
 interface IState {
 	queriedSongs: Song[],
-	songs: Song[]
+	songs: Song[],
+	cogs: boolean[]
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -22,10 +22,12 @@ export default class Builder extends React.Component<IProps, IState> {
 	constructor(props: IProps) {
 		super(props);
 		this.renderPlaylist = this.renderPlaylist.bind(this);
+		this.setCog = this.setCog.bind(this);
 
 		this.state = {
 			queriedSongs: [],
-			songs: []
+			songs: [],
+			cogs: [false, false, false]
 		}
 	}
 
@@ -59,6 +61,14 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
+	setCog(cog: number, setting: boolean){
+		let cogs = this.state.cogs;
+		cogs[cog] = setting;
+		this.setState({
+			cogs: cogs
+		});
+	}
+
 	render(){
 
 		const querySongsDisplay = this.state.queriedSongs.map((song) => <SongRow
@@ -86,35 +96,45 @@ export default class Builder extends React.Component<IProps, IState> {
 					<FloatingLabel
 						label="Search Text"
 						onChange={(event) => {
+							this.setCog(0,true);
 							this.handleSearch(event, "query").then(songs => {
+								this.setCog(0,false);
 								this.setState({
 									queriedSongs: songs
 								})
-							}).catch(console.error);
+							}).catch(err => {
+								this.setCog(0,false);
+								console.error(err);
+							});
 						}}
 						onChangeDelay={500}
-						loadingCog={true}
-						loadingCogSpinning={true}
+						loadingCog={this.state.cogs[0]}
+						loadingCogSpinning={this.state.cogs[0]}
 						loadingCogSize={30} />
 				</div>
 
 				<FloatingLabel
 					label="Load Spotify Playlist URL"
 					onChange={(event) => {
+						this.setCog(1,true);
 						this.handleSearch(event, "playlistId").then(songs => {
+							this.setCog(1,false);
 							this.setState({
 								songs: [...this.state.songs, ...songs]
 							})
-						}).catch(console.error);
+						}).catch(err => {
+							this.setCog(1,false);
+							console.error(err);
+						});
 					}}
 					onChangeDelay={250}
-					loadingCog={true}
-					loadingCogSpinning={true}
+					loadingCog={this.state.cogs[1]}
+					loadingCogSpinning={this.state.cogs[1]}
 					loadingCogSize={30} />
 				<FloatingLabel
 					label="Load YouTube URL (Coming soon)"
-					loadingCog={true}
-					loadingCogSpinning={true}
+					loadingCog={this.state.cogs[2]}
+					loadingCogSpinning={this.state.cogs[2]}
 					loadingCogSize={30} />
 
 				<ul className="searchResults">{querySongsDisplay}</ul>
