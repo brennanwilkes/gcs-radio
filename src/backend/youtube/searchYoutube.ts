@@ -20,7 +20,7 @@ export function searchYoutubeDetailed (id: string): Promise<YoutubeResult> {
 	return new Promise((resolve, reject) => {
 		ytdl.getInfo(`https://www.youtube.com/watch?v=${id}`)
 			.then(res => {
-				resolve(new YoutubeResultFromApi(res.videoDetails));
+				resolve(new YoutubeResultFromApi(res));
 			})
 			.catch(reject);
 	});

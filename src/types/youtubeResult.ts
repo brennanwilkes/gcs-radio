@@ -1,3 +1,5 @@
+import ytdl from "ytdl-core";
+
 export interface YoutubeResult{
 	title: string,
 	artist: string,
@@ -6,7 +8,8 @@ export interface YoutubeResult{
 	album: string,
 	youtubeId: string,
 	tags: string[],
-	duration: number
+	duration: number,
+	formats: ytdl.videoFormat[]
 }
 
 export class YoutubeResultFromApi implements YoutubeResult {
@@ -18,14 +21,16 @@ export class YoutubeResultFromApi implements YoutubeResult {
 	youtubeId: string;
 	tags: string[];
 	duration: number;
-	constructor (results: any) {
-		this.title = results.media.song ?? "Unknown";
-		this.artist = results.media.artist ?? "Unknown";
-		this.youtubeArtist = results.author.name ?? "Unknown";
-		this.youtubeTitle = results.title ?? "Unknown";
-		this.album = results.media.album ?? "Unknown";
-		this.youtubeId = results.videoId ?? "Unknown";
-		this.tags = results.keywords ?? [];
-		this.duration = parseInt(results.lengthSeconds ?? "0") * 1000;
+	formats: ytdl.videoFormat[];
+	constructor (results: ytdl.videoInfo) {
+		this.title = results.videoDetails.media.song ?? "Unknown";
+		this.artist = results.videoDetails.media.artist ?? "Unknown";
+		this.youtubeArtist = results.videoDetails.author.name ?? "Unknown";
+		this.youtubeTitle = results.videoDetails.title ?? "Unknown";
+		this.album = (results.videoDetails.media as any).album ?? "Unknown";
+		this.youtubeId = results.videoDetails.videoId ?? "Unknown";
+		this.tags = results.videoDetails.keywords ?? [];
+		this.duration = parseInt(results.videoDetails.lengthSeconds ?? "0") * 1000;
+		this.formats = results.formats ?? [];
 	}
 }
