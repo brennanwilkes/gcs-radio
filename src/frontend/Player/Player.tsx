@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Song} from '../../types/song';
+import SongHowl from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
@@ -65,14 +66,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	initializeSongs(){
-		const queue: Howl[] = this.props.songs.map(
-			(song: Song) => new Howl({
-				src: `/api/audio/${song?.audioId}`,
-				format: ["mp3"],
-				autoplay: false,
-				preload: false
-			})
-		);
+		const queue: Howl[] = this.props.songs.map((song: Song) => new SongHowl(song));
 
 		queue.forEach((audio,i) => {
 			audio.on("end", () => this.transitionSong(1));
@@ -97,14 +91,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	initializeTransitions(){
-		const transitions: Howl[] = this.props.transitions.map(
-			(voice: VoiceLineRender) => new Howl({
-				src: `/api/audio/${voice?.audioId}`,
-				format: ["mp3"],
-				autoplay: false,
-				preload: false
-		}));
-
+		const transitions: Howl[] = this.props.transitions.map((voice: VoiceLineRender) => new SongHowl(voice));
 
 		transitions.forEach((trans, i) => {
 			trans.on("end", () => trans.stop());
