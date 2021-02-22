@@ -62,7 +62,6 @@
 		"react-select": "^4.1.0",
 		"spotify-web-api-node": "^5.0.2",
 		"style-loader": "^2.0.0",
-		"youtube-dl": "^3.4.1",
 		"ytdl-core": "^4.5.0",
 		"ytsr": "^3.3.1"
 	},

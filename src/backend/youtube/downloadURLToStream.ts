@@ -1,9 +1,9 @@
-import youtubedl from "youtube-dl";
+import ytdl from "ytdl-core";
 import dummyPipe from "../util/dummyPipe";
 import { Transform } from "stream";
 
 export default function (url: string): Transform {
 	const dummy = dummyPipe();
-	youtubedl(url, ["--extract-audio", "--format=bestaudio"], { cwd: __dirname }).pipe(dummy);
+	ytdl(url, { quality: "highestaudio" }).pipe(dummy);
 	return dummy;
 }
