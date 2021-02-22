@@ -4,7 +4,7 @@ import internalErrorHandler from "../util/internalErrorHandler";
 import searchSpotify, { getSpotify } from "../spotify/searchSpotify";
 import { SongApiObj } from "../../types/song";
 import { DownloadLink } from "../../types/link";
-import resolveSpotifySongs from "../spotify/resolveSpotifySongs";
+import resolveSpotifySongs from "../util/resolveSongs";
 
 const search = (req: Request, res: Response): void => {
 	if (req.query.query) {

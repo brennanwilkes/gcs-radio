@@ -6,6 +6,7 @@ export interface YoutubeResult{
 	album: string,
 	youtubeId: string,
 	tags: string[],
+	duration: number
 }
 
 export class YoutubeResultFromApi implements YoutubeResult {
@@ -16,6 +17,7 @@ export class YoutubeResultFromApi implements YoutubeResult {
 	album: string;
 	youtubeId: string;
 	tags: string[];
+	duration: number;
 	constructor (results: any) {
 		this.title = results.media.song ?? "Unknown";
 		this.artist = results.media.artist ?? "Unknown";
@@ -24,5 +26,6 @@ export class YoutubeResultFromApi implements YoutubeResult {
 		this.album = results.media.album ?? "Unknown";
 		this.youtubeId = results.videoId ?? "Unknown";
 		this.tags = results.keywords ?? [];
+		this.duration = parseInt(results.lengthSeconds ?? "0") * 1000;
 	}
 }
