@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import Song, { SongModelFromSong } from "../../database/models/song";
 import streamToMongo from "../../database/streamToMongo";
-import dummyPipe from "../util/dummyPipe";
-// import streamVidToAudio from "../util/streamVidToAudio";
 import downloadURLToStream from "../youtube/downloadURLToStream";
 import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../../types/song";
 import { print } from "../util/util";
@@ -62,34 +60,31 @@ const postSong = (req: Request, res: Response): void => {
 
 	print(`Handling request for audio cache ${youtubeId} - ${spotifyId}`);
 
-	const dummy = dummyPipe();
-
 	searchYoutubeDetailed(youtubeId).then(youtubeInfo => {
 		print(`Retrieved youtube information for "${youtubeInfo.title}"`);
 
 		getSpotifyTrack(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
 
-			// streamVidToAudio(downloadURLToStream(url), dummy).catch(errorHandler);
-			downloadURLToStream(url).pipe(dummy);
+			downloadURLToStream(url, youtubeInfo.formats).then(dummy => {
+				print("Created audio conversion stream");
 
-			print("Created audio conversion stream");
+				streamToMongo(`${spotifyInfo.title} - ${spotifyInfo.artist} - ${spotifyInfo.album}`, dummy).then(audioId => {
+					print(`Created audio resource ${audioId}`);
 
-			streamToMongo(`${spotifyInfo.title} - ${spotifyInfo.artist} - ${spotifyInfo.album}`, dummy).then(audioId => {
-				print(`Created audio resource ${audioId}`);
-
-				const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
-				SongModelFromSong(newSong).save().then((resp) => {
-					print(`Created song resource ${resp}`);
-					res.send({
-						songs: [
-							new SongApiObj(new SongObjFromQuery(resp), [
-								new PlayAudioLink(req, newSong),
-								new SelfLink(req, resp._id, "songs")
-							])
-						]
-					});
-					res.end();
+					const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
+					SongModelFromSong(newSong).save().then((resp) => {
+						print(`Created song resource ${resp}`);
+						res.send({
+							songs: [
+								new SongApiObj(new SongObjFromQuery(resp), [
+									new PlayAudioLink(req, newSong),
+									new SelfLink(req, resp._id, "songs")
+								])
+							]
+						});
+						res.end();
+					}).catch(errorHandler);
 				}).catch(errorHandler);
 			}).catch(errorHandler);
 		}).catch(errorHandler);
