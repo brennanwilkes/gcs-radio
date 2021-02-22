@@ -4,11 +4,11 @@ import resultMatches from "./resultMatches";
 import { print } from "./util";
 import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
 
-export default function (spotifyResults: SpotifyResult[], searchAttempts = 8): Promise<Song[]> {
+export default function (spotifyResults: SpotifyResult[], _searchAttempts = 8): Promise<Song[]> {
 	return new Promise<Song[]>((resolve, reject) => {
-		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, songNumber) => {
+		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, _songNumber) => {
 			print(`Querying youtube for ${spotifySong.title} by ${spotifySong.artist}`);
-			const youtubeIds = await searchYoutubeSimple(`song ${spotifySong.title} by ${spotifySong.artist} official`, Math.max(1, searchAttempts - 2 * songNumber));
+			const youtubeIds = await searchYoutubeSimple(`song ${spotifySong.title} by ${spotifySong.artist} official`, 15);
 
 			for (let i = 0; i < youtubeIds.length; i++) {
 				print(`Querying youtube for ${youtubeIds[i]} metadata`);
