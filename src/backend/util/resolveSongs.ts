@@ -1,14 +1,14 @@
 import { Song, SongFromSearch } from "../../types/song";
 import { SpotifyResult } from "../../types/spotifyResult";
-import resultMatches from "../util/resultMatches";
-import { print } from "../util/util";
+import resultMatches from "./resultMatches";
+import { print } from "./util";
 import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
 
 export default function (spotifyResults: SpotifyResult[], searchAttempts = 6): Promise<Song[]> {
 	return new Promise<Song[]>((resolve, reject) => {
 		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, songNumber) => {
 			print(`Querying youtube for ${spotifySong.title} by ${spotifySong.artist}`);
-			const youtubeIds = await searchYoutubeSimple(`${spotifySong.title} by ${spotifySong.artist} on ${spotifySong.album} official audio song`, searchAttempts - songNumber);
+			const youtubeIds = await searchYoutubeSimple(`song ${spotifySong.title} by ${spotifySong.artist} official`, searchAttempts - songNumber);
 
 			for (let i = 0; i < youtubeIds.length; i++) {
 				print(`Querying youtube for ${youtubeIds[i]} metadata`);
