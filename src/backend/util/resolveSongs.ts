@@ -15,7 +15,7 @@ export default function (spotifyResults: SpotifyResult[], searchAttempts = 8): P
 				const youtubeDetails = await searchYoutubeDetailed(youtubeIds[i]).catch(reject);
 
 				if (youtubeDetails && youtubeDetails.formats.length < 1) {
-					print(`No youtube formats found for ${youtubeDetails.title}`);
+					print(`No youtube formats found for ${youtubeDetails.youtubeTitle} (${spotifySong.title})`);
 				}
 
 				if (youtubeDetails && youtubeDetails.formats.length > 0 && resultMatches(spotifySong, youtubeDetails)) {
