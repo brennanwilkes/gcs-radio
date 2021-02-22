@@ -9,26 +9,28 @@ import streamVidToAudio from "../util/streamVidToAudio";
 
 export default function (url: string, formats: ytdl.videoFormat[]): Promise<Transform> {
 	return new Promise<Transform>((resolve, reject) => {
-		const dummy = dummyPipe();
-		const audioFormats = ytdl.filterFormats(formats, "audioonly");
+		ytdl.getInfo(url).then(res => {
+			const dummy = dummyPipe();
+			const audioFormats = ytdl.filterFormats(res.formats, "audioonly");
 
-		const download = ytdl(url, {
-			quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
-		}).on("error", err => {
 			console.dir(audioFormats);
-			console.dir(formats);
+			console.dir(res.formats);
 
-			console.error(`Failed to download ${url}`);
-			console.error(err);
-			reject(err);
+			const download = ytdl(url, {
+				quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
+			}).on("error", err => {
+				console.error(`Failed to download ${url}`);
+				console.error(err);
+				reject(err);
+			});
+			if (audioFormats.length > 0) {
+				download.pipe(dummy);
+				resolve(dummy);
+			} else {
+				streamVidToAudio(download, dummy).catch(reject);
+				resolve(dummy);
+			}
 		});
-		if (audioFormats.length > 0) {
-			download.pipe(dummy);
-			resolve(dummy);
-		} else {
-			streamVidToAudio(download, dummy).catch(reject);
-			resolve(dummy);
-		}
 	});
 }
 // 64.235.204.107	3128
