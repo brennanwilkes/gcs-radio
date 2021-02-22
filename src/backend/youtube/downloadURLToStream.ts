@@ -15,8 +15,12 @@ export default function (url: string, formats: ytdl.videoFormat[]): Promise<Tran
 		const download = ytdl(url, {
 			quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
 		}).on("error", err => {
+			console.dir(audioFormats);
+			console.dir(formats);
+
 			console.error(`Failed to download ${url}`);
 			console.error(err);
+			reject(err);
 		});
 		if (audioFormats.length > 0) {
 			download.pipe(dummy);
