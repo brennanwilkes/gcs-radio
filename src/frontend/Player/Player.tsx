@@ -4,7 +4,7 @@ import SongHowl from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
-import { VoiceLineRender } from "../../types/voiceLine";
+import { VoiceLineRender, VoiceLineType } from "../../types/voiceLine";
 import {Howl} from "howler";
 
 import Slider from 'rc-slider';
@@ -146,7 +146,14 @@ export default class App extends React.Component<IProps, IState> {
 						lastTransition : this.state.index + (direction - 1)
 					});
 				}
-				this.state.queue[this.state.index + direction].play();
+				if(this.props.transitions[this.state.index + (direction - 1)].type === VoiceLineType.parallel){
+					this.state.queue[this.state.index + direction].play();
+				}
+				else{
+					this.state.transitions[this.state.index + (direction - 1)].on("end",
+						() => this.state.queue[this.state.index + direction].play()
+					);
+				}
 			}
 			this.setState({
 				index: this.state.index + direction,
