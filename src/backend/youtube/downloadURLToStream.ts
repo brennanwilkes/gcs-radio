@@ -9,12 +9,11 @@ import streamVidToAudio from "../util/streamVidToAudio";
 
 export default function (url: string, formats: ytdl.videoFormat[]): Promise<Transform> {
 	return new Promise<Transform>((resolve, reject) => {
-		ytdl.getInfo(url).then(res => {
+		if (formats.length < 1) {
+			reject(new Error("No videoFormats available!"));
+		} else {
 			const dummy = dummyPipe();
-			const audioFormats = ytdl.filterFormats(res.formats, "audioonly");
-
-			console.dir(audioFormats);
-			console.dir(res.formats);
+			const audioFormats = ytdl.filterFormats(formats, "audioonly");
 
 			const download = ytdl(url, {
 				quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
@@ -30,7 +29,7 @@ export default function (url: string, formats: ytdl.videoFormat[]): Promise<Tran
 				streamVidToAudio(download, dummy).catch(reject);
 				resolve(dummy);
 			}
-		});
+		}
 	});
 }
 // 64.235.204.107	3128
