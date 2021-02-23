@@ -152,8 +152,9 @@ export default class App extends React.Component<IProps, IState> {
 					this.state.queue[this.state.index + direction].play();
 				}
 				else{
+					const indexCache = this.state.index + direction;
 					this.state.transitions[this.state.index + (direction - 1)].on("end",
-						() => this.state.queue[this.state.index + direction].play()
+						() => this.state.queue[indexCache].play()
 					);
 				}
 			}
