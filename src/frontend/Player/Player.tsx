@@ -4,7 +4,7 @@ import SongHowl from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
-import { VoiceLineRender, VoiceLineType } from "../../types/voiceLine";
+import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 
 import Slider from 'rc-slider';
