@@ -36,7 +36,14 @@ export default class App extends React.Component<IProps, IState> {
 
 		const songs: Song[] = arrayShuffle(songsFromBuilder);
 
-		const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => axios.post(`/api/voiceLines?prevId=${song.id}&nextId=${i+1 < songs.length ? songs[i+1].id : song.id}`));
+		const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
+			if(i === 0){
+				return axios.post(`/api/voiceLines?firstId=${song.id}`);
+			}
+			else{
+				return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}`);
+			}
+		});
 
 		Promise.all(transitions).then(resps => {
 			const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);

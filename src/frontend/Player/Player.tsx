@@ -24,7 +24,8 @@ interface IState {
 	index: number,
 	ready: boolean,
 	seekLock: boolean,
-	lastTransition: number
+	lastTransition: number,
+	playedIntro: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -48,7 +49,8 @@ export default class App extends React.Component<IProps, IState> {
 			index: 0,
 			ready: false,
 			seekLock: false,
-			lastTransition: 0
+			lastTransition: 0,
+			playedIntro: false
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -131,7 +133,6 @@ export default class App extends React.Component<IProps, IState> {
 		if(
 			this.state.index + direction < this.state.queue.length &&
 			this.state.index + direction < this.state.transitions.length &&
-			this.state.index + direction >= 0 &&
 			this.state.index + direction >= 0){
 
 			//Reset current audio
@@ -140,20 +141,20 @@ export default class App extends React.Component<IProps, IState> {
 
 			//Play transition audio
 			if(!this.state.paused){
-				if(this.state.index + (direction - 1) >= 0){
-					this.state.transitions[this.state.index + (direction - 1)].play();
+				if(this.state.index + direction >= 0){
+					this.state.transitions[this.state.index + direction].play();
 					this.setState({
-						lastTransition : this.state.index + (direction - 1)
+						lastTransition : this.state.index + direction
 					});
 				}
 
 				//Using the enum completely breaks webpack 5
-				if(this.props.transitions[this.state.index + (direction - 1)].type === "PARALLEL"){//VoiceLineType.parallel){
+				if(this.props.transitions[this.state.index + direction].type === "PARALLEL"){//VoiceLineType.parallel){
 					this.state.queue[this.state.index + direction].play();
 				}
 				else{
 					const indexCache = this.state.index + direction;
-					this.state.transitions[this.state.index + (direction - 1)].on("end",
+					this.state.transitions[this.state.index + direction].on("end",
 						() => this.state.queue[indexCache].play()
 					);
 				}
@@ -187,10 +188,21 @@ export default class App extends React.Component<IProps, IState> {
 
 	togglePause(){
 		if(this.state.queue[this.state.index]){
-			if(this.state.index - 1 >= 0 && this.state.transitions[this.state.index - 1].playing()){
-				this.state.transitions[this.state.index - 1][this.state.paused ? "play" : "pause"]();
+			if(!this.state.playedIntro){
+				this.state.transitions[0].play();
+				this.state.transitions[0].on("end", () => {
+					this.state.queue[0].play();
+				});
+				this.setState({
+					playedIntro: true
+				});
 			}
-			this.state.queue[this.state.index][this.state.paused ? "play" : "pause"]();
+			else{
+				if(this.state.transitions[this.state.index].playing()){
+					this.state.transitions[this.state.index][this.state.paused ? "play" : "pause"]();
+				}
+				this.state.queue[this.state.index][this.state.paused ? "play" : "pause"]();
+			}
 		}
 		this.setState({paused: !this.state.paused});
 	}
