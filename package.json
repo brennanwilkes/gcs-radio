@@ -1,6 +1,6 @@
 {
 	"name": "gcs-radio",
-	"version": "1.9.9",
+	"version": "1.9.10",
 	"description": "",
 	"main": "src/backend/index.ts",
 	"scripts": {
@@ -19,7 +19,7 @@
 		"prebuild": "npm run lint",
 		"test": "jest --colors --verbose",
 		"lint": "eslint \"src/**/*.[jt]s\" --fix",
-		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src\/dev\/clearCache.js"
+		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js"
 	},
 	"repository": {
 		"type": "git",
