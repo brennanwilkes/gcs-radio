@@ -5,7 +5,7 @@ import { print } from "./util";
 import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
 
 export default function (spotifyResults: SpotifyResult[], searchAttempts = 24): Promise<Song[]> {
-	let limiter = Math.floor(searchAttempts / 6);
+	let limiter = Math.floor(searchAttempts / 2);
 
 	return new Promise<Song[]>((resolve, reject) => {
 		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, _songNumber) => {
