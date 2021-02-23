@@ -16,7 +16,9 @@ export enum ConditionAppliesTo{
 }
 
 export enum VoiceLineType{
-	normal = "NORMAL"
+	normal = "NORMAL",
+	parallel = "PARALLEL",
+	intro = "INTRO"
 }
 
 export enum Voice{
@@ -93,6 +95,20 @@ export class VoiceLineTemplateObj extends VoiceLineObj implements VoiceLineTempl
 	constructor (conditions: VoiceCondition[], text: string, type: VoiceLineType = VoiceLineType.normal) {
 		super(text, type);
 		this.conditions = conditions;
+	}
+}
+
+export class VoiceLineTemplateAutofill extends VoiceLineTemplateObj {
+	constructor (conditions: VoiceCondition[], text: string, type: VoiceLineType = VoiceLineType.normal) {
+		const auto: VoiceCondition[] = conditions;
+
+		["PREV", "NEXT"].forEach((prefix: string, i: number) => {
+			if (text.includes(`$${prefix}_TITLE`)) auto.push(new VoiceConditionObj(i, VoiceVariable.title, ConditionType.EXISTS));
+			if (text.includes(`$${prefix}_ARTIST`)) auto.push(new VoiceConditionObj(i, VoiceVariable.artist, ConditionType.EXISTS));
+			if (text.includes(`$${prefix}_ALBUM`)) auto.push(new VoiceConditionObj(i, VoiceVariable.albumn, ConditionType.EXISTS));
+			if (text.includes(`$${prefix}_RELEASE_DATE`)) auto.push(new VoiceConditionObj(i, VoiceVariable.releaseDate, ConditionType.EXISTS));
+		});
+		super(auto, text, type);
 	}
 }
 
