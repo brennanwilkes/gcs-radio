@@ -2,6 +2,7 @@ import ytdl from "ytdl-core";
 import dummyPipe from "../util/dummyPipe";
 import { Transform } from "stream";
 import streamVidToAudio from "../util/streamVidToAudio";
+import cookieParams from "../util/cookies";
 // import HttpsProxyAgent from "https-proxy-agent";
 
 // const proxy = "http://64.235.204.107:3128";
@@ -16,6 +17,7 @@ export default function (url: string, formats: ytdl.videoFormat[]): Promise<Tran
 			const audioFormats = ytdl.filterFormats(formats, "audioonly");
 
 			const download = ytdl(url, {
+				...cookieParams,
 				quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
 			}).on("error", err => {
 				console.error(`Failed to download ${url}`);

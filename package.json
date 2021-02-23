@@ -50,6 +50,7 @@
 		"fs": "0.0.1-security",
 		"howler": "^2.2.1",
 		"jquery": "^3.5.1",
+		"miniget": "^4.2.0",
 		"mongoose": "^5.11.15",
 		"multer": "^1.4.2",
 		"prop-types": "^15.7.2",
