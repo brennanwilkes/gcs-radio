@@ -146,7 +146,9 @@ export default class App extends React.Component<IProps, IState> {
 						lastTransition : this.state.index + (direction - 1)
 					});
 				}
-				if(this.props.transitions[this.state.index + (direction - 1)].type === VoiceLineType.parallel){
+
+				//Using the enum completely breaks webpack 5
+				if(this.props.transitions[this.state.index + (direction - 1)].type === "PARALLEL"){//VoiceLineType.parallel){
 					this.state.queue[this.state.index + direction].play();
 				}
 				else{
