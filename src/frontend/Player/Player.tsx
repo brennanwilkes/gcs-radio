@@ -77,13 +77,23 @@ export default class App extends React.Component<IProps, IState> {
 					this.setState({
 						ready: true,
 						maxProgress: queue[0].duration()
-					})
+					});
 				}
 				if(i + 1 < queue.length){
 					console.log(`Loading song ${i + 1}/${queue.length - 1}`);
 					queue[i + 1].load();
 				}
-			})
+			});
+			if(i === 0){
+				audio.once('unlock', () => {
+					audio.load();
+					this.setState({
+						ready: true,
+						maxProgress: queue[0].duration()
+					});
+				});
+			}
+
 		});
 		queue[0].load();
 
