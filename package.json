@@ -17,7 +17,7 @@
 		"rebuild": "npm run build",
 		"prerebuild": "npm run clean",
 		"prebuild": "npm run lint",
-		"test": "jest --colors --verbose",
+		"test": "jest --colors --verbose --silent",
 		"lint": "eslint \"src/**/*.[jt]s\" --fix",
 		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js"
 	},

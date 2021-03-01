@@ -1,5 +1,6 @@
 // Brennan Wilkes
 
+import { mocked } from "ts-jest/utils";
 import SpotifyWebApi from "spotify-web-api-node";
 const TOKEN = "TOKEN";
 const ERROR = "ERROR";
@@ -26,7 +27,11 @@ const setAccessTokenMock = jest.fn(() => {});
 
 jest.mock('spotify-web-api-node', () => ({
 	__esModule: true,
-	default: jest.fn((_options) => {
+	default: jest.fn((options) => {
+		expect(options).toStrictEqual({
+			clientId: expect.any(String),
+			clientSecret: expect.any(String)
+		});
 		return {
 			clientCredentialsGrant: clientCredentialsGrantMock,
 			setAccessToken: setAccessTokenMock
@@ -65,10 +70,10 @@ test("Rejects on no credentials", done => {
 
 
 test("Connects with spotify-web-api-node", done => {
-	expect.assertions(3);
+	expect.assertions(4);
 
 	const connection: Promise<SpotifyWebApi> = require("./connection").default;
-	connection.then(res => {
+	connection.then(_ => {
 		expect(clientCredentialsGrantMock).toHaveBeenCalledTimes(1);
 		expect(setAccessTokenMock).toHaveBeenCalledTimes(1);
 		expect(setAccessTokenMock).toHaveBeenCalledWith(TOKEN);
@@ -77,7 +82,7 @@ test("Connects with spotify-web-api-node", done => {
 });
 
 test("Rejects on error event", done => {
-	expect.assertions(1);
+	expect.assertions(2);
 	shouldErr = true;
 
 	const connection: Promise<SpotifyWebApi> = require("./connection").default;
