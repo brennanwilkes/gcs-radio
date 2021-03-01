@@ -38,7 +38,7 @@ export async function recordVoiceLine (voiceLine: VoiceLineRender): Promise<Tran
 		};
 
 		client.synthesizeSpeech(request).then(response => {
-			if (response[0].audioContent) {
+			if (response[0]?.audioContent) {
 				Readable.from(response[0].audioContent).pipe(dummy);
 				resolve(dummy);
 			} else {
