@@ -1,6 +1,8 @@
 import { SpotifyResult, SpotifyResultFromApi, SpotifyResultFromApiSimple } from "../../types/spotifyResult";
 import connection from "./connection";
 
+const invalidDataResponse = "Spotify returned invalid data";
+
 export default async (query: string): Promise<SpotifyResult[]> => {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
 		connection.then(spotifyApi => {
@@ -8,7 +10,7 @@ export default async (query: string): Promise<SpotifyResult[]> => {
 				if (data.body?.tracks?.items) {
 					resolve(data.body.tracks.items.filter(item => !!item).map(item => new SpotifyResultFromApi(item)));
 				} else {
-					reject(new Error("Spotify returned invalid data"));
+					reject(new Error(invalidDataResponse));
 				}
 			}).catch(err => reject(new Error(err)));
 		}).catch(err => reject(new Error(err)));
@@ -34,7 +36,7 @@ export async function getSpotifyTrack (id: string): Promise<SpotifyResult> {
 				if (data.body?.tracks && data.body.tracks.length > 0) {
 					resolve(new SpotifyResultFromApi(data.body.tracks[0]));
 				} else {
-					reject(new Error("Spotify returned invalid data"));
+					reject(new Error(invalidDataResponse));
 				}
 			}).catch(err => reject(new Error(err)));
 		}).catch(err => reject(new Error(err)));
@@ -48,7 +50,7 @@ export async function getSpotifyTracksByPlaylist (id: string): Promise<SpotifyRe
 				if (data.body?.tracks?.items) {
 					resolve(data.body.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
 				} else {
-					reject(new Error("Spotify returned invalid data"));
+					reject(new Error(invalidDataResponse));
 				}
 			}).catch(err => reject(new Error(err)));
 		}).catch(err => reject(new Error(err)));
@@ -60,10 +62,10 @@ export async function getSpotifyTracksByAlbum (id: string): Promise<SpotifyResul
 		connection.then(spotifyApi => {
 			spotifyApi.getAlbum(id).then(album => {
 				spotifyApi.getAlbumTracks(id).then(data => {
-					if (data.body?.items) {
+					if (data.body?.items && album.body) {
 						resolve(data.body.items.map(song => new SpotifyResultFromApiSimple(song, album.body)));
 					} else {
-						reject(new Error("Spotify returned invalid data"));
+						reject(new Error(invalidDataResponse));
 					}
 				}).catch(err => reject(new Error(err)));
 			}).catch(err => reject(new Error(err)));
@@ -78,7 +80,7 @@ export async function getSpotifyTracksByArtist (id: string, countrycode = "CA"):
 				if (data.body?.tracks) {
 					resolve(data.body.tracks.map(song => new SpotifyResultFromApi(song)));
 				} else {
-					reject(new Error("Spotify returned invalid data"));
+					reject(new Error(invalidDataResponse));
 				}
 			}).catch(err => reject(new Error(err)));
 		}).catch(err => reject(new Error(err)));
