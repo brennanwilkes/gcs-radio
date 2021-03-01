@@ -79,7 +79,7 @@ test("Search simple calls ytsr and returns [limit] results", done => {
 	})
 });
 
-test("Search Simple Rejects promise on errors", async (done) => {
+test("Search Simple Rejects promise on errors", done => {
 	const MockedYtsr = mocked(ytsr, true);
 
 	const res = searchYoutubeSimple(invalid);

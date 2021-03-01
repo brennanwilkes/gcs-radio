@@ -36,26 +36,26 @@ test("Rejects when no formats available", done => {
 	});
 });
 
-test("Calls ytdl with audio formats and returns a pipe with the output", async () => {
-
+test("Calls ytdl with audio formats and returns a pipe with the output", done => {
 	const MockedDummyPipe = mocked(dummyPipe, true);
 	const MockedYoutubedl = mocked(ytdl, true);
 
 	const testPipe = dummyPipe();
 	MockedDummyPipe.mockReturnValueOnce(testPipe);
 
-	const downloadStream = await downloadURLToStream("test", [{} as ytdl.videoFormat]);
-	expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
-	expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
-	expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
-		quality: "highestaudio"
+	downloadURLToStream("test", [{} as ytdl.videoFormat]).then(downloadStream => {
+		expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
+		expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
+		expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
+			quality: "highestaudio"
+		});
+		expect(downloadStream).toStrictEqual(testPipe);
+		done();
 	});
-	expect(downloadStream).toStrictEqual(testPipe);
-
 });
 
 
-test("Calls ytdl with video formats and returns a pipe with the output", async () => {
+test("Calls ytdl with video formats and returns a pipe with the output", done => {
 
 	const MockedDummyPipe = mocked(dummyPipe, true);
 	const MockedYoutubedl = mocked(ytdl, true);
@@ -63,14 +63,15 @@ test("Calls ytdl with video formats and returns a pipe with the output", async (
 	const testPipe = dummyPipe();
 	MockedDummyPipe.mockReturnValueOnce(testPipe);
 
-	const downloadStream = await downloadURLToStream("test", [{} as ytdl.videoFormat, {} as ytdl.videoFormat]);
-	expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
-	expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
-	expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
-		quality: "lowestvideo"
+	downloadURLToStream("test", [{} as ytdl.videoFormat, {} as ytdl.videoFormat]).then(downloadStream => {
+		expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
+		expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
+		expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
+			quality: "lowestvideo"
+		});
+		expect(downloadStream).toStrictEqual(testPipe);
+		done();
 	});
-	expect(downloadStream).toStrictEqual(testPipe);
-
 });
 
 test("Promise rejects on error events", done => {
