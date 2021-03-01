@@ -1,7 +1,6 @@
 import {searchYoutubeDetailed, searchYoutubeSimple, itemIsVideo} from "./searchYoutube";
 import ytsr from "ytsr";
 import { mocked } from "ts-jest/utils";
-import ytdl from "ytdl-core";
 import { YoutubeResultFromApi } from "../../types/youtubeResult";
 
 const query = "test";
