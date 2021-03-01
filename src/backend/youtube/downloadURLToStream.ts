@@ -1,4 +1,4 @@
-import ytdl from "ytdl-core";
+import ytdl, { filterFormats } from "ytdl-core";
 import dummyPipe from "../util/dummyPipe";
 import { Transform } from "stream";
 import streamVidToAudio from "../util/streamVidToAudio";
@@ -14,16 +14,16 @@ export default function (url: string, formats: ytdl.videoFormat[]): Promise<Tran
 			reject(new Error("No videoFormats available!"));
 		} else {
 			const dummy = dummyPipe();
-			const audioFormats = ytdl.filterFormats(formats, "audioonly");
+
+			const audioFormats = filterFormats(formats, "audioonly");
 
 			const download = ytdl(url, {
 				...cookieParams,
 				quality: audioFormats.length > 0 ? "highestaudio" : "lowestvideo"
 			}).on("error", err => {
-				console.error(`Failed to download ${url}`);
-				console.error(err);
 				reject(err);
 			});
+
 			if (audioFormats.length > 0) {
 				download.pipe(dummy);
 				resolve(dummy);
