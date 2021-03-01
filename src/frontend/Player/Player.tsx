@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Song} from '../../types/song';
-import SongHowl from '../../types/songHowl';
+import SongHowl, { iOS } from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
 import "./Player.css";
@@ -23,6 +23,7 @@ interface IState {
 	maxProgress: number,
 	index: number,
 	ready: boolean,
+	unlocked: boolean,
 	seekLock: boolean,
 	lastTransition: number,
 	playedIntro: boolean
@@ -39,6 +40,9 @@ export default class App extends React.Component<IProps, IState> {
 		this.rewind = this.rewind.bind(this);
 		this.initializeSongs = this.initializeSongs.bind(this);
 		this.initializeTransitions = this.initializeTransitions.bind(this);
+		this.loadedSongCallback = this.loadedSongCallback.bind(this);
+		this.loadedTransitionCallback = this.loadedTransitionCallback.bind(this);
+		this.unlockMobileAudio = this.unlockMobileAudio.bind(this);
 
 		this.state = {
 			queue: [],
@@ -48,6 +52,7 @@ export default class App extends React.Component<IProps, IState> {
 			maxProgress: 0,
 			index: 0,
 			ready: false,
+			unlocked: false,
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false
@@ -67,33 +72,25 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
+	loadedSongCallback(i: number, queue: Howl[]){
+		if(i === 0){
+			this.setState({
+				ready: true,
+				maxProgress: queue[0].duration()
+			});
+		}
+		if(i + 1 < queue.length){
+			console.log(`Loading song ${i + 1}/${queue.length - 1}`);
+			queue[i + 1].load();
+		}
+	}
+
 	initializeSongs(){
 		const queue: Howl[] = this.props.songs.map((song: Song) => new SongHowl(song));
 
 		queue.forEach((audio,i) => {
 			audio.on("end", () => this.transitionSong(1));
-			audio.on("load", () =>{
-				if(i === 0){
-					this.setState({
-						ready: true,
-						maxProgress: queue[0].duration()
-					});
-				}
-				if(i + 1 < queue.length){
-					console.log(`Loading song ${i + 1}/${queue.length - 1}`);
-					queue[i + 1].load();
-				}
-			});
-			if(i === 0){
-				audio.once('unlock', () => {
-					audio.load();
-					this.setState({
-						ready: true,
-						maxProgress: queue[0].duration()
-					});
-				});
-			}
-
+			audio.on("load", () => this.loadedSongCallback(i, queue));
 		});
 		queue[0].load();
 
@@ -102,17 +99,40 @@ export default class App extends React.Component<IProps, IState> {
 		});
 	}
 
+	unlockMobileAudio(){
+		document.body.addEventListener('touchstart', () => {
+			if(!this.state.unlocked){
+				alert("unlock");
+				this.state.queue.forEach(audio => {
+					audio.play();
+					audio.pause();
+					audio.seek(0);
+				});
+				this.state.transitions.forEach(audio => {
+					audio.play();
+					audio.pause();
+					audio.seek(0);
+				});
+				this.setState({
+					unlocked: true
+				});
+			}
+		}, false);
+	}
+
+	loadedTransitionCallback(i: number, transitions: Howl[]){
+		if(i + 1 < transitions.length){
+			console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
+			transitions[i + 1].load();
+		}
+	}
+
 	initializeTransitions(){
 		const transitions: Howl[] = this.props.transitions.map((voice: VoiceLineRender) => new SongHowl(voice));
 
 		transitions.forEach((trans, i) => {
 			trans.on("end", () => trans.stop());
-			trans.on("load", () =>{
-				if(i + 1 < transitions.length){
-					console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
-					transitions[i + 1].load();
-				}
-			})
+			trans.on("load", () => this.loadedTransitionCallback(i, transitions));
 		});
 		transitions[0].load();
 
@@ -128,11 +148,23 @@ export default class App extends React.Component<IProps, IState> {
 		if(prevProps.transitions !== this.props.transitions){
 			this.initializeTransitions();
 		}
+		if(iOS()){
+			this.unlockMobileAudio();
+		}
+		else if(!this.state.unlocked){
+			this.setState({unlocked:true});
+		}
 	}
 
 	componentDidMount(){
 		this.initializeSongs();
 		this.initializeTransitions();
+		if(iOS()){
+			this.unlockMobileAudio();
+		}
+		else if(!this.state.unlocked){
+			this.setState({unlocked:true});
+		}
 	}
 
 	transitionSong(direction: number = 1){
@@ -230,11 +262,11 @@ export default class App extends React.Component<IProps, IState> {
 						<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					</div>
 					<div>
-						<button disabled={!this.state.ready} onClick={this.rewind}><FaStepBackward /></button>
-						<button disabled={!this.state.ready} onClick={this.togglePause}>{
+						<button disabled={!this.state.ready || !this.state.unlocked} onClick={this.rewind}><FaStepBackward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
-						<button disabled={!this.state.ready} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 					</div>
 					<Slider
 						min={0}
