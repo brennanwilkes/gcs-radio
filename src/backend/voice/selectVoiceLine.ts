@@ -30,7 +30,6 @@ export async function selectFirstVoiceLine (): Promise<VoiceLineTemplate> {
 		{ $match: { type: "INTRO" } },
 		{ $sample: { size: 1 } }
 	]);
-	console.dir(templateQuery);
 	const template: VoiceLineTemplate = new VoiceLineTemplateObjFromQuery(templateQuery[0]);
 
 	print("Found valid template");
