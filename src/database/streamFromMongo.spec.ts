@@ -8,7 +8,7 @@ const downloadStream: any = {
 			callback("ERROR");
 		}
 		else if(event === "data"){
-			callback(new Buffer([1]));
+			callback(Buffer.alloc(1));
 		}
 		else if(event === "end" && !toErr){
 			callback();
@@ -52,7 +52,7 @@ test("Calls correct mongoose internals and resolves to an id", done => {
 	expect.assertions(7);
 	streamFromMongo("ID", {
 		write: (data: string, mode: string) => {
-			expect(data).toMatchObject(new Buffer([1]));
+			expect(data).toMatchObject(Buffer.alloc(1));
 			expect(mode).toBe("binary");
 		}
 	} as any).then(() => {
@@ -66,7 +66,7 @@ test("Rejects on error", done => {
 	toErr = true;
 	streamFromMongo("ID", {
 		write: (data: string, mode: string) => {
-			expect(data).toMatchObject(new Buffer([1]));
+			expect(data).toMatchObject(Buffer.alloc(1));
 			expect(mode).toBe("binary");
 		}
 	} as any).catch((err: any) => {
