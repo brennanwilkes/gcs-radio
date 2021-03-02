@@ -1,4 +1,3 @@
-import dummyPipe from "../backend/util/dummyPipe";
 import streamToMongo from "./streamToMongo";
 
 var toErr = false;
