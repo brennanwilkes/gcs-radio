@@ -27,8 +27,17 @@ const invalidSong = {
 }
 
 test("Resolves a valid song", done => {
-	expect.assertions(5);
+	expect.assertions(10);
 	resolveSongs([validSong]).then(res => {
+		expect(res.length).toBe(1);
+		expect(res[0].title).toBe(validSong.title);
+		expect(res[0].artist).toBe(validSong.artist);
+		expect(res[0].album).toBe(validSong.album);
+		expect(res[0].duration).toBe(validSong.duration);
+		done();
+	});
+
+	resolveSongs([validSong], 3).then(res => {
 		expect(res.length).toBe(1);
 		expect(res[0].title).toBe(validSong.title);
 		expect(res[0].artist).toBe(validSong.artist);
