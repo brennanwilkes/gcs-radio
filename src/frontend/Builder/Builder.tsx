@@ -3,7 +3,7 @@ import axios from "axios";
 import {Song} from '../../types/song';
 import {PlaylistObj} from "../../types/playlist";
 
-import "./Builder.css";
+import "./builder.css";
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
