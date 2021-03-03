@@ -12,6 +12,21 @@ export class ValidationErrorJson extends ErrorObj implements Error {
 	}
 }
 
+export class AuthErrorJson extends ErrorObj implements Error {
+	constructor (errors: Result<ValidationError>, req: Request, status = 401) {
+		const err = errors.array({ onlyFirstError: true })[0];
+		super("Authorization Error", req.originalUrl, `Invalid token "${err.value}"`, status);
+	}
+}
+
+const authErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(401).json(new AuthErrorJson(errors, req));
+	}
+	next();
+};
+
 const validationErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
@@ -68,4 +83,4 @@ const spotifyIdValidator = (variable: ValidationChain): ValidationChain => varia
 	.matches(spotifyIdRegex)
 	.withMessage("spotify ID is not valid");
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex };
+export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex, authErrorHandler };

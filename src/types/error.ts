@@ -33,3 +33,15 @@ export class NotFoundError extends ErrorObj implements Error {
 		super("Not Found", path, exception, 404);
 	}
 }
+
+export class InvalidLoginError extends ErrorObj implements Error {
+	constructor (user: string, path: string, status = 401) {
+		super("Invalid Login", path, `Failed to login to ${user}`, status);
+	}
+}
+
+export class ConflictError extends ErrorObj implements Error {
+	constructor (message: string, path: string, status = 409) {
+		super(`Resource already exists`, path, message, status);
+	}
+}
