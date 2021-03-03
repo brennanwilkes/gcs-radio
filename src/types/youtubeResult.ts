@@ -23,11 +23,11 @@ export class YoutubeResultFromApi implements YoutubeResult {
 	duration: number;
 	formats: ytdl.videoFormat[];
 	constructor (results: ytdl.videoInfo) {
-		this.title = results.videoDetails.media.song ?? "Unknown";
-		this.artist = results.videoDetails.media.artist ?? "Unknown";
-		this.youtubeArtist = results.videoDetails.author.name ?? "Unknown";
+		this.title = results.videoDetails.media?.song ?? "Unknown";
+		this.artist = results.videoDetails.media?.artist ?? "Unknown";
+		this.youtubeArtist = results.videoDetails.author?.name ?? "Unknown";
 		this.youtubeTitle = results.videoDetails.title ?? "Unknown";
-		this.album = (results.videoDetails.media as any).album ?? "Unknown";
+		this.album = (results.videoDetails.media as any)?.album ?? "Unknown";
 		this.youtubeId = results.videoDetails.videoId ?? "Unknown";
 		this.tags = results.videoDetails.keywords ?? [];
 		this.duration = parseInt(results.videoDetails.lengthSeconds ?? "0") * 1000;

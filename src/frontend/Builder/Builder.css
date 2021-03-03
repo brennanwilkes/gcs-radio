@@ -5,8 +5,17 @@
 }
 
 .Builder .searchResults{
-	position: absolute;
 	width: 100%;
+	position: absolute;
+	overflow: visible;
+}
+
+.Builder .floating-label > input:focus{
+	outline-offset: -10px;
+}
+
+.Builder .songsDisplay{
+	overflow-y: scroll;
 }
 
 .Builder > *{
@@ -25,7 +34,17 @@
 
 .Builder ul:last-of-type{
 	overflow-y: auto;
-	max-height: 40vh;
+	max-height: 42vh;
+}
+
+@media only screen and (max-width: 1024px) {
+	.Builder ul:last-of-type{
+		max-height: 36vh;
+	}
+	.Builder .searchResults{
+		max-height: 35vh;
+		overflow-y: scroll;
+	}
 }
 
 .Builder .searchWrapper{

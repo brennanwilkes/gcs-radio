@@ -68,3 +68,24 @@
 .Player .songProgressBar > .rc-slider-track:hover, .Player .songProgressBar > .rc-slider-rail:hover{
 	cursor: pointer;
 }
+
+.Player h2, .Player h4{
+	text-align: center;
+}
+
+@media only screen and (max-width: 1024px) {
+	.Player img{
+		width: 75vmin;
+		height: 75vmin;
+	}
+	.Player h2{
+		font-size: 1.75rem;
+	}
+	.Player h4{
+		font-size: 1.25rem;
+	}
+
+	.Player .songProgressBar > .rc-slider-rail, .Player .songProgressBar > .rc-slider-track {
+		height: 2.5vmin;
+	}
+}

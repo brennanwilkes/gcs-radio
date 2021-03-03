@@ -17,7 +17,8 @@
 		"rebuild": "npm run build",
 		"prerebuild": "npm run clean",
 		"prebuild": "npm run lint",
-		"test": "jest --colors --verbose",
+		"test": "jest --colors --verbose --silent",
+		"test:loud": "jest --colors --verbose",
 		"lint": "eslint \"src/**/*.[jt]s\" --fix",
 		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js"
 	},
@@ -57,7 +58,7 @@
 		"prop-types": "^15.7.2",
 		"rc-slider": "^9.7.1",
 		"react": "^17.0.1",
-		"react-bootstrap-floating-label": "^1.4.10",
+		"react-bootstrap-floating-label": "^1.4.11",
 		"react-dom": "^17.0.1",
 		"react-icons": "^4.2.0",
 		"react-player": "^2.9.0",

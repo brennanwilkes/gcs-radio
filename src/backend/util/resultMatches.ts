@@ -11,13 +11,13 @@ const sani = (inp: string): string => {
 		.replace(/video ?/g, "")
 		.replace(/lyric ?/, "")
 		.replace(/with ?/g, "")
-		.replace(/feat.?u?r?e?i?n?g? ?/g, "")
+		.replace(/feat.?u?r?e?s?i?n?g? ?/g, "")
 		.replace(/official ?/g, "")
 		.replace(/audio ?/g, "")
 		.replace(/performance ?/g, "");
 };
 
-export default function matches (spotify: SpotifyResult, youtube: YoutubeResult): boolean {
+export default function (spotify: SpotifyResult, youtube: YoutubeResult): boolean {
 	const titDis = levenshtein.get(sani(youtube.title), sani(spotify.title));
 	const titDis2 = levenshtein.get(sani(youtube.youtubeTitle).replace(new RegExp(sani(spotify.artist), "g"), ""), sani(spotify.title));
 	const titThresh = (spotify.title.length + youtube.title.length) / 2;

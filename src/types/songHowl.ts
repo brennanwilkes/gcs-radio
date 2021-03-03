@@ -24,3 +24,4 @@ export default class SongHowl extends Howl {
 		});
 	}
 }
+export { iOS };

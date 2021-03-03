@@ -100,25 +100,23 @@ export default class Builder extends React.Component<IProps, IState> {
 				}} children={
 					<h2>Search</h2>
 				} />
-				<div className="searchWrapper">
-					<FloatingLabel
-						label="Search Text"
-						onChange={(event) => {
-							this.setCog(0,true);
-							this.handleSearch(event, "query").then(songs => {
-								this.setCog(0,false);
-								this.setState({
-									queriedSongs: songs
-								})
-							}).catch(err => {
-								this.setCog(0,false);
-								console.error(err);
-							});
-						}}
-						onChangeDelay={500}
-						loadingCog={this.state.cogs[0]}
-						loadingCogSpinning={this.state.cogs[0]} />
-				</div>
+				<FloatingLabel
+					label="Search Text"
+					onChange={(event) => {
+						this.setCog(0,true);
+						this.handleSearch(event, "query").then(songs => {
+							this.setCog(0,false);
+							this.setState({
+								queriedSongs: songs
+							})
+						}).catch(err => {
+							this.setCog(0,false);
+							console.error(err);
+						});
+					}}
+					onChangeDelay={500}
+					loadingCog={this.state.cogs[0]}
+					loadingCogSpinning={this.state.cogs[0]} />
 
 				<FloatingLabel
 					label="Load Spotify URL"
@@ -148,7 +146,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				}} children={
 					<h2>Selected Songs</h2>
 				} />
-				<ul>{songsDisplay}</ul>
+				<ul className="songsDisplay">{songsDisplay}</ul>
 
 				<button
 					disabled={this.state.rendering || this.state.cogs.reduce((prev, cur) => prev || cur)}
