@@ -4,6 +4,47 @@ default:
         - gcloud config set project $GOOGLE_CLOUD_PROJECT
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
 
+stages:
+  - test
+  - coverage
+  - build
+  - deploy
+
+jest:
+  stage: test
+  image: node:12-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+  script:
+    - npm install
+    - npm run test
+  coverage: '/All files[^|]*\|[^|]*\s([\d.]+)/'
+  artifacts:
+    paths:
+      - coverage/
+    reports:
+      junit: 'coverage/junit.xml'
+    expire_in: 1 week
+  only:
+    - master
+
+pages:
+  stage: coverage
+  image: alpine
+  cache: {}
+  script:
+    - ls -al coverage/
+    - test -f coverage/lcov-report/index.html && rm -rf public/* && mv coverage/lcov-report/ public/
+    - ls -al public/
+  artifacts:
+    paths:
+      - public/
+    expire_in: 1 hour
+  only:
+    - master
+
 build-beta:
     stage: build
     script:
