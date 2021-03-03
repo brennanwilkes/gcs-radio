@@ -2,6 +2,7 @@ import {searchYoutubeDetailed, searchYoutubeSimple, itemIsVideo} from "./searchY
 import ytsr from "ytsr";
 import { mocked } from "ts-jest/utils";
 import { YoutubeResultFromApi } from "../../types/youtubeResult";
+import cookie from "../util/cookies";
 
 const query = "test";
 const id = "d7pA7lWrN-4";
@@ -68,7 +69,7 @@ test("Search simple calls ytsr and returns [limit] results", done => {
 
 	const res = searchYoutubeSimple(query, limit);
 	expect(MockedYtsr).toHaveBeenCalledTimes(1);
-	expect(MockedYtsr).toHaveBeenCalledWith(query, { limit: limit * 2 })
+	expect(MockedYtsr).toHaveBeenCalledWith(query, { limit: limit * 2, ...cookie })
 	res.then(resp => {
 		expect(resp.length).toBe(limit);
 		resp.forEach(item => {
@@ -83,7 +84,7 @@ test("Search Simple Rejects promise on errors", done => {
 
 	const res = searchYoutubeSimple(invalid);
 	expect(MockedYtsr).toHaveBeenCalledTimes(1);
-	expect(MockedYtsr).toHaveBeenCalledWith(invalid, { limit: 10 })
+	expect(MockedYtsr).toHaveBeenCalledWith(invalid, { limit: 10, ...cookie })
 	res.catch(error => {
 		expect(error).toBe("error!");
 		done();

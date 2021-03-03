@@ -4,6 +4,7 @@ import downloadURLToStream from "./downloadURLToStream";
 import dummyPipe from "../util/dummyPipe";
 import ytdl from "ytdl-core";
 import { mocked } from "ts-jest/utils";
+import cookie from "../util/cookies";
 
 jest.mock("../util/dummyPipe", () => ({
 	__esModule: true,
@@ -47,7 +48,8 @@ test("Calls ytdl with audio formats and returns a pipe with the output", done =>
 		expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
 		expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
 		expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
-			quality: "highestaudio"
+			quality: "highestaudio",
+			...cookie
 		});
 		expect(downloadStream).toStrictEqual(testPipe);
 		done();
@@ -67,7 +69,8 @@ test("Calls ytdl with video formats and returns a pipe with the output", done =>
 		expect(MockedDummyPipe).toHaveBeenCalledTimes(2);
 		expect(MockedYoutubedl).toHaveBeenCalledTimes(1);
 		expect(MockedYoutubedl).toHaveBeenCalledWith("test",{
-			quality: "lowestvideo"
+			quality: "lowestvideo",
+			...cookie
 		});
 		expect(downloadStream).toStrictEqual(testPipe);
 		done();
