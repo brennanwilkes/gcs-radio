@@ -11,6 +11,7 @@
 	transition: transform 0.25s, border-color 0.25s, background-color 0.25s;
 	background-color: #DDD;
 	width: 100%;
+	overflow: visible;
 }
 
 .songRowHoverable:hover{
@@ -22,10 +23,12 @@
 	border-color: #CCCCCCFF;
 }
 
-.songRow > :nth-child(2){
-	margin-left: 1rem;
-	margin-right: 1rem;
+.songRow > div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
+
 
 .songRow img{
 	height: 4rem;
@@ -38,4 +41,31 @@
 
 .songRow h4, .songRow h3{
 	margin: 0;
+}
+
+@media only screen and (min-width: 1024px) {
+	.songRow > div > h3{
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+}
+
+
+@media only screen and (max-width: 1024px) {
+	.songRow > div > *{
+		margin-left: 0.5rem;
+	}
+
+	.songRow > div {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.songRow h3{
+		font-size: 1.25rem;
+	}
+
+	.songRow h4{
+		font-size: 1.0rem;
+	}
 }

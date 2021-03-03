@@ -22,8 +22,10 @@ export default class Builder extends React.Component<IProps, IState> {
 				}
 			}}>
 				<img src={this.props.song.thumbnailUrl}/>
-				<h3>{this.props.song.title}</h3>
-				<h4>{this.props.song.artist}</h4>
+				<div>
+					<h3>{this.props.song.title}</h3>
+					<h4>{this.props.song.artist}</h4>
+				</div>
 			</li>
 		</>
 	}

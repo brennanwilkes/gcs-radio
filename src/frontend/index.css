@@ -14,6 +14,7 @@ body{
 	align-items: center;
 	padding: 2.5vmin;
 	height: 100%;
+	overflow-y: hidden;
 }
 
 .App > h1 {
@@ -22,6 +23,12 @@ body{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+@media only screen and (max-width: 1024px) {
+	.App {
+		padding: 7.5vmin;
+	}
 }
 
 
