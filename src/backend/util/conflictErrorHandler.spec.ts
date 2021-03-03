@@ -25,6 +25,7 @@ const res = {
 }
 
 test("Generates correct JSON response", () => {
-	expect.assertions(4);
+	expect.assertions(8);
 	conflictErrorHandler(req as any, res as any)("ERROR");
+	conflictErrorHandler(req as any, res as any)("ERROR", 409);
 });

@@ -24,6 +24,7 @@ const res = {
 }
 
 test("Generates correct JSON response", () => {
-	expect.assertions(4);
+	expect.assertions(8);
 	invalidLoginErrorHandler(req as any, res as any)("ERROR");
+	invalidLoginErrorHandler(req as any, res as any)("ERROR", 401);
 });
