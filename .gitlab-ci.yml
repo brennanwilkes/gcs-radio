@@ -1,9 +1,3 @@
-default:
-    image: google/cloud-sdk:alpine
-    before_script:
-        - gcloud config set project $GOOGLE_CLOUD_PROJECT
-        - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
-
 stages:
   - test
   - coverage
@@ -46,6 +40,10 @@ pages:
     - master
 
 build-beta:
+    image: google/cloud-sdk:alpine
+    before_script:
+        - gcloud config set project $GOOGLE_CLOUD_PROJECT
+        - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: build
     script:
         - gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta
@@ -53,6 +51,10 @@ build-beta:
     - beta
 
 deploy-beta:
+    image: google/cloud-sdk:alpine
+    before_script:
+        - gcloud config set project $GOOGLE_CLOUD_PROJECT
+        - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: deploy
     script:
         - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --concurrency 2 --cpu 2 --memory 512M --max-instances 250 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE"
