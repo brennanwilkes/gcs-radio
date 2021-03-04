@@ -3,6 +3,7 @@ import { CONFIG } from "../util/util";
 import { google } from "googleapis";
 import internalErrorHandler from "../util/internalErrorHandler";
 import jwt from "jsonwebtoken";
+import axios from "axios";
 
 const OAuthFromReq = (req: Request) => {
 	return new google.auth.OAuth2(
@@ -42,7 +43,13 @@ const redirectFromGoogle = (req: Request, res:Response): void => {
 				} else {
 					// Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
 					res.cookie("jwt", jwt.sign(token, process.env.TOKEN_SECRET as string));
-					res.redirect("/app");
+
+					axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${encodeURIComponent(token.id_token ?? "")}`)
+						.then(resp => {
+							console.dir(resp);
+							res.redirect("/app");
+						})
+						.catch(console.error);
 				}
 			});
 		}
