@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import User from "../../database/models/user";
 import { UserFromDoc } from "../../types/user";
@@ -7,29 +6,7 @@ import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import internalErrorHandler from "../util/internalErrorHandler";
 import invalidLoginErrorHandler from "../util/invalidLoginErrorHandler";
 import conflictErrorHandler from "../util/conflictErrorHandler";
-
-const tokenResponse = (req: Request, res: Response) => (err: Error | null, token: string | undefined) => {
-	if (err || !token) {
-		internalErrorHandler(req, res)(err?.message ?? "Internal Error");
-	} else {
-		res.status(200).json({
-			token
-		});
-	}
-};
-
-const signIdResponse = (req: Request, res: Response, id: string) => {
-	if (process.env.TOKEN_SECRET) {
-		jwt.sign(
-			{ user: { id: id } },
-			process.env.TOKEN_SECRET,
-			{ expiresIn: 3600 },
-			tokenResponse(req, res)
-		);
-	} else {
-		internalErrorHandler(req, res)("Token secret not set");
-	}
-};
+import generateToken from "../util/generateToken";
 
 export async function login (req: Request, res: Response) {
 	const { email, password } = req.body;
@@ -37,7 +14,11 @@ export async function login (req: Request, res: Response) {
 		if (user) {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
-					signIdResponse(req, res, user.id);
+					generateToken(user.id).then(token => {
+						res.status(200).json({
+							token
+						});
+					}).catch(internalErrorHandler(req, res));
 				} else {
 					invalidLoginErrorHandler(req, res)(email, 401);
 				}
@@ -57,7 +38,11 @@ export async function signUp (req: Request, res: Response) {
 			bcrypt.genSalt(10).then(salt => {
 				bcrypt.hash(password, salt).then(encryptedPassword => {
 					new User({ email, encryptedPassword }).save().then(doc => {
-						signIdResponse(req, res, doc.id);
+						generateToken(doc._id).then(token => {
+							res.status(200).json({
+								token
+							});
+						}).catch(internalErrorHandler(req, res));
 					}).catch(internalErrorHandler(req, res));
 				}).catch(internalErrorHandler(req, res));
 			}).catch(internalErrorHandler(req, res));

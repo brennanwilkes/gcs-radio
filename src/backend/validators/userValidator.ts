@@ -11,6 +11,7 @@ const loginValidator = [
 	}).withMessage("Password must be atleast six characters long"),
 	validationErrorHandler
 ];
+
 const signUpValidator = [
 	body("email").isEmail().withMessage("Please enter a valid email"),
 	body("password").isLength({
