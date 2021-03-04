@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { redirectToGoogle } from "../controllers/oauthGoogleController";
+import { redirectFromGoogle, redirectToGoogle } from "../controllers/oauthGoogleController";
 
 const oauthRouter = Router();
 
 oauthRouter.get("/", redirectToGoogle);
+oauthRouter.get("/callback", redirectFromGoogle);
 
 export default oauthRouter;

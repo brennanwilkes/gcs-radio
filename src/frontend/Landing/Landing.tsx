@@ -19,7 +19,7 @@ export default class Landing extends React.Component<IProps, IState> {
 					<a href="./browse" className="btn btn-info row col-12 p-1">BROWSE PLAYLISTS</a>
 					<a href="./app" className="btn btn-success row col-12 p-1">BUILD PLAYLIST</a>
 					<div className="row my-2">
-						<a href="./login"><h6 className="col-4">Login</h6></a>
+						<a href="./oauth"><h6 className="col-4">Login</h6></a>
 						<h6 className="mx-n2 text-primary">|</h6>
 						<a href="./signup"><h6 className="col-4">Sign Up</h6></a>
 					</div>
