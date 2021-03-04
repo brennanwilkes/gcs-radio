@@ -51,6 +51,8 @@
 		"fast-levenshtein": "^3.0.0",
 		"fluent-ffmpeg": "^2.1.2",
 		"fs": "0.0.1-security",
+		"google-auth-library": "^7.0.2",
+		"googleapis": "^67.1.1",
 		"howler": "^2.2.1",
 		"jquery": "^3.5.1",
 		"jsonwebtoken": "^8.5.1",
