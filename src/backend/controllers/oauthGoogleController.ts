@@ -1,34 +1,57 @@
 import { Request, Response } from "express";
 import { CONFIG } from "../util/util";
-import { google } from "googleapis";
 import internalErrorHandler from "../util/internalErrorHandler";
+import { getTokenFromCode, getUserInfoFromToken, oath2FromCredentials } from "../auth/googleOauth";
+import signPayload from "../auth/signPayload";
+import UserModel, { userDocFromUser } from "../../database/models/user";
+import generateToken from "../auth/generateToken";
+import { UserFromGoogleCredentials, UserType } from "../../types/user";
 
-const OAuth2 = google.auth.OAuth2;
+const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/oauth/callback`;
 
 const redirectToGoogle = (req: Request, res: Response): void => {
-	if (!process.env.GOOGLE_PROJECT) {
-		internalErrorHandler(req, res)("Google project not set");
-	}
-	if (!process.env.GOOGLE_CLIENT_ID) {
-		internalErrorHandler(req, res)("Google OAUTH ID not set");
-	}
-	if (!process.env.GOOGLE_CLIENT_SECRET) {
-		internalErrorHandler(req, res)("Google OAUTH secret not set");
-	} else {
-		const oauth2Client = new OAuth2(
-			process.env.GOOGLE_CLIENT_ID as string,
-			process.env.GOOGLE_CLIENT_SECRET as string,
-			`${(req.protocol + "://" + req.get("host") + req.originalUrl).replace(/\/$/, "")}/callback`
-		);
-
-		const loginLink = oauth2Client.generateAuthUrl({
+	oath2FromCredentials(generateRedirectURI(req)).then(oauthClient => {
+		res.redirect(oauthClient.generateAuthUrl({
 			access_type: "offline",
 			scope: CONFIG.oauth2Credentials.scope
-		});
+		}));
+	}).catch(internalErrorHandler(req, res));
+};
 
-		console.dir(loginLink);
-		res.redirect(302, loginLink);
+const redirectFromGoogle = (req: Request, res:Response): void => {
+	if (req.query.error || !req.query.code) {
+		// User rejected request
+		internalErrorHandler(req, res)((req.query.error ?? "Google failed to authenticate") as string);
+	} else {
+		getTokenFromCode(req.query.code as string, generateRedirectURI(req)).then(token => {
+			getUserInfoFromToken(token, generateRedirectURI(req)).then(info => {
+				signPayload(token).then(signedToken => {
+					res.cookie("jwt", signedToken);
+					UserModel.find({
+						email: info.email,
+						type: UserType.GOOGLE
+					}).then(docs => {
+						if (docs.length > 0) {
+							generateToken(docs[0]._id).then(loginToken => {
+								res.status(200).json({
+									token: loginToken
+								});
+							}).catch(internalErrorHandler(req, res));
+						} else {
+							const user = new UserFromGoogleCredentials(info);
+							userDocFromUser(user).save().then(doc => {
+								generateToken(doc._id).then(loginToken => {
+									res.status(200).json({
+										token: loginToken
+									});
+								}).catch(internalErrorHandler(req, res));
+							}).catch(internalErrorHandler(req, res));
+						}
+					}).catch(internalErrorHandler(req, res));
+				}).catch(internalErrorHandler(req, res));
+			}).catch(internalErrorHandler(req, res));
+		}).catch(internalErrorHandler(req, res));
 	}
 };
 
-export { redirectToGoogle };
+export { redirectToGoogle, redirectFromGoogle };

@@ -6,12 +6,15 @@ import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import internalErrorHandler from "../util/internalErrorHandler";
 import invalidLoginErrorHandler from "../util/invalidLoginErrorHandler";
 import conflictErrorHandler from "../util/conflictErrorHandler";
-import generateToken from "../util/generateToken";
+import generateToken from "../auth/generateToken";
 
 export async function login (req: Request, res: Response) {
 	const { email, password } = req.body;
-	User.findOne({ email }).then(user => {
-		if (user) {
+	User.findOne({
+		email,
+		type: "PASSWORD"
+	}).then(user => {
+		if (user && user.password) {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
 					generateToken(user.id).then(token => {
@@ -31,13 +34,20 @@ export async function login (req: Request, res: Response) {
 
 export async function signUp (req: Request, res: Response) {
 	const { email, password } = req.body;
-	User.findOne({ email }).then(user => {
+	User.findOne({
+		email,
+		type: "PASSWORD"
+	}).then(user => {
 		if (user) {
 			conflictErrorHandler(req, res)(`User ${email} already exists`);
 		} else {
 			bcrypt.genSalt(10).then(salt => {
 				bcrypt.hash(password, salt).then(encryptedPassword => {
-					new User({ email, encryptedPassword }).save().then(doc => {
+					new User({
+						email,
+						password: encryptedPassword,
+						type: "PASSWORD"
+					}).save().then(doc => {
 						generateToken(doc._id).then(token => {
 							res.status(200).json({
 								token

@@ -57,7 +57,7 @@ deploy:
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: deploy
     script:
-        - gcloud run deploy gcs-radio --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio --platform managed --region us-west1 --allow-unauthenticated --concurrency 2 --cpu 2 --memory 512M --max-instances 250 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET"
+        - gcloud run deploy gcs-radio --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio --platform managed --region us-west1 --allow-unauthenticated --concurrency 2 --cpu 2 --memory 512M --max-instances 250 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" --set-env-vars="GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT"
     only:
     - master
 
@@ -79,6 +79,6 @@ deploy-beta:
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: deploy
     script:
-        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --concurrency 1 --cpu 1 --memory 128M --max-instances 4 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET"
+        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --concurrency 1 --cpu 1 --memory 256M --max-instances 4 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" --set-env-vars="GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT"
     only:
     - beta
