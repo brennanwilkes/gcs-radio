@@ -1,73 +1,54 @@
 import { Request, Response } from "express";
 import { CONFIG } from "../util/util";
-import { google } from "googleapis";
 import internalErrorHandler from "../util/internalErrorHandler";
-import jwt from "jsonwebtoken";
-// import { Credentials } from "google-auth-library";
-
-const oauth2 = google.oauth2("v2");
-const OAuth2 = google.auth.OAuth2;
-
-const OAuthFromReq = (req: Request) => {
-	return new OAuth2(
-		process.env.GOOGLE_CLIENT_ID as string,
-		process.env.GOOGLE_CLIENT_SECRET as string,
-		`${req.protocol}://${req.get("host")}/oauth/callback`
-	);
-};
+import { getTokenFromCode, getUserInfoFromToken, oath2FromCredentials } from "../auth/googleOauth";
+import signPayload from "../auth/signPayload";
+import UserModel, { userDocFromUser } from "../../database/models/user";
+import generateToken from "../auth/generateToken";
+import { UserFromGoogleCredentials, UserType } from "../../types/user";
 
 const redirectToGoogle = (req: Request, res: Response): void => {
-	if (!process.env.GOOGLE_CLIENT_ID) {
-		internalErrorHandler(req, res)("Google OAUTH ID not set");
-	} else if (!process.env.GOOGLE_CLIENT_SECRET) {
-		internalErrorHandler(req, res)("Google OAUTH secret not set");
-	} else {
-		res.redirect(OAuthFromReq(req).generateAuthUrl({
+	oath2FromCredentials(`${req.protocol}://${req.get("host")}/oauth/callback`).then(oauthClient => {
+		res.redirect(oauthClient.generateAuthUrl({
 			access_type: "offline",
 			scope: CONFIG.oauth2Credentials.scope
 		}));
-	}
+	}).catch(internalErrorHandler(req, res));
 };
 
 const redirectFromGoogle = (req: Request, res:Response): void => {
-	if (!process.env.GOOGLE_CLIENT_ID) {
-		internalErrorHandler(req, res)("Google OAUTH ID not set");
-	} else if (!process.env.GOOGLE_CLIENT_SECRET) {
-		internalErrorHandler(req, res)("Google OAUTH secret not set");
-	} else if (!process.env.TOKEN_SECRET) {
-		internalErrorHandler(req, res)("Token secret not set");
+	if (req.query.error || !req.query.code) {
+		// User rejected request
+		internalErrorHandler(req, res)((req.query.error ?? "Google failed to authenticate") as string);
 	} else {
-		if (req.query.error || !req.query.code) {
-			res.redirect("/");
-		} else {
-			const authClient = OAuthFromReq(req);
-			authClient.getToken(req.query.code as string, (err, token) => {
-				if (err || !token) {
-					res.redirect("/");
-				} else {
-					// Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
-					const key: string = process.env.TOKEN_SECRET as string;
-					const signedToken = jwt.sign(token, key);
+		getTokenFromCode(req.query.code as string).then(token => {
+			getUserInfoFromToken(token).then(info => {
+				signPayload(token).then(signedToken => {
 					res.cookie("jwt", signedToken);
-
-					// authClient.credentials = jwt.verify(signedToken, key) as Credentials;
-					authClient.setCredentials({
-						access_token: token.access_token
-					});
-
-					oauth2.userinfo.get({
-						auth: authClient
-					}, (err, data) => {
-						if (!err && data) {
-							res.status(200).json(data);
+					UserModel.find({
+						email: info.email,
+						type: UserType.GOOGLE
+					}).then(docs => {
+						if (docs.length > 0) {
+							generateToken(docs[0]._id).then(loginToken => {
+								res.status(200).json({
+									token: loginToken
+								});
+							}).catch(internalErrorHandler(req, res));
 						} else {
-							res.status(500).send(err);
+							const user = new UserFromGoogleCredentials(info);
+							userDocFromUser(user).save().then(doc => {
+								generateToken(doc._id).then(loginToken => {
+									res.status(200).json({
+										token: loginToken
+									});
+								}).catch(internalErrorHandler(req, res));
+							}).catch(internalErrorHandler(req, res));
 						}
-					});
-					// res.redirect("/app");
-				}
-			});
-		}
+					}).catch(internalErrorHandler(req, res));
+				}).catch(internalErrorHandler(req, res));
+			}).catch(internalErrorHandler(req, res));
+		}).catch(internalErrorHandler(req, res));
 	}
 };
 

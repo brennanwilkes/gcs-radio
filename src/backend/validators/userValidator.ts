@@ -1,8 +1,8 @@
 import { body, header } from "express-validator";
 import { validationErrorHandler, authErrorHandler } from "./validatorUtil";
 import { Request, Response, NextFunction } from "express";
-import jwt, { VerifyCallback } from "jsonwebtoken";
 import internalErrorHandler from "../util/internalErrorHandler";
+import { getUserFromToken } from "../auth/getUser";
 
 const loginValidator = [
 	body("email").isEmail().withMessage("Please enter a valid email"),
@@ -20,29 +20,14 @@ const signUpValidator = [
 	validationErrorHandler
 ];
 
-const verificationCallback: ((req: Request, res: Response, next: NextFunction) => VerifyCallback) = (req: Request, res: Response, next: NextFunction) => (err, decoded) => {
-	if (err || !decoded) {
-		internalErrorHandler(req, res)(err?.message ?? "Internal Error");
-	} else {
-		if ("user" in decoded) {
-			req.body.user = (decoded as any).user;
-			next();
-		} else {
-			internalErrorHandler(req, res)("Authorization error");
-		}
-	}
-};
-
 const tokenValidator = [
 	header("token").exists(),
 	authErrorHandler,
 	(req: Request, res: Response, next: NextFunction) => {
-		const token = req.header("token") as string;
-		if (process.env.TOKEN_SECRET) {
-			jwt.verify(token, process.env.TOKEN_SECRET, verificationCallback(req, res, next));
-		} else {
-			internalErrorHandler(req, res)("Token secret not set");
-		}
+		getUserFromToken(req.header("token") as string).then(user => {
+			req.body.user = user;
+			next();
+		}).catch(internalErrorHandler(req, res));
 	}
 ];
 
