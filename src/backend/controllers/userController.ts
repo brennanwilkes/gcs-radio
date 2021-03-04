@@ -19,12 +19,16 @@ const tokenResponse = (req: Request, res: Response) => (err: Error | null, token
 };
 
 const signIdResponse = (req: Request, res: Response, id: string) => {
-	jwt.sign(
-		{ user: { id: id } },
-		"randomString",
-		{ expiresIn: 3600 },
-		tokenResponse(req, res)
-	);
+	if (process.env.TOKEN_SECRET) {
+		jwt.sign(
+			{ user: { id: id } },
+			process.env.TOKEN_SECRET,
+			{ expiresIn: 3600 },
+			tokenResponse(req, res)
+		);
+	} else {
+		internalErrorHandler(req, res)("Token secret not set");
+	}
 };
 
 export async function login (req: Request, res: Response) {
