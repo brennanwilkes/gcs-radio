@@ -24,7 +24,10 @@ export function getGoogleEnv (): Promise<{id:string, secret: string}> {
 export function oath2FromCredentials (args?: string): Promise<OAuth2Client> {
 	return new Promise<OAuth2Client>((resolve, reject) => {
 		getGoogleEnv().then(env => {
-			resolve(new OAuth2(env.id, env.secret, args));
+			resolve(args
+				? new OAuth2(env.id, env.secret, args)
+				: new OAuth2(env.id, env.secret)
+			);
 		}).catch(reject);
 	});
 }
@@ -35,7 +38,7 @@ export function getTokenFromCode (code: string): Promise<Credentials> {
 			authClient.getToken(code, (err, token) => {
 				if (err || !token) {
 					console.error(err);
-					console.error(code);
+					console.dir(`CODE: ${code}`);
 					console.dir(authClient);
 					reject(err ?? new Error("Google AUTH code contains invalid or no token"));
 				} else {
