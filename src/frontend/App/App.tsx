@@ -1,10 +1,12 @@
 import * as React from "react";
 import axios, { AxiosResponse } from "axios";
-import {Song} from '../types/song';
-import Player from "./Player/Player";
-import Builder from "./Builder/Builder";
+import {Song} from '../../types/song';
+import Player from "../Player/Player";
+import Builder from "../Builder/Builder";
 import arrayShuffle from "array-shuffle";
-import { VoiceLineRender } from "../types/voiceLine";
+import { VoiceLineRender } from "../../types/voiceLine";
+import "./app.css";
+
 //import $ from "jquery";
 
 enum AppMode {

@@ -3,7 +3,7 @@ import {Song} from '../../types/song';
 import SongHowl, { iOS } from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
-import "./Player.css";
+import "./player.css";
 import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 

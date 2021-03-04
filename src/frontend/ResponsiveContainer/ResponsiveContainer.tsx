@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./ResponsiveContainer.css";
+import "./responsiveContainer.css";
 
 export default ({ children } : { children: any }) => (
 	<div className="ResponsiveContainer">{

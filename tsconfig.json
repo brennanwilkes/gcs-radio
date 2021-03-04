@@ -19,6 +19,7 @@
 	},
 	"exclude": [
 		"build/**/*",
-		"src/frontend/**/*"
+		"src/frontend/**/*",
+		"**/*.spec.ts"
 	]
 }

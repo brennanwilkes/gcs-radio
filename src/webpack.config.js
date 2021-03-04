@@ -2,10 +2,13 @@ const path = require("path");
 module.exports = {
 	mode: "development",
 	devtool: "source-map",
-	entry: "./src/frontend/index.tsx",
+	entry: {
+		app: "./src/frontend/entryPoints/app.tsx",
+		landing: "./src/frontend/entryPoints/landing.tsx"
+	},
 	output: {
-		filename: "bundle.js",
-		path: path.resolve(__dirname, "..", "public-frontend")
+		filename: '[name].js',
+		path: path.resolve(__dirname, "..", "public-frontend", "dist"),
 	},
 	module: {
 		rules: [
