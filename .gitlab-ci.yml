@@ -68,7 +68,7 @@ build-beta:
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: build
     script:
-        - gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio
+        - gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta
     only:
     - beta
 
@@ -79,6 +79,6 @@ deploy-beta:
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: deploy
     script:
-        - gcloud run deploy gcs-radio --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --concurrency 1 --cpu 1 --memory 128M --max-instances 4 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET"
+        - gcloud run deploy gcs-radio-beta --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio-beta --platform managed --region us-west1 --allow-unauthenticated --concurrency 1 --cpu 1 --memory 128M --max-instances 4 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=true" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET"
     only:
     - beta
