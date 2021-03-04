@@ -34,7 +34,10 @@ export function getTokenFromCode (code: string): Promise<Credentials> {
 		oath2FromCredentials().then(authClient => {
 			authClient.getToken(code, (err, token) => {
 				if (err || !token) {
-					reject(new Error("Google AUTH code contains invalid or no token"));
+					console.error(err);
+					console.error(code);
+					console.dir(authClient);
+					reject(err ?? new Error("Google AUTH code contains invalid or no token"));
 				} else {
 					resolve(token);
 				}
