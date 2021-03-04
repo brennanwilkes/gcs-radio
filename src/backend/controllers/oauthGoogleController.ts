@@ -3,9 +3,13 @@ import { CONFIG } from "../util/util";
 import { google } from "googleapis";
 import internalErrorHandler from "../util/internalErrorHandler";
 import jwt from "jsonwebtoken";
+// import { Credentials } from "google-auth-library";
+
+const oauth2 = google.oauth2("v2");
+const OAuth2 = google.auth.OAuth2;
 
 const OAuthFromReq = (req: Request) => {
-	return new google.auth.OAuth2(
+	return new OAuth2(
 		process.env.GOOGLE_CLIENT_ID as string,
 		process.env.GOOGLE_CLIENT_SECRET as string,
 		`${req.protocol}://${req.get("host")}/oauth/callback`
@@ -36,25 +40,30 @@ const redirectFromGoogle = (req: Request, res:Response): void => {
 		if (req.query.error || !req.query.code) {
 			res.redirect("/");
 		} else {
-			const oauth = OAuthFromReq(req);
-			oauth.getToken(req.query.code as string, (err, token) => {
+			const authClient = OAuthFromReq(req);
+			authClient.getToken(req.query.code as string, (err, token) => {
 				if (err || !token) {
 					res.redirect("/");
 				} else {
 					// Store the credentials given by google into a jsonwebtoken in a cookie called 'jwt'
-					res.cookie("jwt", jwt.sign(token, process.env.TOKEN_SECRET as string));
+					const key: string = process.env.TOKEN_SECRET as string;
+					const signedToken = jwt.sign(token, key);
+					res.cookie("jwt", signedToken);
 
-					const gmail = google.gmail({ version: "v1", auth: oauth });
-					gmail.users.labels.list({
-						userId: "me"
-					}, (err, resp) => {
-						if (!err && resp) {
-							res.json(resp);
-						} else {
-							res.send(err);
-						}
+					// authClient.credentials = jwt.verify(signedToken, key) as Credentials;
+					authClient.setCredentials({
+						access_token: token.access_token
 					});
 
+					oauth2.userinfo.get({
+						auth: authClient
+					}, (err, data) => {
+						if (!err && data) {
+							res.status(200).json(data);
+						} else {
+							res.status(500).send(err);
+						}
+					});
 					// res.redirect("/app");
 				}
 			});
