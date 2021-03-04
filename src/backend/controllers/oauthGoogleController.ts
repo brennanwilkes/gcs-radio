@@ -37,7 +37,8 @@ const redirectFromGoogle = (req: Request, res:Response): void => {
 		if (req.query.error || !req.query.code) {
 			res.redirect("/");
 		} else {
-			OAuthFromReq(req).getToken(req.query.code as string, (err, token) => {
+			const oauth = OAuthFromReq(req);
+			oauth.getToken(req.query.code as string, (err, token) => {
 				if (err || !token) {
 					res.redirect("/");
 				} else {
@@ -47,7 +48,21 @@ const redirectFromGoogle = (req: Request, res:Response): void => {
 					axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${encodeURIComponent(token.id_token ?? "")}`)
 						.then(resp => {
 							console.dir(resp);
-							res.redirect("/app");
+
+							const oauth2 = google.oauth2({
+								auth: oauth,
+								version: "v2"
+							});
+
+							oauth2.userinfo.v2.me.get(
+								function (err, resp2) {
+									if (err) {
+										console.log(err);
+									} else {
+										console.dir(resp2);
+										res.redirect("/app");
+									}
+								});
 						})
 						.catch(console.error);
 				}
