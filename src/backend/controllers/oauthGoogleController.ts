@@ -6,13 +6,9 @@ import internalErrorHandler from "../util/internalErrorHandler";
 const OAuth2 = google.auth.OAuth2;
 
 const redirectToGoogle = (req: Request, res: Response): void => {
-	if (!process.env.GOOGLE_PROJECT) {
-		internalErrorHandler(req, res)("Google project not set");
-	}
 	if (!process.env.GOOGLE_CLIENT_ID) {
 		internalErrorHandler(req, res)("Google OAUTH ID not set");
-	}
-	if (!process.env.GOOGLE_CLIENT_SECRET) {
+	} else if (!process.env.GOOGLE_CLIENT_SECRET) {
 		internalErrorHandler(req, res)("Google OAUTH secret not set");
 	} else {
 		const oauth2Client = new OAuth2(
@@ -25,8 +21,6 @@ const redirectToGoogle = (req: Request, res: Response): void => {
 			access_type: "offline",
 			scope: CONFIG.oauth2Credentials.scope
 		});
-
-		console.dir(loginLink);
 		res.redirect(302, loginLink);
 	}
 };
