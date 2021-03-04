@@ -21,25 +21,19 @@ export function getGoogleEnv (): Promise<{id:string, secret: string}> {
 	});
 }
 
-export function oath2FromCredentials (args?: string): Promise<OAuth2Client> {
+export function oath2FromCredentials (redirectUri: string): Promise<OAuth2Client> {
 	return new Promise<OAuth2Client>((resolve, reject) => {
 		getGoogleEnv().then(env => {
-			resolve(args
-				? new OAuth2(env.id, env.secret, args)
-				: new OAuth2(env.id, env.secret)
-			);
+			resolve(new OAuth2(env.id, env.secret, redirectUri));
 		}).catch(reject);
 	});
 }
 
-export function getTokenFromCode (code: string): Promise<Credentials> {
+export function getTokenFromCode (code: string, redirectURI: string): Promise<Credentials> {
 	return new Promise<Credentials>((resolve, reject) => {
-		oath2FromCredentials().then(authClient => {
+		oath2FromCredentials(redirectURI).then(authClient => {
 			authClient.getToken(code, (err, token) => {
 				if (err || !token) {
-					console.error(err);
-					console.dir(`CODE: ${code}`);
-					console.dir(authClient);
 					reject(err ?? new Error("Google AUTH code contains invalid or no token"));
 				} else {
 					resolve(token);
@@ -49,17 +43,17 @@ export function getTokenFromCode (code: string): Promise<Credentials> {
 	});
 }
 
-export function getSignedTokenFromCode (code: string): Promise<string> {
+export function getSignedTokenFromCode (code: string, redirectURI: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
-		getTokenFromCode(code).then(token => {
+		getTokenFromCode(code, redirectURI).then(token => {
 			signPayload(token).then(resolve).catch(reject);
 		}).catch(reject);
 	});
 }
 
-export function getUserInfoFromToken (token: Credentials): Promise<GoogleCredential> {
+export function getUserInfoFromToken (token: Credentials, redirectURI: string): Promise<GoogleCredential> {
 	return new Promise<GoogleCredential>((resolve, reject) => {
-		oath2FromCredentials().then(authClient => {
+		oath2FromCredentials(redirectURI).then(authClient => {
 			authClient.setCredentials({
 				access_token: token.access_token
 			});

@@ -7,8 +7,10 @@ import UserModel, { userDocFromUser } from "../../database/models/user";
 import generateToken from "../auth/generateToken";
 import { UserFromGoogleCredentials, UserType } from "../../types/user";
 
+const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/oauth/callback`;
+
 const redirectToGoogle = (req: Request, res: Response): void => {
-	oath2FromCredentials(`${req.protocol}://${req.get("host")}/oauth/callback`).then(oauthClient => {
+	oath2FromCredentials(generateRedirectURI(req)).then(oauthClient => {
 		res.redirect(oauthClient.generateAuthUrl({
 			access_type: "offline",
 			scope: CONFIG.oauth2Credentials.scope
@@ -21,8 +23,8 @@ const redirectFromGoogle = (req: Request, res:Response): void => {
 		// User rejected request
 		internalErrorHandler(req, res)((req.query.error ?? "Google failed to authenticate") as string);
 	} else {
-		getTokenFromCode(req.query.code as string).then(token => {
-			getUserInfoFromToken(token).then(info => {
+		getTokenFromCode(req.query.code as string, generateRedirectURI(req)).then(token => {
+			getUserInfoFromToken(token, generateRedirectURI(req)).then(info => {
 				signPayload(token).then(signedToken => {
 					res.cookie("jwt", signedToken);
 					UserModel.find({
