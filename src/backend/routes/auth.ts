@@ -6,7 +6,7 @@ import { loginValidator, signUpValidator, tokenValidator } from "../validators/u
 const authRouter = Router();
 
 authRouter.get("/google", redirectToGoogle);
-authRouter.get("/oath", redirectFromGoogle);
+authRouter.get("/oauth", redirectFromGoogle);
 
 authRouter.post("/", signUpValidator, signUp);
 authRouter.post("/login", loginValidator, login);
