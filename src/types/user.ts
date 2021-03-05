@@ -20,6 +20,10 @@ export interface UserWithId extends User{
 	id: string
 }
 
+export interface UserWithPassword extends UserWithId{
+	password: string
+}
+
 export class UserObj implements User {
 	email: string;
 	createdAt: Date;

@@ -1,4 +1,4 @@
-import { UserFromDoc, UserWithId } from "../../types/user";
+import { UserFromDoc, UserWithId, UserWithPassword } from "../../types/user";
 import jwt, { VerifyCallback } from "jsonwebtoken";
 import UserModel from "../../database/models/user";
 
@@ -36,11 +36,38 @@ export function getUserFromId (id: string): Promise<UserWithId> {
 	});
 }
 
+export function getPasswordFromId (id: string): Promise<string> {
+	return new Promise<string>((resolve, reject) => {
+		UserModel.findById(id).then(user => {
+			if (user && user.password) {
+				resolve(user.password);
+			} else {
+				reject(new Error("Password not found"));
+			}
+		}).catch(reject);
+	});
+}
+
 export function getUserFromToken (token: string): Promise<UserWithId> {
 	return new Promise<UserWithId>((resolve, reject) => {
 		getUserIdFromToken(token)
 			.then(getUserFromId)
 			.then(resolve)
 			.catch(reject);
+	});
+}
+
+export function getUserFromTokenWithPassword (token: string): Promise<UserWithPassword> {
+	return new Promise<UserWithPassword>((resolve, reject) => {
+		getUserIdFromToken(token).then(id => {
+			getUserFromId(id).then(user => {
+				getPasswordFromId(id).then(password => {
+					resolve({
+						...user,
+						password
+					});
+				}).catch(reject);
+			}).catch(reject);
+		}).catch(reject);
 	});
 }
