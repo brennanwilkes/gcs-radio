@@ -16,6 +16,10 @@ export interface User{
 	id?: string
 }
 
+export interface UserWithId extends User{
+	id: string
+}
+
 export class UserObj implements User {
 	email: string;
 	createdAt: Date;
@@ -31,9 +35,16 @@ export class UserObj implements User {
 	}
 }
 
-export class UserFromDoc extends UserObj {
+export class UserFromDoc implements UserWithId {
+	email: string;
+	createdAt: Date;
+	type: UserType;
+	id: string;
 	constructor (doc: UserDoc) {
-		super(doc.email, doc.type as UserType, doc.createdAt, String(doc._id));
+		this.id = doc.id;
+		this.email = doc.email;
+		this.type = doc.type as UserType;
+		this.createdAt = doc.createdAt;
 	}
 }
 

@@ -7,6 +7,7 @@ import internalErrorHandler from "../util/internalErrorHandler";
 import invalidLoginErrorHandler from "../util/invalidLoginErrorHandler";
 import conflictErrorHandler from "../util/conflictErrorHandler";
 import generateToken from "../auth/generateToken";
+import { getUserFromToken } from "../auth/getUser";
 
 export async function login (req: Request, res: Response) {
 	const { email, password } = req.body;
@@ -59,13 +60,15 @@ export async function signUp (req: Request, res: Response) {
 }
 
 export function getUser (req: Request, res: Response) {
-	User.findById(req.body.user.id).then(user => {
-		if (user) {
-			res.status(200).json({
-				users: [new UserFromDoc(user)]
-			});
-		} else {
-			notFoundErrorHandler(req, res)("user", req.body.user.id);
-		}
-	}).catch(() => notFoundErrorHandler(req, res)("user", req.body.user.id));
+	getUserFromToken(req.header("token") as string).then(user => {
+		User.findById(user.id).then(userDoc => {
+			if (userDoc) {
+				res.status(200).json({
+					users: [new UserFromDoc(userDoc)]
+				});
+			} else {
+				notFoundErrorHandler(req, res)("user", user.id);
+			}
+		}).catch(() => notFoundErrorHandler(req, res)("user", user.id));
+	}).catch(internalErrorHandler(req, res));
 }

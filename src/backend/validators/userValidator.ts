@@ -24,8 +24,7 @@ const tokenValidator = [
 	header("token").exists(),
 	authErrorHandler,
 	(req: Request, res: Response, next: NextFunction) => {
-		getUserFromToken(req.header("token") as string).then(user => {
-			req.body.user = user;
+		getUserFromToken(req.header("token") as string).then(() => {
 			next();
 		}).catch(internalErrorHandler(req, res));
 	}

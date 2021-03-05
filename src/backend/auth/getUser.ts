@@ -1,4 +1,4 @@
-import { User, UserFromDoc } from "../../types/user";
+import { UserFromDoc, UserWithId } from "../../types/user";
 import jwt, { VerifyCallback } from "jsonwebtoken";
 import UserModel from "../../database/models/user";
 
@@ -24,8 +24,8 @@ export function getUserIdFromToken (token: string): Promise<string> {
 	});
 }
 
-export function getUserFromId (id: string): Promise<User> {
-	return new Promise<User>((resolve, reject) => {
+export function getUserFromId (id: string): Promise<UserWithId> {
+	return new Promise<UserWithId>((resolve, reject) => {
 		UserModel.findById(id).then(user => {
 			if (user) {
 				resolve(new UserFromDoc(user));
@@ -36,8 +36,8 @@ export function getUserFromId (id: string): Promise<User> {
 	});
 }
 
-export function getUserFromToken (token: string): Promise<User> {
-	return new Promise<User>((resolve, reject) => {
+export function getUserFromToken (token: string): Promise<UserWithId> {
+	return new Promise<UserWithId>((resolve, reject) => {
 		getUserIdFromToken(token)
 			.then(getUserFromId)
 			.then(resolve)
