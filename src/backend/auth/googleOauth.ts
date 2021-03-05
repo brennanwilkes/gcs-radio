@@ -45,9 +45,10 @@ export function getTokenFromCode (code: string, redirectURI: string): Promise<Cr
 
 export function getSignedTokenFromCode (code: string, redirectURI: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
-		getTokenFromCode(code, redirectURI).then(token => {
-			signPayload(token).then(resolve).catch(reject);
-		}).catch(reject);
+		getTokenFromCode(code, redirectURI)
+			.then(signPayload)
+			.then(resolve)
+			.catch(reject);
 	});
 }
 

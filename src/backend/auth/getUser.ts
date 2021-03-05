@@ -38,8 +38,9 @@ export function getUserFromId (id: string): Promise<User> {
 
 export function getUserFromToken (token: string): Promise<User> {
 	return new Promise<User>((resolve, reject) => {
-		getUserIdFromToken(token).then(id => {
-			getUserFromId(id).then(resolve).catch(reject);
-		}).catch(reject);
+		getUserIdFromToken(token)
+			.then(getUserFromId)
+			.then(resolve)
+			.catch(reject);
 	});
 }

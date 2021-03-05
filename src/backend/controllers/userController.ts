@@ -42,19 +42,17 @@ export async function signUp (req: Request, res: Response) {
 			conflictErrorHandler(req, res)(`User ${email} already exists`);
 		} else {
 			bcrypt.genSalt(10).then(salt => {
-				bcrypt.hash(password, salt).then(encryptedPassword => {
-					new User({
-						email,
-						password: encryptedPassword,
-						type: "PASSWORD"
-					}).save().then(doc => {
-						generateToken(doc._id).then(token => {
-							res.status(200).json({
-								token
-							});
-						}).catch(internalErrorHandler(req, res));
-					}).catch(internalErrorHandler(req, res));
-				}).catch(internalErrorHandler(req, res));
+				return bcrypt.hash(password, salt);
+			}).then(encryptedPassword => {
+				return new User({
+					email,
+					password: encryptedPassword,
+					type: "PASSWORD"
+				}).save();
+			}).then(doc => {
+				return generateToken(doc._id);
+			}).then(token => {
+				res.status(200).json({ token });
 			}).catch(internalErrorHandler(req, res));
 		}
 	}).catch(internalErrorHandler(req, res));
