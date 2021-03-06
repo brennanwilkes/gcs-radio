@@ -8,14 +8,15 @@ import { UserFromSpotifyCredentials, UserType } from "../../types/user";
 import SpotifyApi from "spotify-web-api-node";
 import generateToken from "../auth/generateToken";
 
-const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
+const generateSpotifyRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
+export { generateSpotifyRedirectURI };
 
 const redirectToSpotify = (req: Request, res: Response): void => {
 	if (!process.env.SPOTIFY_ID) {
 		internalErrorHandler(req, res)("Spotify application ID not set");
 	} else {
 		connection.then(spotifyApi => {
-			spotifyApi.setRedirectURI(generateRedirectURI(req));
+			spotifyApi.setRedirectURI(generateSpotifyRedirectURI(req));
 			res.redirect(spotifyApi.createAuthorizeURL(CONFIG.spotifyOauth2Credentials.scope, ""));
 		}).catch(internalErrorHandler(req, res));
 	}
@@ -50,7 +51,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 			token = loginToken;
 			return signPayload(code);
 		}).then(signed => {
-			res.cookie("spotifyJWT", signed);
+			res.cookie("spotifyAccessCode", signed);
 			res.status(200).json({
 				token: token as string
 			});

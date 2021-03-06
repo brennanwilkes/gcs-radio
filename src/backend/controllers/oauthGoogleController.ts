@@ -8,10 +8,11 @@ import generateToken from "../auth/generateToken";
 import { UserFromGoogleCredentials, UserType } from "../../types/user";
 import { GoogleCredential } from "../../types/googleCredential";
 
-const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/google`;
+const generateGoogleRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/google`;
+export { generateGoogleRedirectURI };
 
 const redirectToGoogle = (req: Request, res: Response): void => {
-	oath2FromCredentials(generateRedirectURI(req)).then(oauthClient => {
+	oath2FromCredentials(generateGoogleRedirectURI(req)).then(oauthClient => {
 		res.redirect(oauthClient.generateAuthUrl({
 			access_type: "offline",
 			scope: CONFIG.googleOauth2Credentials.scope
@@ -19,13 +20,14 @@ const redirectToGoogle = (req: Request, res: Response): void => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-const redirectFromGoogle = (req: Request, res:Response): void => {
+const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => {
 	const code = req.query.code as string;
+	res.cookie("googleAccessCode", await signPayload(code));
 
 	let info: GoogleCredential | undefined;
-	getTokenFromCode(code, generateRedirectURI(req)).then(async token => {
+	getTokenFromCode(code, generateGoogleRedirectURI(req)).then(async token => {
 		res.cookie("googleJWT", await signPayload(token));
-		return getUserInfoFromToken(token, generateRedirectURI(req));
+		return getUserInfoFromToken(token, generateGoogleRedirectURI(req));
 	}).then(userInfo => {
 		info = userInfo;
 		return UserModel.find({
