@@ -1,5 +1,6 @@
 import express, { Express, Router } from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import path from "path";
 import { Server } from "http";
 
@@ -39,6 +40,9 @@ export default class RadioServer {
 
 		// support json encoded bodies
 		this.app.use(express.json());
+
+		// Parse cookies
+		this.app.use(cookieParser());
 
 		// support encoded bodies
 		this.app.use(bodyParser.urlencoded({ extended: true }));
