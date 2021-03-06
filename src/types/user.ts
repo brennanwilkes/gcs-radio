@@ -1,10 +1,12 @@
 import { UserDoc } from "../database/models/user";
 import { GoogleCredential } from "./googleCredential";
+import SpotifyApi from "spotify-web-api-node";
 
 /* eslint-disable no-unused-vars */
 export enum UserType{
 	PASSWORD = "PASSWORD",
-	GOOGLE = "GOOGLE"
+	GOOGLE = "GOOGLE",
+	SPOTIFY = "SPOTIFY"
 }
 
 /* eslint-enable no-unused-vars */
@@ -55,5 +57,11 @@ export class UserFromDoc implements UserWithId {
 export class UserFromGoogleCredentials extends UserObj {
 	constructor (credentials: GoogleCredential) {
 		super(credentials.email, UserType.GOOGLE);
+	}
+}
+
+export class UserFromSpotifyCredentials extends UserObj {
+	constructor (credentials: SpotifyApi.UserObjectPrivate) {
+		super(credentials.email, UserType.SPOTIFY);
 	}
 }
