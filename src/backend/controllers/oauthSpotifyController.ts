@@ -8,7 +8,7 @@ import { UserFromSpotifyCredentials, UserType } from "../../types/user";
 import SpotifyApi from "spotify-web-api-node";
 import generateToken from "../auth/generateToken";
 
-const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth`;
+const generateRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
 
 const redirectToSpotify = (req: Request, res: Response): void => {
 	if (!process.env.SPOTIFY_ID) {
