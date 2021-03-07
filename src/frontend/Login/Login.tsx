@@ -38,10 +38,10 @@ export default class Landing extends React.Component<IProps, IState> {
 		axios.post(`../auth${!this.props.signup ? "/login" : ""}`,{
 			email,
 			password
-		}).then(res => {
-			console.dir(res.data);
+		}).then(() => {
+			window.location.pathname = "../dashboard";
 		}).catch(err => {
-			console.error(err.response.data);
+			alert(err.response.data);
 		}).finally(() => {
 			this.setState({
 				processing: false
@@ -55,14 +55,19 @@ export default class Landing extends React.Component<IProps, IState> {
 				<h1>GCS Radio</h1>
 				<FloatingLabel id="email" label="Email" />
 				<FloatingLabel id="password1" label="Password" type="password" />
-				<FloatingLabel id="password2" label="Confirm password" type="password" />
+				{
+					this.props.signup ? <FloatingLabel id="password2" label="Confirm password" type="password" /> : <></>
+				}
 				<a href="../auth/google" className="btn btn-info">
 					Login with Google
+				</a>
+				<a href="../auth/spotify" className="btn btn-success">
+					Login with Spotify
 				</a>
 
 				<button
 					onClick={this.login}
-					className={`btn btn-${this.state.processing ? "warning" : "success"}`}>{
+					className={`btn btn-${this.state.processing ? "warning" : "primary"}`}>{
 					this.state.processing
 					? `Processing`
 					: `${this.props.signup ? "Sign Up" : "Login"}`

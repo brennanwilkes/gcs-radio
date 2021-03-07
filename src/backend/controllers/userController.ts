@@ -19,9 +19,8 @@ export async function login (req: Request, res: Response): Promise<void> {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
 					generateToken(user.id).then(token => {
-						res.status(200).json({
-							token
-						});
+						res.cookie("jwt", token);
+						res.status(200).json({ token });
 					}).catch(internalErrorHandler(req, res));
 				} else {
 					invalidLoginErrorHandler(req, res)(email, 401);
@@ -53,6 +52,7 @@ export async function signUp (req: Request, res: Response): Promise<void> {
 			}).then(doc => {
 				return generateToken(doc._id);
 			}).then(token => {
+				res.cookie("jwt", token);
 				res.status(200).json({ token });
 			}).catch(internalErrorHandler(req, res));
 		}
