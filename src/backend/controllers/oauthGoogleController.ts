@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CONFIG } from "../util/util";
+import { CONFIG, generateDashboardRedirect } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
 import { getTokenFromCode, getUserInfoFromToken, oath2FromCredentials } from "../auth/googleOauth";
 import signPayload from "../auth/signPayload";
@@ -9,7 +9,6 @@ import { UserFromGoogleCredentials, UserType } from "../../types/user";
 import { GoogleCredential } from "../../types/googleCredential";
 
 const generateGoogleRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/google`;
-export { generateGoogleRedirectURI };
 
 const redirectToGoogle = (req: Request, res: Response): void => {
 	oath2FromCredentials(generateGoogleRedirectURI(req)).then(oauthClient => {
@@ -22,7 +21,6 @@ const redirectToGoogle = (req: Request, res: Response): void => {
 
 const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => {
 	const code = req.query.code as string;
-	res.cookie("googleAccessCode", await signPayload(code));
 
 	let info: GoogleCredential | undefined;
 	getTokenFromCode(code, generateGoogleRedirectURI(req)).then(async token => {
@@ -43,9 +41,8 @@ const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => 
 			return await generateToken(doc._id);
 		}
 	}).then(loginToken => {
-		res.status(200).json({
-			token: loginToken
-		});
+		res.cookie("jwt", loginToken);
+		res.redirect(generateDashboardRedirect(req));
 	}).catch(internalErrorHandler(req, res));
 };
 

@@ -1,26 +1,16 @@
 import { UserFromDoc, UserWithId, UserWithPassword } from "../../types/user";
-import jwt, { VerifyCallback } from "jsonwebtoken";
 import UserModel from "../../database/models/user";
-
-const verificationCallback: ((resolve: (value: string | PromiseLike<string>) => void, reject: (err?: Error) => void) => VerifyCallback) = (resolve, reject) => (err, decoded) => {
-	if (err || !decoded) {
-		reject(new Error(err?.message ?? "Internal Error"));
-	} else {
-		if ("user" in decoded && "id" in (decoded as any).user) {
-			resolve((decoded as any).user.id);
-		} else {
-			reject(new Error("Authorization error"));
-		}
-	}
-};
+import { resolveSignedPayload } from "./signPayload";
 
 export function getUserIdFromToken (token: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
-		if (process.env.TOKEN_SECRET) {
-			jwt.verify(token, process.env.TOKEN_SECRET, verificationCallback(resolve, reject));
-		} else {
-			reject(new Error("Token secret not set"));
-		}
+		resolveSignedPayload(token).then(payload => {
+			if ("user" in (payload as any) && "id" in (payload as any).user) {
+				resolve((payload as any).user.id);
+			} else {
+				reject(new Error("Authorization error"));
+			}
+		}).catch(reject);
 	});
 }
 

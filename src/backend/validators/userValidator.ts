@@ -1,4 +1,4 @@
-import { body, header } from "express-validator";
+import { body, header, oneOf, cookie } from "express-validator";
 import { validationErrorHandler, authErrorHandler } from "./validatorUtil";
 import { Request, Response, NextFunction } from "express";
 import internalErrorHandler from "../util/internalErrorHandler";
@@ -21,10 +21,15 @@ const signUpValidator = [
 ];
 
 const tokenValidator = [
-	header("token").exists(),
+	oneOf([
+		header("token").exists(),
+		cookie("jwt").exists()
+	]),
 	authErrorHandler,
 	(req: Request, res: Response, next: NextFunction) => {
-		getUserFromToken(req.header("token") as string).then(() => {
+		const token = (req.header("token") ?? req.cookies.jwt) as string;
+		getUserFromToken(token).then(() => {
+			req.headers.token = token;
 			next();
 		}).catch(internalErrorHandler(req, res));
 	}

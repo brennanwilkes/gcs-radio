@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { CONFIG } from "../util/util";
+import { CONFIG, generateDashboardRedirect } from "../util/util";
 import internalErrorHandler from "../util/internalErrorHandler";
-import signPayload from "../auth/signPayload";
 import connection from "../spotify/connection";
 import UserModel, { userDocFromUser } from "../../database/models/user";
 import { UserFromSpotifyCredentials, UserType } from "../../types/user";
@@ -25,7 +24,6 @@ const redirectToSpotify = (req: Request, res: Response): void => {
 const redirectFromSpotify = (req: Request, res:Response): void => {
 	const code = req.query.code as string;
 	let user: SpotifyApi.UserObjectPrivate | undefined;
-	let token: string | undefined;
 
 	connection.then(spotifyApi => {
 		spotifyApi.authorizationCodeGrant(code).then(data => {
@@ -47,14 +45,9 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 				const doc = await userDocFromUser(userObj).save();
 				return await generateToken(doc._id);
 			}
-		}).then(loginToken => {
-			token = loginToken;
-			return signPayload(code);
-		}).then(signed => {
-			res.cookie("spotifyAccessCode", signed);
-			res.status(200).json({
-				token: token as string
-			});
+		}).then(token => {
+			res.cookie("jwt", token);
+			res.redirect(generateDashboardRedirect(req));
 		}).catch(internalErrorHandler(req, res));
 	}).catch(internalErrorHandler(req, res));
 };

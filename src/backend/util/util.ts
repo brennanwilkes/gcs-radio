@@ -1,3 +1,4 @@
+import { Request } from "express";
 
 // Store all backend config vars here
 import "dotenv/config";
@@ -24,3 +25,5 @@ export const CONFIG = {
 export const print = function (...content: string[]): void {
 	if (CONFIG.verbose) console.log(...content);
 };
+
+export const generateDashboardRedirect = (req: Request): string => `${req.protocol}://${req.get("host")}/dashboard`;
