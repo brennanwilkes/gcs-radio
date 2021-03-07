@@ -42,7 +42,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 				return generateToken(docs[0]._id);
 			} else {
 				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate);
-				const doc = await userDocFromUser({ user: userObj }).save();
+				const doc = await userDocFromUser(userObj).save();
 				return await generateToken(doc._id);
 			}
 		}).then(token => {

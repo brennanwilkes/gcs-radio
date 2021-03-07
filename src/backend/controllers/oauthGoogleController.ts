@@ -37,7 +37,7 @@ const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => 
 			return generateToken(docs[0]._id);
 		} else {
 			const user = new UserFromGoogleCredentials(info as GoogleCredential);
-			const doc = await userDocFromUser({ user }).save();
+			const doc = await userDocFromUser(user).save();
 			return await generateToken(doc._id);
 		}
 	}).then(loginToken => {
