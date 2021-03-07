@@ -6,7 +6,7 @@ import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYou
 
 export default function (spotifyResults: SpotifyResult[], searchAttempts = 10): Promise<Song[]> {
 	return new Promise<Song[]>((resolve, reject) => {
-		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async (spotifySong, _songNumber) => {
+		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async spotifySong => {
 			print(`Querying youtube for ${spotifySong.title} by ${spotifySong.artist}`);
 			const youtubeIds = await searchYoutubeSimple(`song ${spotifySong.title} by ${spotifySong.artist} official`, searchAttempts).catch(reject);
 			if (youtubeIds) {

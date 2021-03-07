@@ -19,7 +19,7 @@ export class GoogleCredentialObj implements GoogleCredential {
 	}
 }
 
-export function googleCredentialFromApi (apiResult: oauth2V2.Schema$Userinfo) {
+export function googleCredentialFromApi (apiResult: oauth2V2.Schema$Userinfo): Promise<GoogleCredential> {
 	return new Promise<GoogleCredential>((resolve, reject) => {
 		if (apiResult.email && apiResult.name) {
 			resolve(new GoogleCredentialObj(apiResult.email, apiResult.name, apiResult.picture as string | undefined));

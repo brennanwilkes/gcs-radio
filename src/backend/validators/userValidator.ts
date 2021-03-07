@@ -26,7 +26,7 @@ const tokenValidator = [
 		cookie("jwt").exists()
 	]),
 	authErrorHandler,
-	(req: Request, res: Response, next: NextFunction) => {
+	(req: Request, res: Response, next: NextFunction): void => {
 		const token = (req.header("token") ?? req.cookies.jwt) as string;
 		getUserFromToken(token).then(() => {
 			req.headers.token = token;

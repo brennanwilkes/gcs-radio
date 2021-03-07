@@ -37,7 +37,7 @@ export interface UserDoc extends mongoose.Document {
 const User = mongoose.model<UserDoc>("user", UserSchema);
 export default User;
 
-export function userDocFromUser (user: UserType, password?: string) {
+export function userDocFromUser (user: UserType, password?: string): UserDoc {
 	return new User({
 		email: user.email,
 		type: user.type,

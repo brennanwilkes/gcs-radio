@@ -7,7 +7,7 @@ import { UserFromSpotifyCredentials, UserType } from "../../types/user";
 import SpotifyApi from "spotify-web-api-node";
 import generateToken from "../auth/generateToken";
 
-const generateSpotifyRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
+const generateSpotifyRedirectURI = (req: Request): string => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
 export { generateSpotifyRedirectURI };
 
 const redirectToSpotify = (req: Request, res: Response): void => {
@@ -42,7 +42,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 				return generateToken(docs[0]._id);
 			} else {
 				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate);
-				const doc = await userDocFromUser(userObj).save();
+				const doc = await userDocFromUser({ user: userObj }).save();
 				return await generateToken(doc._id);
 			}
 		}).then(token => {

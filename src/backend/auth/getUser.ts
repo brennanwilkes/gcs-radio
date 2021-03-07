@@ -1,12 +1,16 @@
-import { UserFromDoc, UserWithId, UserWithPassword } from "../../types/user";
+import { User, UserFromDoc, UserWithId, UserWithPassword } from "../../types/user";
 import UserModel from "../../database/models/user";
 import { resolveSignedPayload } from "./signPayload";
+
+function isUser (unknown: any): unknown is {user:User} {
+	return typeof unknown !== "string" && "user" in unknown && "id" in unknown.user;
+}
 
 export function getUserIdFromToken (token: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
 		resolveSignedPayload(token).then(payload => {
-			if ("user" in (payload as any) && "id" in (payload as any).user) {
-				resolve((payload as any).user.id);
+			if (isUser(payload) && payload.user.id) {
+				resolve(payload.user.id);
 			} else {
 				reject(new Error("Authorization error"));
 			}

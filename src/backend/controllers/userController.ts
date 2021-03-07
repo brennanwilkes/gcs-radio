@@ -9,7 +9,7 @@ import conflictErrorHandler from "../util/conflictErrorHandler";
 import generateToken from "../auth/generateToken";
 import { getUserFromToken } from "../auth/getUser";
 
-export async function login (req: Request, res: Response) {
+export async function login (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
 	User.findOne({
 		email,
@@ -33,7 +33,7 @@ export async function login (req: Request, res: Response) {
 	}).catch(() => invalidLoginErrorHandler(req, res)(email, 404));
 }
 
-export async function signUp (req: Request, res: Response) {
+export async function signUp (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
 	User.findOne({
 		email,
@@ -59,7 +59,7 @@ export async function signUp (req: Request, res: Response) {
 	}).catch(internalErrorHandler(req, res));
 }
 
-export function getUser (req: Request, res: Response) {
+export function getUser (req: Request, res: Response): void {
 	getUserFromToken(req.header("token") as string).then(user => {
 		User.findById(user.id).then(userDoc => {
 			if (userDoc) {
