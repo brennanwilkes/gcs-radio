@@ -70,6 +70,9 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	updateProgress(){
+		console.dir(this.state.progress);
+		console.dir(this.state.maxProgress);
+		console.log("");
 		if(this.state.index < this.state.queue.length){
 			this.setState({
 				progress: this.getProgress()
@@ -81,7 +84,7 @@ export default class App extends React.Component<IProps, IState> {
 		if(i === 0){
 			this.setState({
 				ready: true,
-				maxProgress: queue[0].duration()
+				maxProgress: this.props.songs[0].duration
 			});
 		}
 		if(i + 1 < queue.length){
@@ -211,7 +214,9 @@ export default class App extends React.Component<IProps, IState> {
 			this.state.index + direction >= 0){
 
 			//Reset current audio
-			this.state.queue[this.state.index].stop();
+			if(!this.state.spotifySDKMode){
+				this.state.queue[this.state.index].stop();
+			}
 			this.state.transitions[this.state.lastTransition].stop();
 
 			//Play transition audio
@@ -247,7 +252,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	rewind(){
-		if(this.state.progress > 3 || this.state.index === 0){
+		if(this.state.progress > 3000 || this.state.index === 0){
 			this.setProgress(0);
 		}
 		else{
@@ -283,7 +288,7 @@ export default class App extends React.Component<IProps, IState> {
 				if(this.state.transitions[this.state.index].playing()){
 					this.state.transitions[this.state.index][this.state.paused ? "play" : "pause"]();
 				}
-				if(this.state.paused){
+				if(!this.state.paused){
 					this.pauseSong(this.state.index);
 				}
 				else{
