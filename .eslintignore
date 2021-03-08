@@ -3,3 +3,4 @@
 public-frontend/
 **/*.config.*
 src/dev/clearCache.js
+src/frontend/spotifyWebSDK/

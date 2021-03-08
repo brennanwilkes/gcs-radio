@@ -10,6 +10,7 @@ import {Howl} from "howler";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
+import {playId} from "../spotifyWebSDK/spotify";
 
 interface IProps {
 	songs: Song[],
@@ -157,6 +158,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount(){
+
 		this.initializeSongs();
 		this.initializeTransitions();
 		if(iOS()){
@@ -190,6 +192,8 @@ export default class App extends React.Component<IProps, IState> {
 					});
 				}
 
+				playId(this.props.songs[this.state.index + direction].spotifyId);
+				/*
 				//Using the enum completely breaks webpack 5
 				if(this.props.transitions[this.state.index + direction].type === "PARALLEL"){//VoiceLineType.parallel){
 					this.state.queue[this.state.index + direction].play();
@@ -200,6 +204,7 @@ export default class App extends React.Component<IProps, IState> {
 						() => this.state.queue[indexCache].play()
 					);
 				}
+				*/
 			}
 			this.setState({
 				index: this.state.index + direction,

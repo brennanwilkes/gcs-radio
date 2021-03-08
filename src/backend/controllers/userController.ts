@@ -19,7 +19,7 @@ export async function login (req: Request, res: Response): Promise<void> {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
 					generateToken(user.id).then(token => {
-						res.cookie("jwt", token);
+						res.cookie("jwt", token, { httpOnly: false });
 						res.status(200).json({ token });
 					}).catch(internalErrorHandler(req, res));
 				} else {

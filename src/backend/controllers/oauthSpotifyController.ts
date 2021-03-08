@@ -29,6 +29,8 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 		spotifyApi.authorizationCodeGrant(code).then(data => {
 			spotifyApi.setAccessToken(data.body.access_token);
 			spotifyApi.setRefreshToken(data.body.refresh_token);
+			res.cookie("sat", data.body.access_token, { httpOnly: false });
+			res.cookie("srt", data.body.refresh_token, { httpOnly: false });
 
 			return spotifyApi.getMe();
 		}).then(userResp => {
@@ -46,7 +48,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 				return await generateToken(doc._id);
 			}
 		}).then(token => {
-			res.cookie("jwt", token);
+			res.cookie("jwt", token, { httpOnly: false });
 			res.redirect(generateDashboardRedirect(req));
 		}).catch(internalErrorHandler(req, res));
 	}).catch(internalErrorHandler(req, res));

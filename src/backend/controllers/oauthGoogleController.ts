@@ -41,7 +41,7 @@ const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => 
 			return await generateToken(doc._id);
 		}
 	}).then(loginToken => {
-		res.cookie("jwt", loginToken);
+		res.cookie("jwt", loginToken, { httpOnly: false });
 		res.redirect(generateDashboardRedirect(req));
 	}).catch(internalErrorHandler(req, res));
 };
