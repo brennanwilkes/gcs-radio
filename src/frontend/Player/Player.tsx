@@ -10,12 +10,13 @@ import {Howl} from "howler";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {playId} from "../spotifyWebSDK/spotify";
+import {spotifyPause, spotifyPlayId, spotifySeek} from "../spotifyWebSDK/spotify";
 import { access_token } from "../spotifyWebSDK/spotifyWebSDK";
 
 interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
+	spotifySDKMode?: boolean
 }
 interface IState {
 	paused: boolean,
@@ -47,6 +48,8 @@ export default class App extends React.Component<IProps, IState> {
 		this.loadedTransitionCallback = this.loadedTransitionCallback.bind(this);
 		this.unlockMobileAudio = this.unlockMobileAudio.bind(this);
 		this.playSong = this.playSong.bind(this);
+		this.pauseSong = this.pauseSong.bind(this);
+		this.getProgress = this.getProgress.bind(this);
 
 		this.state = {
 			queue: [],
@@ -60,7 +63,7 @@ export default class App extends React.Component<IProps, IState> {
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false,
-			spotifySDKMode: access_token !== "INVALID"
+			spotifySDKMode: this.props.spotifySDKMode ?? access_token !== "INVALID"
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -68,12 +71,9 @@ export default class App extends React.Component<IProps, IState> {
 
 	updateProgress(){
 		if(this.state.index < this.state.queue.length){
-			const progress = this.state.queue[this.state.index].seek();
-			if(typeof(progress) === "number"){
-				this.setState({
-					progress: progress
-				});
-			}
+			this.setState({
+				progress: this.getProgress()
+			});
 		}
 	}
 
@@ -175,10 +175,28 @@ export default class App extends React.Component<IProps, IState> {
 
 	playSong(index: number){
 		if(this.state.spotifySDKMode){
-			playId(this.props.songs[index].spotifyId);
+			spotifyPlayId(this.props.songs[index].spotifyId);
 		}
 		else{
 			this.state.queue[index].play();
+		}
+	}
+
+	pauseSong(index: number){
+		if(this.state.spotifySDKMode){
+			spotifyPause();
+		}
+		else{
+			this.state.queue[index].pause();
+		}
+	}
+
+	getProgress(): number{
+		if(this.state.spotifySDKMode){
+			return spotifySeek();
+		}
+		else{
+			return this.state.queue[this.state.index].seek() as number;
 		}
 	}
 
@@ -219,7 +237,7 @@ export default class App extends React.Component<IProps, IState> {
 			}
 			this.setState({
 				index: this.state.index + direction,
-				maxProgress: this.state.queue[this.state.index + direction].duration()
+				maxProgress: this.props.songs[this.state.index + direction].duration
 			});
 		}
 		else{
@@ -239,7 +257,12 @@ export default class App extends React.Component<IProps, IState> {
 
 	setProgress(value: number){
 		if(this.state.index < this.state.queue.length && !this.state.seekLock){
-			this.state.queue[this.state.index].seek(value);
+			if(this.state.spotifySDKMode){
+				spotifySeek(value);
+			}
+			else{
+				this.state.queue[this.state.index].seek(value);
+			}
 			this.updateProgress();
 		}
 	}
@@ -256,10 +279,16 @@ export default class App extends React.Component<IProps, IState> {
 				});
 			}
 			else{
+
 				if(this.state.transitions[this.state.index].playing()){
 					this.state.transitions[this.state.index][this.state.paused ? "play" : "pause"]();
 				}
-				this.state.queue[this.state.index][this.state.paused ? "play" : "pause"]();
+				if(this.state.paused){
+					this.pauseSong(this.state.index);
+				}
+				else{
+					this.playSong(this.state.index);
+				}
 			}
 		}
 		this.setState({paused: !this.state.paused});
