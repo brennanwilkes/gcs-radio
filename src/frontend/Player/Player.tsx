@@ -217,6 +217,7 @@ export default class App extends React.Component<IProps, IState> {
 			//Reset current audio
 			if(this.state.spotifySDKMode){
 				this.pauseSong();
+				this.setProgress(0);
 			}
 			else{
 				this.state.queue[this.state.index].stop();

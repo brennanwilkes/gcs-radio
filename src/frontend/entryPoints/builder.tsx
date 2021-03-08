@@ -4,10 +4,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-//import Demo from "./Demo";
+import ResponsiveContainer from "../ResponsiveContainer/ResponsiveContainer";
 import Builder from "../Builder/Builder";
 
 // Main render
-ReactDOM.render(<Builder redirectCallback={(playlist: string) => {
-	window.location.href = `../app?playlist=${encodeURIComponent(playlist)}`
-}} />,document.getElementsByTagName("MAIN")[0]);
+ReactDOM.render(<ResponsiveContainer children={
+	<Builder redirectCallback={(playlist: string) => {
+		window.location.href = `../app?playlist=${encodeURIComponent(playlist)}`
+	}} />
+} />, document.getElementsByTagName("MAIN")[0]);
