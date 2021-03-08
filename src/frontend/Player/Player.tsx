@@ -70,9 +70,6 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	updateProgress(){
-		console.dir(this.state.progress);
-		console.dir(this.state.maxProgress);
-		console.log("");
 		if(this.state.index < this.state.queue.length){
 			this.setState({
 				progress: this.getProgress()
@@ -176,7 +173,7 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
-	playSong(index: number){
+	playSong(index: number = this.state.index){
 		if(this.state.spotifySDKMode){
 			spotifyPlayId(this.props.songs[index].spotifyId);
 		}
@@ -185,7 +182,7 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
-	pauseSong(index: number){
+	pauseSong(index: number = this.state.index){
 		if(this.state.spotifySDKMode){
 			spotifyPause();
 		}
@@ -214,7 +211,10 @@ export default class App extends React.Component<IProps, IState> {
 			this.state.index + direction >= 0){
 
 			//Reset current audio
-			if(!this.state.spotifySDKMode){
+			if(this.state.spotifySDKMode){
+				this.pauseSong();
+			}
+			else{
 				this.state.queue[this.state.index].stop();
 			}
 			this.state.transitions[this.state.lastTransition].stop();
@@ -289,10 +289,10 @@ export default class App extends React.Component<IProps, IState> {
 					this.state.transitions[this.state.index][this.state.paused ? "play" : "pause"]();
 				}
 				if(!this.state.paused){
-					this.pauseSong(this.state.index);
+					this.pauseSong();
 				}
 				else{
-					this.playSong(this.state.index);
+					this.playSong();
 				}
 			}
 		}
