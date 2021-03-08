@@ -6,6 +6,9 @@ module.exports = {
 		app: "./src/frontend/entryPoints/app.tsx",
 		landing: "./src/frontend/entryPoints/landing.tsx",
 		login: "./src/frontend/entryPoints/login.tsx",
+		browser: "./src/frontend/entryPoints/browser.tsx",
+		dashboard: "./src/frontend/entryPoints/dashboard.tsx",
+		builder: "./src/frontend/entryPoints/builder.tsx"
 	},
 	output: {
 		filename: '[name].js',

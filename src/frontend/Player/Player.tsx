@@ -97,7 +97,9 @@ export default class App extends React.Component<IProps, IState> {
 			audio.on("end", () => this.transitionSong(1));
 			audio.on("load", () => this.loadedSongCallback(i, queue));
 		});
-		queue[0].load();
+		if(queue.length){
+			queue[0].load();
+		}
 
 		this.setState({
 			queue : queue,
@@ -139,7 +141,9 @@ export default class App extends React.Component<IProps, IState> {
 			trans.on("end", () => trans.stop());
 			trans.on("load", () => this.loadedTransitionCallback(i, transitions));
 		});
-		transitions[0].load();
+		if(transitions.length){
+			transitions[0].load();
+		}
 
 		this.setState({
 			transitions : transitions,
@@ -196,7 +200,7 @@ export default class App extends React.Component<IProps, IState> {
 			return spotifySeek();
 		}
 		else{
-			return this.state.queue[this.state.index].seek() as number;
+			return (this.state.queue[this.state.index].seek() as number) * 1000;
 		}
 	}
 
@@ -266,7 +270,7 @@ export default class App extends React.Component<IProps, IState> {
 				spotifySeek(value);
 			}
 			else{
-				this.state.queue[this.state.index].seek(value);
+				this.state.queue[this.state.index].seek(value / 1000);
 			}
 			this.updateProgress();
 		}

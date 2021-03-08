@@ -4,12 +4,13 @@ import {Song} from '../../types/song';
 import {PlaylistObj} from "../../types/playlist";
 
 import "./builder.css";
+
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import HrWrapper from "../HrWrapper/HrWrapper";
 
 interface IProps {
-	loadSongsCallback: ((songs: Song[]) => void)
+	redirectCallback: ((playlist: string) => void)
 }
 interface IState {
 	queriedSongs: Song[],
@@ -49,7 +50,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				songs: complete.songs.map(song => song.id)
 			}).then(resp => {
 				if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
-					this.props.loadSongsCallback(resp.data.playlists[0].songs);
+					this.props.redirectCallback(resp.data.playlists[0].id);
 				}
 			}).catch(console.error);
 		});
@@ -94,6 +95,7 @@ export default class Builder extends React.Component<IProps, IState> {
 		const songsDisplay = this.state.songs.map((song) => <SongRow key={getSongKey(song)} song={song} keyExtension="selected" />);
 
 		return <>
+			<h1>GCS Radio</h1>
 			<div className="Builder">
 				<HrWrapper style={{
 					borderBottomColor: "#CCC"
