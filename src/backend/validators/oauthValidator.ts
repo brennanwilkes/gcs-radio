@@ -9,7 +9,7 @@ const existingTokenRedirect = [
 		if (req.cookies.jwt) {
 			resolveSignedPayload(req.cookies.jwt).then(() => {
 				res.redirect(generateDashboardRedirect(req));
-			}).catch(next);
+			}).catch(() => next());
 		} else {
 			next();
 		}
