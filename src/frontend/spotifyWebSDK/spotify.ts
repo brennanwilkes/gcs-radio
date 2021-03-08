@@ -8,7 +8,7 @@ export const playId = (id: string): boolean => {
 	}
 	play({
 		playerInstance: spotifyPlayer,
-		spotify_uri: `'spotify:track:${id}`,
+		spotify_uri: `spotify:track:${id}`,
 	});
 	return true;
 }

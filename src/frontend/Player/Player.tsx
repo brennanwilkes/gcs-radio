@@ -11,6 +11,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import {playId} from "../spotifyWebSDK/spotify";
+import { access_token } from "../spotifyWebSDK/spotifyWebSDK";
 
 interface IProps {
 	songs: Song[],
@@ -27,7 +28,8 @@ interface IState {
 	unlocked: boolean,
 	seekLock: boolean,
 	lastTransition: number,
-	playedIntro: boolean
+	playedIntro: boolean,
+	spotifySDKMode: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -44,6 +46,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.loadedSongCallback = this.loadedSongCallback.bind(this);
 		this.loadedTransitionCallback = this.loadedTransitionCallback.bind(this);
 		this.unlockMobileAudio = this.unlockMobileAudio.bind(this);
+		this.playSong = this.playSong.bind(this);
 
 		this.state = {
 			queue: [],
@@ -56,7 +59,8 @@ export default class App extends React.Component<IProps, IState> {
 			unlocked: false,
 			seekLock: false,
 			lastTransition: 0,
-			playedIntro: false
+			playedIntro: false,
+			spotifySDKMode: access_token !== "INVALID"
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -169,6 +173,15 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
+	playSong(index: number){
+		if(this.state.spotifySDKMode){
+			playId(this.props.songs[index].spotifyId);
+		}
+		else{
+			this.state.queue[index].play();
+		}
+	}
+
 	transitionSong(direction: number = 1){
 
 		this.setState({seekLock: true});
@@ -192,19 +205,17 @@ export default class App extends React.Component<IProps, IState> {
 					});
 				}
 
-				playId(this.props.songs[this.state.index + direction].spotifyId);
-				/*
+
 				//Using the enum completely breaks webpack 5
 				if(this.props.transitions[this.state.index + direction].type === "PARALLEL"){//VoiceLineType.parallel){
-					this.state.queue[this.state.index + direction].play();
+					this.playSong(this.state.index + direction);
 				}
 				else{
 					const indexCache = this.state.index + direction;
 					this.state.transitions[this.state.index + direction].on("end",
-						() => this.state.queue[indexCache].play()
+						() => this.playSong(indexCache)
 					);
 				}
-				*/
 			}
 			this.setState({
 				index: this.state.index + direction,
@@ -238,7 +249,7 @@ export default class App extends React.Component<IProps, IState> {
 			if(!this.state.playedIntro){
 				this.state.transitions[0].play();
 				this.state.transitions[0].on("end", () => {
-					this.state.queue[0].play();
+					this.playSong(0);
 				});
 				this.setState({
 					playedIntro: true
