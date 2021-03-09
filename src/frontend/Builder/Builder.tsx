@@ -56,15 +56,17 @@ export default class Builder extends React.Component<IProps, IState> {
 	}
 
 	postPlaylist(){
-		axios.post('/api/v1/playlists', {
-			songs: this.state.completeSongs?.map(song => song.id),
-			user: this.state.user?.id,
-			name: this.state.details?.name,
-			description: this.state.details?.description,
-			features: this.state.completeSongs?.map(song => song.id).slice(0,2)
-		},
-		{ withCredentials: true }
-	).then(resp => {
+		const args = (this.state.details.name && this.state.details.name.length)
+			? {
+				songs: this.state.completeSongs?.map(song => song.id),
+				user: this.state.user?.id,
+				name: this.state.details?.name,
+				description: this.state.details?.description,
+				features: this.state.completeSongs?.map(song => song.id).slice(0,2)
+			} : {
+				songs: this.state.completeSongs?.map(song => song.id)
+			};
+		axios.post('/api/v1/playlists', args, { withCredentials: true }).then(resp => {
 			if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
 				this.props.redirectCallback(resp.data.playlists[0].id);
 			}
@@ -87,7 +89,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			}).then(complete => {
 				this.setState({
 					completeSongs: complete.songs
-				})
+				});
 				axios.get("/auth").then(resp => {
 					this.setState({
 						rendered: true,
@@ -114,7 +116,7 @@ export default class Builder extends React.Component<IProps, IState> {
 					<button
 						disabled={this.state.rendering || this.state.processing}
 						onClick={this.renderPlaylist}
-						className={`btn btn-${this.state.rendering ? "secondary" : "primary"}`}>{
+						className={`btn btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
 						this.state.rendering
 						? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
 						: (this.state.rendered ? "Submit" : "Build Playlist")
