@@ -5,6 +5,8 @@ import { Link } from "./link";
 export interface Playlist{
 	songs: Song[],
 	id?: string,
+	user?: string,
+	name?: string,
 	add(song: Song): Playlist,
 	render(songResponseCallback?: (song: Song) => void): Promise<Playlist>,
 }
@@ -12,10 +14,18 @@ export interface Playlist{
 export class PlaylistObj implements Playlist {
 	songs: Song[];
 	id?: string;
-	constructor (songs: Song[] = [], id?: string) {
+	user?: string;
+	name?: string;
+	constructor (songs: Song[] = [], id?: string, user?: string, name?: string) {
 		this.songs = songs;
 		if (id) {
 			this.id = id;
+		}
+		if (user) {
+			this.user = user;
+		}
+		if (name) {
+			this.name = name;
 		}
 	}
 
@@ -54,7 +64,7 @@ export interface PlaylistApi extends Playlist{
 export class PlaylistApiObj extends PlaylistObj implements PlaylistApi {
 	links: Link[]
 	constructor (playlistBase: Playlist, links: Link[]) {
-		super(playlistBase.songs, playlistBase.id);
+		super(playlistBase.songs, playlistBase.id, playlistBase.user, playlistBase.name);
 		this.links = links;
 	}
 }

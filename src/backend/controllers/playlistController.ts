@@ -16,6 +16,7 @@ const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:
 			new PlayAudioLink(req, song),
 			new SelfLink(req, song.id ?? "UNKNOWN", "songs")
 		]));
+
 		return new PlaylistApiObj(
 			playlist,
 			[new SelfLink(req, result._id, "playlists")]
@@ -60,7 +61,9 @@ const postPlaylist = (req: Request, res: Response): void => {
 	const songIds: string[] = req.body.songs;
 
 	new Playlist({
-		songs: songIds
+		songs: songIds,
+		name: req.body.name,
+		user: req.body.user ? new mongoose.Types.ObjectId(req.body.user) : undefined
 	}).save().then(resp => {
 		print(`Created playlist resource ${resp}`);
 		sendPlaylistResponse([resp], req, res);

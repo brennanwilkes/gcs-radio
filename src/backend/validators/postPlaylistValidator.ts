@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { body } from "express-validator";
+import { body, oneOf, cookie, header } from "express-validator";
 import Playlist from "../../database/models/playlist";
-import { validationErrorHandler, mongoIdRegex } from "./validatorUtil";
+import { validationErrorHandler, mongoIdRegex, authErrorHandler } from "./validatorUtil";
 import { print } from "../util/util";
 import { mongoose } from "../../database/connection";
+import { isValidId } from "./oauthValidator";
 
 export default [
 	body("songs")
@@ -14,7 +15,22 @@ export default [
 		.trim()
 		.matches(mongoIdRegex)
 		.withMessage("internal ID is not valid"),
+	oneOf([
+		[
+			body("user").not().exists(),
+			body("name").not().exists()],
+		[
+			body("user").exists().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
+			body("name").exists().not().isEmpty().trim().escape().withMessage("Playlist name is not valid")
+		]
+	]),
 	validationErrorHandler,
+	oneOf([
+		body("user").not().exists(),
+		cookie("jwt").custom(isValidId(body("user").toString())),
+		header("token").custom(isValidId(body("user").toString()))
+	]),
+	authErrorHandler,
 	(req: Request, res: Response, next: NextFunction): void => {
 		Playlist.findOne({ songs: req.body.songs.map((id: string) => new mongoose.Types.ObjectId(id)) }).then(result => {
 			if (result) {

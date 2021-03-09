@@ -1,0 +1,41 @@
+
+.Selector .searchResults{
+	width: 100%;
+	position: absolute;
+	overflow: visible;
+}
+
+.Selector .floating-label > input:focus{
+	outline-offset: -10px;
+}
+
+.Selector .songsDisplay{
+	overflow-y: scroll;
+}
+
+.Selector > *{
+	margin-bottom: 1.5vh;
+}
+
+.HrWrapper > *{
+	margin: 0;
+}
+
+.Selector ul:last-of-type{
+	overflow-y: auto;
+	max-height: 42vh;
+}
+
+.Selector .searchWrapper{
+	position: relative;
+}
+
+@media only screen and (max-width: 1024px) {
+	.Selector ul:last-of-type{
+		max-height: 36vh;
+	}
+	.Selector .searchResults{
+		max-height: 35vh;
+		overflow-y: scroll;
+	}
+}

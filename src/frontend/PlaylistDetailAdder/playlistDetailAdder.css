@@ -1,0 +1,7 @@
+.DetailAdder > *{
+	margin-bottom: 1.5vh;
+}
+
+.floating-label > input:focus{
+	outline-offset: -10px;
+}
