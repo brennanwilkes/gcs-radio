@@ -26,6 +26,12 @@ export default class Landing extends React.Component<IProps, IState> {
 		}
 	}
 
+	componentDidMount(){
+		axios.get("/auth", {withCredentials: true}).then(() => {
+			window.location.pathname = "../dashboard";
+		}).catch(() => {});
+	}
+
 	login(_event: React.FormEvent){
 		this.setState({
 			processing: true

@@ -7,8 +7,8 @@ import axios from "axios";
 
 export class ValidationErrorJson extends ErrorObj implements Error {
 	constructor (errors: Result<ValidationError>, req: Request, status = 422) {
-		const err = errors.array({ onlyFirstError: true })[0];
-		super(`Invalid ${err.location} parameter ${err.param} "${err.value}"`, req.originalUrl, err.msg, status);
+		const err = errors.array()[0];
+		super(`Invalid ${err.location} parameter ${err.param} "${err.value}"`, req.originalUrl, err.nestedErrors?.length ? (err.nestedErrors[0] as ValidationError).msg : err.msg, status);
 	}
 }
 

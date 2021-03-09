@@ -18,17 +18,22 @@ export default [
 		.withMessage("internal song ID is not valid"),
 	oneOf([
 		[
-			body("user").not().exists().withMessage("Playlist must specify a user id"),
-			body("name").not().exists().withMessage("Playlist must specify a name"),
-			body("description").not().exists().withMessage("Playlist must specify a description"),
-			body("features").not().exists().withMessage("Playlist must specify track features")
-		],
-		[
 			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
 			body("name").exists().isString().not().isEmpty().trim().escape().withMessage("Playlist name is not valid"),
 			body("description").exists().isString().trim().escape().withMessage("Playlist description is not valid"),
-			body("features").exists().isArray().isLength({ min: 1, max: 3 }).withMessage("Invalid features"),
+			body("features").exists().isArray().custom((value: string[]) => {
+				if (value.length <= 3 && value.length > 0) {
+					return true;
+				}
+				throw new Error("Song features must contain 1-3 song IDS");
+			}).withMessage("Invalid features"),
 			body("features.*").exists().trim().matches(mongoIdRegex).withMessage("internal ID is not valid")
+		],
+		[
+			body("user").not().exists().withMessage("Playlist must specify a all or no detail data"),
+			body("name").not().exists().withMessage("Playlist must specify a all or no detail data"),
+			body("description").not().exists().withMessage("Playlist must specify a all or no detail data"),
+			body("features").not().exists().withMessage("Playlist must specify a all or no detail data")
 		]
 	]),
 	validationErrorHandler,

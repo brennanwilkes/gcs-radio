@@ -6,8 +6,9 @@ import { generateDashboardRedirect } from "../util/util";
 
 const existingTokenRedirect = [
 	(req: Request, res: Response, next: NextFunction): void => {
-		if (req.cookies.jwt) {
-			resolveSignedPayload(req.cookies.jwt).then(() => {
+		const token = req.headers.token ?? req.cookies.jwt;
+		if (token) {
+			resolveSignedPayload(token).then(() => {
 				res.redirect(generateDashboardRedirect(req));
 			}).catch(() => next());
 		} else {
@@ -34,11 +35,8 @@ const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) 
 	(token: string | undefined, meta: Meta): Promise<boolean> => {
 		return new Promise<boolean>((resolve, reject) => {
 			const id = meta.req.body[bodyParam];
-			console.dir(id);
-			console.dir(token);
 			if (token) {
 				resolveSignedPayload(token).then(payload => {
-					console.dir(payload);
 					if (payload === id) {
 						resolve(true);
 					} else if (

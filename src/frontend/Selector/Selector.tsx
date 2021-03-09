@@ -36,9 +36,6 @@ export default class Selector extends React.Component<IProps, IState> {
 		if(this.state.songs !== prevState.songs){
 			this.props.songChangeCallback(this.state.songs);
 		}
-		if(this.state.cogs !== prevState.cogs){
-			this.props.setProcessing(this.state.cogs.reduce((prev, cur) => prev || cur));
-		}
 	}
 
 	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
@@ -61,6 +58,7 @@ export default class Selector extends React.Component<IProps, IState> {
 		this.setState({
 			cogs: cogs
 		});
+		this.props.setProcessing(cogs.reduce((prev, cur) => prev || cur));
 	}
 
 	render(){

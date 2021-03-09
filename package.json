@@ -20,7 +20,9 @@
 		"test": "jest --colors --verbose --silent",
 		"test:loud": "jest --colors --verbose",
 		"lint": "eslint \"src/**/*.[jt]s\" --fix",
-		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js"
+		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js",
+		"deploy": "bash ./src/dev/deploy.sh gcs-radio",
+		"deploy:beta": "bash ./src/dev/deploy.sh gcs-radio-beta"
 	},
 	"repository": {
 		"type": "git",

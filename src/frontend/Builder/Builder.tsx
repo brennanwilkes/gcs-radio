@@ -62,7 +62,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				user: this.state.user?.id,
 				name: this.state.details?.name,
 				description: this.state.details?.description,
-				features: this.state.completeSongs?.map(song => song.id).slice(0,2)
+				features: this.state.completeSongs?.map(song => song.id).slice(0,3)
 			} : {
 				songs: this.state.completeSongs?.map(song => song.id)
 			};
@@ -114,7 +114,7 @@ export default class Builder extends React.Component<IProps, IState> {
 						: <Selector songChangeCallback={this.songChangeCallback} setProcessing={this.proccessingCallback} />
 					}
 					<button
-						disabled={this.state.rendering || this.state.processing}
+						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
 						onClick={this.renderPlaylist}
 						className={`btn btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
 						this.state.rendering
