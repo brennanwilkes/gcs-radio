@@ -9,18 +9,19 @@ import { isValidId } from "./oauthValidator";
 export default [
 	body("songs")
 		.exists()
-		.isArray(),
+		.isArray()
+		.withMessage("Playlist must have songs"),
 	body("songs.*")
 		.exists()
 		.trim()
 		.matches(mongoIdRegex)
-		.withMessage("internal ID is not valid"),
+		.withMessage("internal song ID is not valid"),
 	oneOf([
 		[
-			body("user").not().exists(),
-			body("name").not().exists(),
-			body("description").not().exists(),
-			body("features").not().exists()
+			body("user").not().exists().withMessage("Playlist must specify a user id"),
+			body("name").not().exists().withMessage("Playlist must specify a name"),
+			body("description").not().exists().withMessage("Playlist must specify a description"),
+			body("features").not().exists().withMessage("Playlist must specify track features")
 		],
 		[
 			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
