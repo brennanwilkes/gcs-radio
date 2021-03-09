@@ -59,7 +59,9 @@ export default class Builder extends React.Component<IProps, IState> {
 		axios.post('/api/v1/playlists', {
 			songs: this.state.completeSongs?.map(song => song.id),
 			user: this.state.user?.id,
-			name: this.state.details?.name
+			name: this.state.details?.name,
+			description: this.state.details?.description,
+			features: this.state.completeSongs?.map(song => song.id).slice(0,3)
 		},
 		{ withCredentials: true }
 	).then(resp => {

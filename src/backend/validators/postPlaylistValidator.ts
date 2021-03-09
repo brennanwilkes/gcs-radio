@@ -18,10 +18,16 @@ export default [
 	oneOf([
 		[
 			body("user").not().exists(),
-			body("name").not().exists()],
+			body("name").not().exists(),
+			body("description").not().exists(),
+			body("features").not().exists()
+		],
 		[
-			body("user").exists().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
-			body("name").exists().not().isEmpty().trim().escape().withMessage("Playlist name is not valid")
+			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
+			body("name").exists().isString().not().isEmpty().trim().escape().withMessage("Playlist name is not valid"),
+			body("description").exists().isString().trim().escape().withMessage("Playlist description is not valid"),
+			body("features").exists().isArray().isLength({ min: 1, max: 3 }).withMessage("Invalid features"),
+			body("features.*").exists().trim().matches(mongoIdRegex).withMessage("internal ID is not valid")
 		]
 	]),
 	validationErrorHandler,

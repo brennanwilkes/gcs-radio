@@ -11,6 +11,7 @@ interface IProps {
 }
 interface IState {
 	name?: string
+	description?: string
 }
 
 export {IState as Details};
@@ -50,6 +51,10 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 				<FloatingLabel
 					label="Name"
 					onChange={(event) => this.setState({name: (event.target as HTMLTextAreaElement).value})}
+					onChangeDelay={150} />
+				<FloatingLabel
+					label="Description"
+					onChange={(event) => this.setState({description: (event.target as HTMLTextAreaElement).value})}
 					onChangeDelay={150} />
 			</div>
 		</>

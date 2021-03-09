@@ -62,8 +62,12 @@ const postPlaylist = (req: Request, res: Response): void => {
 
 	new Playlist({
 		songs: songIds,
-		name: req.body.name,
-		user: req.body.user ? new mongoose.Types.ObjectId(req.body.user) : undefined
+		details: {
+			name: req.body.name,
+			user: req.body.user ? new mongoose.Types.ObjectId(req.body.user) : undefined,
+			description: req.body.description,
+			features: req.body.features
+		}
 	}).save().then(resp => {
 		print(`Created playlist resource ${resp}`);
 		sendPlaylistResponse([resp], req, res);

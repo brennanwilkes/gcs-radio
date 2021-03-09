@@ -9,14 +9,22 @@ const Schema = mongoose.Schema;
 
 const PlaylistSchema = new Schema({
 	songs: [{ type: mongoose.Schema.Types.ObjectId, ref: "songs" }],
-	name: { type: String },
-	user: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }]
+	details: {
+		user: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+		name: { type: String },
+		description: { type: String },
+		features: [{ type: mongoose.Schema.Types.ObjectId, ref: "songs" }]
+	}
 });
 
 export interface PlaylistDoc extends mongoose.Document {
 	songs: mongoose.Schema.Types.ObjectId[],
-	name: string,
-	user: mongoose.Schema.Types.ObjectId,
+	details: {
+		user: mongoose.Schema.Types.ObjectId,
+		name: string,
+		description: string,
+		features: mongoose.Schema.Types.ObjectId[]
+	}
 }
 
 const PlaylistModel = mongoose.model<PlaylistDoc>("playlist", PlaylistSchema);
@@ -25,8 +33,12 @@ export default PlaylistModel;
 export function PlaylistModelFromPlaylist (playlist: Playlist): InstanceType<typeof PlaylistModel> {
 	return new PlaylistModel({
 		songs: playlist.songs.filter(song => song.id).map(song => new mongoose.Schema.Types.ObjectId(song.id as string)),
-		name: playlist.name,
-		user: playlist.user ? new mongoose.Schema.Types.ObjectId(playlist.user) : undefined
+		details: {
+			user: playlist.details?.user ? new mongoose.Schema.Types.ObjectId(playlist.details?.user) : undefined,
+			name: playlist.details?.name,
+			description: playlist.details?.description,
+			features: playlist.details?.features ? playlist.details.features.map(song => new mongoose.Schema.Types.ObjectId(song)) : []
+		}
 	});
 }
 
@@ -39,8 +51,14 @@ export function PlaylistObjFromQuery (docs: PlaylistDoc): Promise<Playlist> {
 				resolve(new PlaylistObj(
 					filtered.map(song => new SongObjFromQuery(song)),
 					String(docs._id),
-					docs.user ? String(docs.user) : undefined,
-					docs.name
+					(docs.details && docs.details.user && docs.details.name && docs.details.description)
+						? {
+							user: String(docs.details.user),
+							name: docs.details.name,
+							description: docs.details.description,
+							features: docs.details.features.map(song => String(song))
+						}
+						: undefined
 				));
 			} else {
 				reject(new Error("No results found!"));
