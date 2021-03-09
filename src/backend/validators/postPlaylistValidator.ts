@@ -27,8 +27,8 @@ export default [
 	validationErrorHandler,
 	oneOf([
 		body("user").not().exists(),
-		cookie("jwt").custom(isValidId),
-		header("token").custom(isValidId)
+		cookie("jwt").custom(isValidId("user")),
+		header("token").custom(isValidId("user"))
 	]),
 	authErrorHandler,
 	(req: Request, res: Response, next: NextFunction): void => {

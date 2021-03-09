@@ -30,33 +30,34 @@ const isValidToken: CustomValidator = (token: string | undefined): Promise<boole
 	});
 };
 
-const isValidId:CustomValidator = (token: string | undefined, meta: Meta): Promise<boolean> => {
-	return new Promise<boolean>((resolve, reject) => {
-		const id = meta.req.body.user;
-		console.dir(id);
-		console.dir(token);
-		if (token) {
-			resolveSignedPayload(token).then(payload => {
-				console.dir(payload);
-				if (payload === id) {
-					resolve(true);
-				} else if (
-					"user" in (payload as any) &&
-					"id" in ((payload as any).user as any) &&
-					(payload as any).user.id === id
-				) {
-					resolve(true);
-				} else {
-					reject(new Error("Invalid id"));
-				}
-			}).catch(() => {
+const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) =>
+	(token: string | undefined, meta: Meta): Promise<boolean> => {
+		return new Promise<boolean>((resolve, reject) => {
+			const id = meta.req.body[bodyParam];
+			console.dir(id);
+			console.dir(token);
+			if (token) {
+				resolveSignedPayload(token).then(payload => {
+					console.dir(payload);
+					if (payload === id) {
+						resolve(true);
+					} else if (
+						"user" in (payload as any) &&
+						"id" in ((payload as any).user as any) &&
+						(payload as any).user.id === id
+					) {
+						resolve(true);
+					} else {
+						reject(new Error("Invalid id"));
+					}
+				}).catch(() => {
+					reject(new Error("Invalid token"));
+				});
+			} else {
 				reject(new Error("Invalid token"));
-			});
-		} else {
-			reject(new Error("Invalid token"));
-		}
-	});
-};
+			}
+		});
+	};
 
 const oauthValidator = [
 	query("error").not().exists(),
