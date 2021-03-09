@@ -32,9 +32,18 @@ const isValidToken: CustomValidator = (token: string | undefined): Promise<boole
 
 const isValidId: ((id: string) => CustomValidator) = (id: string) => (token: string | undefined): Promise<boolean> => {
 	return new Promise<boolean>((resolve, reject) => {
+		console.dir(id);
+		console.dir(token);
 		if (token) {
 			resolveSignedPayload(token).then(payload => {
-				if (payload === id || ("id" in (payload as any) && (payload as any)?.id === id)) {
+				console.dir(payload);
+				if (payload === id) {
+					resolve(true);
+				} else if (
+					"user" in (payload as any) &&
+					"id" in ((payload as any).user as any) &&
+					(payload as any).user.id === id
+				) {
 					resolve(true);
 				} else {
 					reject(new Error("Invalid id"));
