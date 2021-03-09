@@ -61,7 +61,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			user: this.state.user?.id,
 			name: this.state.details?.name,
 			description: this.state.details?.description,
-			features: this.state.completeSongs?.map(song => song.id).slice(0,3)
+			features: this.state.completeSongs?.map(song => song.id).slice(0,2)
 		},
 		{ withCredentials: true }
 	).then(resp => {
