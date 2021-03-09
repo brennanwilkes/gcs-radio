@@ -1,4 +1,4 @@
-import { CustomValidator, query } from "express-validator";
+import { CustomValidator, Meta, query } from "express-validator";
 import { authErrorHandler } from "./validatorUtil";
 import { Request, Response, NextFunction } from "express";
 import { resolveSignedPayload } from "../auth/signPayload";
@@ -30,8 +30,9 @@ const isValidToken: CustomValidator = (token: string | undefined): Promise<boole
 	});
 };
 
-const isValidId: ((id: string) => CustomValidator) = (id: string) => (token: string | undefined): Promise<boolean> => {
+const isValidId:CustomValidator = (token: string | undefined, meta: Meta): Promise<boolean> => {
 	return new Promise<boolean>((resolve, reject) => {
+		const id = meta.req.body.user;
 		console.dir(id);
 		console.dir(token);
 		if (token) {
