@@ -8,7 +8,6 @@ export enum UserType{
 	GOOGLE = "GOOGLE",
 	SPOTIFY = "SPOTIFY"
 }
-
 /* eslint-enable no-unused-vars */
 
 export interface User{

@@ -76,6 +76,7 @@
 		"react-select": "^4.1.0",
 		"spotify-web-api-node": "^5.0.2",
 		"style-loader": "^2.0.0",
+		"universal-analytics": "^0.4.23",
 		"ytdl-core": "^4.5.0",
 		"ytsr": "^3.3.1"
 	},
@@ -94,6 +95,7 @@
 		"@types/react": "^17.0.2",
 		"@types/react-dom": "^17.0.1",
 		"@types/spotify-web-api-node": "^5.0.0",
+		"@types/universal-analytics": "^0.4.4",
 		"@typescript-eslint/eslint-plugin": "^4.15.1",
 		"@typescript-eslint/parser": "^4.15.1",
 		"eslint": "^7.20.0",

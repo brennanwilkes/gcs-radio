@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../../database/models/user";
-import { UserFromDoc } from "../../types/user";
+import { UserFromDoc, UserType } from "../../types/user";
 import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import invalidLoginErrorHandler from "../errorHandlers/invalidLoginErrorHandler";
@@ -10,6 +10,7 @@ import generateToken from "../auth/generateToken";
 import { getUserFromToken } from "../auth/getUser";
 import welcomeEmail from "../email/welcomeEmail";
 import { fireAndForgetMail } from "../email/email";
+import logger from "../logging/logger";
 
 export async function login (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
@@ -49,11 +50,12 @@ export async function signUp (req: Request, res: Response): Promise<void> {
 				return new User({
 					email,
 					password: encryptedPassword,
-					type: "PASSWORD"
+					type: UserType.PASSWORD
 				}).save();
 			}).then(doc => {
 				return generateToken(doc._id);
 			}).then(token => {
+				logger.logSignup(email, UserType.PASSWORD);
 				fireAndForgetMail(welcomeEmail(email));
 
 				res.cookie("jwt", token);

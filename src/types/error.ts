@@ -1,5 +1,6 @@
 import { Result, ValidationError as ExpressValidationError } from "express-validator";
 import { Request } from "express";
+import logger from "../backend/logging/logger";
 
 export interface Error{
 	status?: number,
@@ -22,6 +23,7 @@ export class ErrorObj implements Error {
 		this.message = message;
 		this.status = status;
 		this.timestamp = timestamp;
+		logger.logError(this);
 	}
 }
 
