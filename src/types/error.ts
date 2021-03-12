@@ -40,6 +40,12 @@ export class InvalidLoginError extends ErrorObj implements Error {
 	}
 }
 
+export class AccessDeniedError extends ErrorObj implements Error {
+	constructor (resource: string, path: string, status = 401) {
+		super("Access Denied", path, `Invalid permissions to access ${resource}`, status);
+	}
+}
+
 export class ConflictError extends ErrorObj implements Error {
 	constructor (message: string, path: string, status = 409) {
 		super(`Resource already exists`, path, message, status);

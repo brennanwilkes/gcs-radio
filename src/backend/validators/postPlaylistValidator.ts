@@ -21,6 +21,7 @@ export default [
 			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
 			body("name").exists().isString().not().isEmpty().trim().escape().withMessage("Playlist name is not valid"),
 			body("description").exists().isString().trim().escape().withMessage("Playlist description is not valid"),
+			body("private").exists().isBoolean().withMessage("Playlist privacy is not valid"),
 			body("features").exists().isArray().custom((value: string[]) => {
 				if (value.length <= 3 && value.length > 0) {
 					return true;
@@ -33,7 +34,8 @@ export default [
 			body("user").not().exists().withMessage("Playlist must specify a all or no detail data"),
 			body("name").not().exists().withMessage("Playlist must specify a all or no detail data"),
 			body("description").not().exists().withMessage("Playlist must specify a all or no detail data"),
-			body("features").not().exists().withMessage("Playlist must specify a all or no detail data")
+			body("features").not().exists().withMessage("Playlist must specify a all or no detail data"),
+			body("private").not().exists().withMessage("Playlist must specify a all or no detail data")
 		]
 	]),
 	validationErrorHandler,

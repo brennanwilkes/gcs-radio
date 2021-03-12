@@ -11,7 +11,8 @@ interface IProps {
 }
 interface IState {
 	name?: string
-	description?: string
+	description?: string,
+	private?: boolean
 }
 
 export {IState as Details};

@@ -6,14 +6,10 @@ import { generateDashboardRedirect } from "../util/util";
 
 const existingTokenRedirect = [
 	(req: Request, res: Response, next: NextFunction): void => {
-		const token = req.headers.token ?? req.cookies.jwt;
-		if (token) {
-			resolveSignedPayload(token).then(() => {
-				res.redirect(generateDashboardRedirect(req));
-			}).catch(() => next());
-		} else {
-			next();
-		}
+		const token = `${req.headers.token}`;
+		resolveSignedPayload(token).then(() => {
+			res.redirect(generateDashboardRedirect(req));
+		}).catch(() => next());
 	}
 ];
 

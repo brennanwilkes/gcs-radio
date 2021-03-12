@@ -7,6 +7,8 @@ import notFoundErrorHandler from "../util/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 import { PlayAudioLink, SelfLink } from "../../types/link";
 import { PlaylistApiObj } from "../../types/playlist";
+import accessDeniedErrorHandler from "../util/accessDeniedErrorHandler";
+import { getUserIdFromToken } from "../auth/getUser";
 
 const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response) => {
 	const playlists = playlistResults.map(async result => {
@@ -31,24 +33,47 @@ const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:
 	}).catch(internalErrorHandler(req, res));
 };
 
-const getPlaylists = async (req: Request, res: Response): Promise<void> => {
+const getPlaylists = (req: Request, res: Response): void => {
 	print(`Handling request for playlist resources`);
 
-	await Playlist.find({}).then(async playlistResults => {
-		if (playlistResults) {
-			sendPlaylistResponse(playlistResults, req, res);
+	let total: PlaylistDoc[] = [];
+	Playlist.find({
+		private: false
+	}).then(playlistResults => {
+		total = [...playlistResults];
+		return new Promise<PlaylistDoc[]>((resolve, reject) => {
+			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
+				Playlist.find({
+					user: new mongoose.Schema.Types.ObjectId(user)
+				}).then(resolve).catch(reject);
+			}).catch(() => {
+				resolve(Promise.resolve([]));
+			});
+		});
+	}).then(playlistResults => {
+		total = [...total, ...playlistResults];
+		if (total && total.length) {
+			sendPlaylistResponse(total, req, res);
 		} else {
-			notFoundErrorHandler(req, res)("playlist", req.params.id);
+			notFoundErrorHandler(req, res)("playlist");
 		}
 	}).catch(internalErrorHandler(req, res));
 };
 
-const getPlaylist = async (req: Request, res: Response): Promise<void> => {
+const getPlaylist = (req: Request, res: Response): void => {
+	const user = "TEMP";
+
 	print(`Handling request for playlist resource ${req.params.id}`);
 
-	Playlist.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(async playlistResults => {
+	Playlist.findOne({
+		_id: new mongoose.Types.ObjectId(req.params.id)
+	}).then(playlistResults => {
 		if (playlistResults) {
-			sendPlaylistResponse([playlistResults], req, res);
+			if (!playlistResults.private || String(playlistResults.user) === user) {
+				sendPlaylistResponse([playlistResults], req, res);
+			} else {
+				accessDeniedErrorHandler(req, res)(playlistResults._id);
+			}
 		} else {
 			notFoundErrorHandler(req, res)("playlist", req.params.id);
 		}
@@ -62,12 +87,11 @@ const postPlaylist = (req: Request, res: Response): void => {
 
 	new Playlist({
 		songs: songIds,
-		details: {
-			name: req.body.name,
-			user: req.body.user ? new mongoose.Types.ObjectId(req.body.user) : undefined,
-			description: req.body.description,
-			features: req.body.features
-		}
+		name: req.body.name,
+		user: req.body.user ? new mongoose.Types.ObjectId(req.body.user) : undefined,
+		description: req.body.description,
+		features: req.body.features,
+		private: req.body.private ?? true
 	}).save().then(resp => {
 		print(`Created playlist resource ${resp}`);
 		sendPlaylistResponse([resp], req, res);

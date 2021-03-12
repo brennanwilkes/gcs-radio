@@ -6,13 +6,15 @@ export interface PlaylistDetails{
 	user: string,
 	name: string,
 	description: string,
-	features: string[]
+	features: string[],
+	private?: boolean
 }
 
 export interface Playlist{
 	songs: Song[],
 	id?: string,
 	details?: PlaylistDetails,
+	private: boolean,
 	add(song: Song): Playlist,
 	render(songResponseCallback?: (song: Song) => void): Promise<Playlist>,
 }
@@ -21,6 +23,7 @@ export class PlaylistObj implements Playlist {
 	songs: Song[];
 	id?: string;
 	details?: PlaylistDetails;
+	private: boolean;
 	constructor (songs: Song[] = [], id?: string, details?: PlaylistDetails) {
 		this.songs = songs;
 		if (id) {
@@ -29,6 +32,7 @@ export class PlaylistObj implements Playlist {
 		if (details) {
 			this.details = details;
 		}
+		this.private = details?.private ?? true;
 	}
 
 	add (song: Song): PlaylistObj {
