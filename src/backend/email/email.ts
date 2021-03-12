@@ -42,6 +42,8 @@ export default MailServiceObj;
 
 export function fireAndForgetMail (mail: Mail): void {
 	MailServiceObj.then(({ send }) => {
-		send(mail).catch(print);
+		send(mail).then(() => {
+			print(`${mail.subject} sent to ${mail.email}`);
+		}).catch(print);
 	}).catch(print);
 }
