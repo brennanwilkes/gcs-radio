@@ -24,15 +24,20 @@ export class PlaylistObj implements Playlist {
 	id?: string;
 	details?: PlaylistDetails;
 	private: boolean;
-	constructor (songs: Song[] = [], id?: string, details?: PlaylistDetails) {
+	constructor (songs: Song[] = [], id?: string, details?: PlaylistDetails, privateOverride?: boolean) {
 		this.songs = songs;
 		if (id) {
 			this.id = id;
 		}
 		if (details) {
-			this.details = details;
+			this.details = {
+				user: details.user,
+				name: details.name,
+				description: details.description,
+				features: details.features
+			};
 		}
-		this.private = details?.private ?? true;
+		this.private = privateOverride ?? (details?.private ?? true);
 	}
 
 	add (song: Song): PlaylistObj {
@@ -70,7 +75,7 @@ export interface PlaylistApi extends Playlist{
 export class PlaylistApiObj extends PlaylistObj implements PlaylistApi {
 	links: Link[]
 	constructor (playlistBase: Playlist, links: Link[]) {
-		super(playlistBase.songs, playlistBase.id, playlistBase.details);
+		super(playlistBase.songs, playlistBase.id, playlistBase.details, playlistBase.private);
 		this.links = links;
 	}
 }

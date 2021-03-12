@@ -17,11 +17,11 @@ const PlaylistSchema = new Schema({
 });
 
 export interface PlaylistDoc extends mongoose.Document {
-	songs: mongoose.Schema.Types.ObjectId[],
-	user: mongoose.Schema.Types.ObjectId,
+	songs: mongoose.Types.ObjectId[],
+	user: mongoose.Types.ObjectId,
 	name: string,
 	description: string,
-	features: mongoose.Schema.Types.ObjectId[]
+	features: mongoose.Types.ObjectId[]
 	private: boolean
 }
 
@@ -53,10 +53,10 @@ export function PlaylistObjFromQuery (docs: PlaylistDoc): Promise<Playlist> {
 							user: String(docs.user),
 							name: docs.name,
 							description: docs.description,
-							features: docs.features.map(song => String(song)),
-							private: docs.private
+							features: docs.features.map(song => String(song))
 						}
-						: undefined
+						: undefined,
+					docs.private
 				));
 			} else {
 				reject(new Error("No results found!"));

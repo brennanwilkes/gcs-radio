@@ -4,11 +4,21 @@ import { ErrorObj, Error } from "../../types/error";
 import { mongoose } from "../../database/connection";
 import { Model, Document } from "mongoose";
 import axios from "axios";
+import { print } from "../util/util";
 
 export class ValidationErrorJson extends ErrorObj implements Error {
 	constructor (errors: Result<ValidationError>, req: Request, status = 422) {
 		const err = errors.array()[0];
-		super(`Invalid ${err.location} parameter ${err.param} "${err.value}"`, req.originalUrl, err.nestedErrors?.length ? (err.nestedErrors[0] as ValidationError).msg : err.msg, status);
+		console.dir(err.nestedErrors);
+
+		const msg = err.nestedErrors && err.nestedErrors.length > 0 ? (err.nestedErrors as ValidationError[])[0].msg : err.msg;
+
+		super(
+			`Invalid ${err.location} parameter ${err.param} "${err.value}"`,
+			req.originalUrl,
+			msg,
+			status
+		);
 	}
 }
 
@@ -22,7 +32,9 @@ export class AuthErrorJson extends ErrorObj implements Error {
 const authErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(401).json(new AuthErrorJson(errors, req));
+		const err = new AuthErrorJson(errors, req);
+		print(JSON.stringify(err, null, 4));
+		return res.status(401).json(err);
 	}
 	next();
 };
@@ -30,7 +42,9 @@ const authErrorHandler = (req: Request, res: Response, next: NextFunction): Resp
 const validationErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		return res.status(422).json(new ValidationErrorJson(errors, req));
+		const err = new ValidationErrorJson(errors, req);
+		print(JSON.stringify(err, null, 4));
+		return res.status(422).json(err);
 	}
 	next();
 };

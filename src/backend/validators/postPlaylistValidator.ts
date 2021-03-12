@@ -1,9 +1,5 @@
-import { Request, Response, NextFunction } from "express";
 import { body, oneOf, cookie, header } from "express-validator";
-import Playlist from "../../database/models/playlist";
 import { validationErrorHandler, mongoIdRegex, authErrorHandler } from "./validatorUtil";
-import { print } from "../util/util";
-import { mongoose } from "../../database/connection";
 import { isValidId } from "./oauthValidator";
 
 export default [
@@ -20,8 +16,7 @@ export default [
 		[
 			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
 			body("name").exists().isString().not().isEmpty().trim().escape().withMessage("Playlist name is not valid"),
-			body("description").exists().isString().trim().escape().withMessage("Playlist description is not valid"),
-			body("private").exists().isBoolean().withMessage("Playlist privacy is not valid"),
+			body("description").optional().isString().trim().escape().withMessage("Playlist description is not valid").default("GCS Radio playlist"),
 			body("features").exists().isArray().custom((value: string[]) => {
 				if (value.length <= 3 && value.length > 0) {
 					return true;
@@ -31,30 +26,16 @@ export default [
 			body("features.*").exists().trim().matches(mongoIdRegex).withMessage("internal ID is not valid")
 		],
 		[
-			body("user").not().exists().withMessage("Playlist must specify a all or no detail data"),
-			body("name").not().exists().withMessage("Playlist must specify a all or no detail data"),
-			body("description").not().exists().withMessage("Playlist must specify a all or no detail data"),
-			body("features").not().exists().withMessage("Playlist must specify a all or no detail data"),
-			body("private").not().exists().withMessage("Playlist must specify a all or no detail data")
+			body("user").not().exists().withMessage("Playlist must specify both a user ID and name or neither"),
+			body("name").not().exists().withMessage("Playlist must specify both a user ID and name or neither")
 		]
 	]),
+	body("private").optional().isBoolean().withMessage("Playlist privacy is not valid").default(true),
 	validationErrorHandler,
 	oneOf([
 		body("user").not().exists(),
 		cookie("jwt").custom(isValidId("user")),
 		header("token").custom(isValidId("user"))
 	]),
-	authErrorHandler,
-	(req: Request, res: Response, next: NextFunction): void => {
-		Playlist.findOne({ songs: req.body.songs.map((id: string) => new mongoose.Types.ObjectId(id)) }).then(result => {
-			if (result) {
-				res.redirect(303, `${req.baseUrl}/playlists/${result._id.toString()}`);
-			} else {
-				next();
-			}
-		}).catch(err => {
-			print(err);
-			next();
-		});
-	}
+	authErrorHandler
 ];

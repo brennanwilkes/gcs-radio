@@ -44,7 +44,7 @@ const getPlaylists = (req: Request, res: Response): void => {
 		return new Promise<PlaylistDoc[]>((resolve, reject) => {
 			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
 				Playlist.find({
-					user: new mongoose.Schema.Types.ObjectId(user)
+					user: new mongoose.Types.ObjectId(user)
 				}).then(resolve).catch(reject);
 			}).catch(() => {
 				resolve(Promise.resolve([]));
@@ -61,18 +61,24 @@ const getPlaylists = (req: Request, res: Response): void => {
 };
 
 const getPlaylist = (req: Request, res: Response): void => {
-	const user = "TEMP";
-
 	print(`Handling request for playlist resource ${req.params.id}`);
 
 	Playlist.findOne({
 		_id: new mongoose.Types.ObjectId(req.params.id)
 	}).then(playlistResults => {
 		if (playlistResults) {
-			if (!playlistResults.private || String(playlistResults.user) === user) {
-				sendPlaylistResponse([playlistResults], req, res);
+			if (playlistResults.private) {
+				getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
+					if (user === String(playlistResults.user)) {
+						sendPlaylistResponse([playlistResults], req, res);
+					} else {
+						accessDeniedErrorHandler(req, res)(playlistResults._id);
+					}
+				}).catch(() => {
+					accessDeniedErrorHandler(req, res)(playlistResults._id);
+				});
 			} else {
-				accessDeniedErrorHandler(req, res)(playlistResults._id);
+				sendPlaylistResponse([playlistResults], req, res);
 			}
 		} else {
 			notFoundErrorHandler(req, res)("playlist", req.params.id);
