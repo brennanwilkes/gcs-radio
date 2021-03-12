@@ -1,53 +1,7 @@
-import { Result, ValidationChain, ValidationError, validationResult } from "express-validator";
-import { Request, Response, NextFunction } from "express";
-import { ErrorObj, Error } from "../../types/error";
+import { ValidationChain } from "express-validator";
 import { mongoose } from "../../database/connection";
 import { Model, Document } from "mongoose";
 import axios from "axios";
-import { print } from "../util/util";
-
-export class ValidationErrorJson extends ErrorObj implements Error {
-	constructor (errors: Result<ValidationError>, req: Request, status = 422) {
-		const err = errors.array()[0];
-		console.dir(err.nestedErrors);
-
-		const msg = err.nestedErrors && err.nestedErrors.length > 0 ? (err.nestedErrors as ValidationError[])[0].msg : err.msg;
-
-		super(
-			`Invalid ${err.location} parameter ${err.param} "${err.value}"`,
-			req.originalUrl,
-			msg,
-			status
-		);
-	}
-}
-
-export class AuthErrorJson extends ErrorObj implements Error {
-	constructor (errors: Result<ValidationError>, req: Request, status = 401) {
-		const err = errors.array({ onlyFirstError: true })[0];
-		super("Authorization Error", req.originalUrl, `Invalid token "${err.value}"`, status);
-	}
-}
-
-const authErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		const err = new AuthErrorJson(errors, req);
-		print(JSON.stringify(err, null, 4));
-		return res.status(401).json(err);
-	}
-	next();
-};
-
-const validationErrorHandler = (req: Request, res: Response, next: NextFunction): Response | undefined => {
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		const err = new ValidationErrorJson(errors, req);
-		print(JSON.stringify(err, null, 4));
-		return res.status(422).json(err);
-	}
-	next();
-};
 
 const mongoVerifyExistance = (id: string, Collection: Model<Document<any>>): Promise<boolean> => {
 	return Collection.exists({ _id: new mongoose.Types.ObjectId(id) });
@@ -97,4 +51,4 @@ const spotifyIdValidator = (variable: ValidationChain): ValidationChain => varia
 	.matches(spotifyIdRegex)
 	.withMessage("spotify ID is not valid");
 
-export { mongoVerifyExistance, validationErrorHandler, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex, authErrorHandler };
+export { mongoVerifyExistance, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex };

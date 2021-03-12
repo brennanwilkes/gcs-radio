@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { InvalidLoginError, Error } from "../../types/error";
-import { print } from "./util";
+import { print } from "../util/util";
 
 export default (req: Request, res: Response) => (user: string, status = 401): void => {
 	const error: Error = new InvalidLoginError(user, req.originalUrl, status);

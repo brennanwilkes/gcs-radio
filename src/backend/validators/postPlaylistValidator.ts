@@ -1,6 +1,8 @@
 import { body, oneOf, cookie, header } from "express-validator";
-import { validationErrorHandler, mongoIdRegex, authErrorHandler } from "./validatorUtil";
+import { mongoIdRegex } from "./validatorUtil";
 import { isValidId } from "./oauthValidator";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
+import authorizationErrorHandler from "../errorHandlers/authorizationErrorHandler";
 
 export default [
 	body("songs")
@@ -37,5 +39,5 @@ export default [
 		cookie("jwt").custom(isValidId("user")),
 		header("token").custom(isValidId("user"))
 	]),
-	authErrorHandler
+	authorizationErrorHandler
 ];

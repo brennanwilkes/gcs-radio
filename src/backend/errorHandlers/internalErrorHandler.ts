@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ErrorFromException, Error } from "../../types/error";
-import { print } from "./util";
+import { print } from "../util/util";
 
 export default (req: Request, res: Response) => (err: string): void => {
 	const error: Error = new ErrorFromException(String(err), req.originalUrl);

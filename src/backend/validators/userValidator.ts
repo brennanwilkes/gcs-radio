@@ -1,8 +1,9 @@
 import { body, header } from "express-validator";
-import { validationErrorHandler, authErrorHandler } from "./validatorUtil";
 import { Request, Response, NextFunction } from "express";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../auth/getUser";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
+import authorizationErrorHandler from "../errorHandlers/authorizationErrorHandler";
 
 const loginValidator = [
 	body("email").isEmail().withMessage("Please enter a valid email"),
@@ -31,7 +32,7 @@ const cookieToHeader = [
 
 const tokenValidator = [
 	header("token").exists(),
-	authErrorHandler,
+	authorizationErrorHandler,
 	(req: Request, res: Response, next: NextFunction): void => {
 		getUserFromToken(req.header("token") as string).then(() => {
 			next();

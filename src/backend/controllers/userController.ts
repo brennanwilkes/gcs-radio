@@ -2,10 +2,10 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import User from "../../database/models/user";
 import { UserFromDoc } from "../../types/user";
-import notFoundErrorHandler from "../util/notFoundErrorHandler";
-import internalErrorHandler from "../util/internalErrorHandler";
-import invalidLoginErrorHandler from "../util/invalidLoginErrorHandler";
-import conflictErrorHandler from "../util/conflictErrorHandler";
+import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
+import invalidLoginErrorHandler from "../errorHandlers/invalidLoginErrorHandler";
+import conflictErrorHandler from "../errorHandlers/conflictErrorHandler";
 import generateToken from "../auth/generateToken";
 import { getUserFromToken } from "../auth/getUser";
 

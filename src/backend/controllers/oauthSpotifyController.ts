@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CONFIG, generateDashboardRedirect } from "../util/util";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import connection from "../spotify/connection";
 import UserModel, { userDocFromUser } from "../../database/models/user";
 import { UserFromSpotifyCredentials, UserType } from "../../types/user";

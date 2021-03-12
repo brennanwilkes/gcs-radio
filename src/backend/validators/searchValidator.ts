@@ -1,5 +1,6 @@
 import { oneOf, query } from "express-validator";
-import { validationErrorHandler, spotifyWebRegex, spotifyURIRegex, spotifyIdRegex } from "./validatorUtil";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
+import { spotifyWebRegex, spotifyURIRegex, spotifyIdRegex } from "./validatorUtil";
 
 export default [
 	oneOf([

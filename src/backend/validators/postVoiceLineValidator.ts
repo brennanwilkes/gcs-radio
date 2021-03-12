@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { oneOf, query } from "express-validator";
-import { validationErrorHandler, mongoIdValidator } from "./validatorUtil";
+import { mongoIdValidator } from "./validatorUtil";
 import Song from "../../database/models/song";
 import { mongoose } from "../../database/connection";
-import notFoundErrorHandler from "../util/notFoundErrorHandler";
+import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 
 const songExists = (id: string): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {

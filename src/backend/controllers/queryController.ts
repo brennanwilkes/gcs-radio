@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { print } from "../util/util";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import searchSpotify, { getSpotify } from "../spotify/searchSpotify";
 import { SongApiObj } from "../../types/song";
 import { DownloadLink } from "../../types/link";

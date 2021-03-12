@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CONFIG, generateDashboardRedirect } from "../util/util";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import { getTokenFromCode, getUserInfoFromToken, oath2FromCredentials } from "../auth/googleOauth";
 import signPayload from "../auth/signPayload";
 import UserModel, { userDocFromUser } from "../../database/models/user";

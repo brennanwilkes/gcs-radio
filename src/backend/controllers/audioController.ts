@@ -2,7 +2,7 @@ import streamFromMongo from "../../database/streamFromMongo";
 import { Request, Response } from "express";
 import { print } from "../util/util";
 import { mongoose } from "../../database/connection";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 
 const getAudio = async (req: Request, res: Response): Promise<void> => {
 	const errorHandler = internalErrorHandler(req, res);

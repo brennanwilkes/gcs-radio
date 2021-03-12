@@ -1,3 +1,6 @@
+import { Result, ValidationError as ExpressValidationError } from "express-validator";
+import { Request } from "express";
+
 export interface Error{
 	status?: number,
 	timestamp?: Date,
@@ -49,5 +52,25 @@ export class AccessDeniedError extends ErrorObj implements Error {
 export class ConflictError extends ErrorObj implements Error {
 	constructor (message: string, path: string, status = 409) {
 		super(`Resource already exists`, path, message, status);
+	}
+}
+
+export class ValidationError extends ErrorObj implements Error {
+	constructor (errors: Result<ExpressValidationError>, req: Request, status = 422) {
+		const err = errors.array()[0];
+		const msg = err.nestedErrors && err.nestedErrors.length > 0 ? (err.nestedErrors as ExpressValidationError[])[0].msg : err.msg;
+		super(
+			`Invalid ${err.location} parameter ${err.param} "${err.value}"`,
+			req.originalUrl,
+			msg,
+			status
+		);
+	}
+}
+
+export class AuthorizationError extends ErrorObj implements Error {
+	constructor (errors: Result<ExpressValidationError>, req: Request, status = 401) {
+		const err = errors.array({ onlyFirstError: true })[0];
+		super("Authorization Error", req.originalUrl, `Invalid token "${err.value}"`, status);
 	}
 }

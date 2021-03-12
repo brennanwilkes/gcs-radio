@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { query } from "express-validator";
 import Song from "../../database/models/song";
-import { validationErrorHandler, verifyUrlExistance, youtubeIdValidator, spotifyIdValidator } from "./validatorUtil";
+import { verifyUrlExistance, youtubeIdValidator, spotifyIdValidator } from "./validatorUtil";
 import { print } from "../util/util";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 
 export default [
 	youtubeIdValidator(query("youtubeId")),

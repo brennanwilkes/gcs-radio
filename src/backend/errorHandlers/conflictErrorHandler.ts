@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ConflictError, Error } from "../../types/error";
-import { print } from "./util";
+import { print } from "../util/util";
 
 export default (req: Request, res: Response) => (message: string, status = 409): void => {
 	const error: Error = new ConflictError(message, req.originalUrl, status);

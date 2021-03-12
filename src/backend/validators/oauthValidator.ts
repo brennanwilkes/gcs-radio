@@ -1,5 +1,5 @@
 import { CustomValidator, Meta, query } from "express-validator";
-import { authErrorHandler } from "./validatorUtil";
+import authorizationErrorHandler from "../errorHandlers/authorizationErrorHandler";
 import { Request, Response, NextFunction } from "express";
 import { resolveSignedPayload } from "../auth/signPayload";
 import { generateDashboardRedirect } from "../util/util";
@@ -56,7 +56,7 @@ const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) 
 const oauthValidator = [
 	query("error").not().exists(),
 	query("code").exists(),
-	authErrorHandler
+	authorizationErrorHandler
 ];
 
 export { oauthValidator, existingTokenRedirect, isValidToken, isValidId };

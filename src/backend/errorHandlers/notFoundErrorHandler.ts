@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { NotFoundError, Error } from "../../types/error";
-import { print } from "./util";
+import { print } from "../util/util";
 
 export default (req: Request, res: Response) => (resource: string, id?: string): void => {
 	const message = id ? `Failed to find ${resource} with id ${id}` : `Failed to find ${resource} resources`;

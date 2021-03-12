@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import Playlist, { PlaylistDoc, PlaylistObjFromQuery } from "../../database/models/playlist";
 import { SongApiObj } from "../../types/song";
 import { print } from "../util/util";
-import internalErrorHandler from "../util/internalErrorHandler";
-import notFoundErrorHandler from "../util/notFoundErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
+import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
 import { PlayAudioLink, SelfLink } from "../../types/link";
 import { PlaylistApiObj } from "../../types/playlist";
-import accessDeniedErrorHandler from "../util/accessDeniedErrorHandler";
+import accessDeniedErrorHandler from "../errorHandlers/accessDeniedErrorHandler";
 import { getUserIdFromToken } from "../auth/getUser";
 
 const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response) => {

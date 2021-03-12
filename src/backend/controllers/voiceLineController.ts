@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import internalErrorHandler from "../util/internalErrorHandler";
+import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import { mongoose } from "../../database/connection";
 import { print } from "../util/util";
 import { SongObjFromQuery } from "../../types/song";
@@ -10,7 +10,7 @@ import { recordVoiceLine } from "../voice/recordVoiceLine";
 import streamToMongo from "../../database/streamToMongo";
 import VoiceLineRenderModel, { VoiceLineRenderModelFromVoiceLineRender } from "../../database/models/voiceLineRender";
 import selectVoiceLine, { selectFirstVoiceLine } from "../voice/selectVoiceLine";
-import notFoundErrorHandler from "../util/notFoundErrorHandler";
+import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import { PlayAudioLink, SelfLink } from "../../types/link";
 
 const uploadVoiceLine = (render: VoiceLineRender, req: Request, res: Response, errorHandler:((err: string) => void), message: string) => {

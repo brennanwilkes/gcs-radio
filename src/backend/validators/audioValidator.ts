@@ -1,5 +1,6 @@
 import { param } from "express-validator";
-import { validationErrorHandler, mongoVerifyBucketExistance, mongoIdRegex } from "./validatorUtil";
+import { mongoVerifyBucketExistance, mongoIdRegex } from "./validatorUtil";
+import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 
 export default [
 	param("id")
