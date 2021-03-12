@@ -7,6 +7,8 @@ import UserModel, { userDocFromUser } from "../../database/models/user";
 import generateToken from "../auth/generateToken";
 import { UserFromGoogleCredentials, UserType } from "../../types/user";
 import { GoogleCredential } from "../../types/googleCredential";
+import welcomeEmail from "../email/welcomeEmail";
+import { fireAndForgetMail } from "../email/email";
 
 const generateGoogleRedirectURI = (req: Request) => `${req.protocol}://${req.get("host")}/auth/oauth/google`;
 
@@ -37,6 +39,7 @@ const redirectFromGoogle = async (req: Request, res:Response): Promise<void> => 
 			return generateToken(docs[0]._id);
 		} else {
 			const user = new UserFromGoogleCredentials(info as GoogleCredential);
+			fireAndForgetMail(welcomeEmail(user.email));
 			const doc = await userDocFromUser(user).save();
 			return await generateToken(doc._id);
 		}

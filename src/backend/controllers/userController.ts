@@ -8,6 +8,8 @@ import invalidLoginErrorHandler from "../errorHandlers/invalidLoginErrorHandler"
 import conflictErrorHandler from "../errorHandlers/conflictErrorHandler";
 import generateToken from "../auth/generateToken";
 import { getUserFromToken } from "../auth/getUser";
+import welcomeEmail from "../email/welcomeEmail";
+import { fireAndForgetMail } from "../email/email";
 
 export async function login (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
@@ -52,6 +54,8 @@ export async function signUp (req: Request, res: Response): Promise<void> {
 			}).then(doc => {
 				return generateToken(doc._id);
 			}).then(token => {
+				fireAndForgetMail(welcomeEmail(email));
+
 				res.cookie("jwt", token);
 				res.status(200).json({ token });
 			}).catch(internalErrorHandler(req, res));

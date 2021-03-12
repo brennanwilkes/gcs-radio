@@ -14,7 +14,8 @@ export const CONFIG = {
 	},
 	spotifyOauth2Credentials: {
 		scope: ["user-read-private", "user-read-email", "streaming"]
-	}
+	},
+	fromEmail: "GCS Radio <noreply@494913.xyz>"
 };
 
 /**

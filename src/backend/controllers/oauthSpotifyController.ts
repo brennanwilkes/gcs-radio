@@ -6,6 +6,8 @@ import UserModel, { userDocFromUser } from "../../database/models/user";
 import { UserFromSpotifyCredentials, UserType } from "../../types/user";
 import SpotifyApi from "spotify-web-api-node";
 import generateToken from "../auth/generateToken";
+import welcomeEmail from "../email/welcomeEmail";
+import { fireAndForgetMail } from "../email/email";
 
 const generateSpotifyRedirectURI = (req: Request): string => `${req.protocol}://${req.get("host")}/auth/oauth/spotify`;
 export { generateSpotifyRedirectURI };
@@ -44,6 +46,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 				return generateToken(docs[0]._id);
 			} else {
 				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate);
+				fireAndForgetMail(welcomeEmail(userObj.email));
 				const doc = await userDocFromUser(userObj).save();
 				return await generateToken(doc._id);
 			}
