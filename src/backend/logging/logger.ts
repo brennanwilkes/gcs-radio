@@ -11,15 +11,23 @@ export enum EventType{
 
 export class Logger {
 	tracker: ua.Visitor;
-	trackingId = CONFIG.googleTrackingId;
-	constructor () {
-		this.tracker = ua(this.trackingId);
+	trackingId: string;
+	constructor (trackingId: string) {
+		this.trackingId = trackingId;
+		this.tracker = ua(trackingId);
+	}
+
+	errorHandler (error: any, response: any, body: any) {
+		if (error) {
+			console.error(error);
+			console.dir(response);
+			console.dir(body);
+		}
 	}
 
 	logError (err: Error, fatalOverride?: boolean) {
 		const fatal: boolean = fatalOverride ?? (!!err.status && err.status >= 500);
-		this.tracker.exception(`${err.error}: ${err.message}`, fatal);
-		console.dir("LOGGED ERR");
+		this.tracker.exception(`${err.error}: ${err.message}`, fatal).send(this.errorHandler);
 	}
 
 	logSignup (email: string, type: UserType) {
@@ -27,9 +35,12 @@ export class Logger {
 			ec: EventType.SIGNUP,
 			ea: type,
 			ev: email
-		});
-		console.dir("LOGGED SIGNUP");
+		}).send(this.errorHandler);
+	}
+
+	logApiCall (path: string) {
+		this.tracker.pageview(path).send(this.errorHandler);
 	}
 }
 
-export default new Logger();
+export default new Logger(CONFIG.googleTrackingId);
