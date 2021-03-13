@@ -4,6 +4,7 @@ import {Song} from '../../types/song';
 import Player from "../Player/Player";
 import arrayShuffle from "array-shuffle";
 import { VoiceLineRender } from "../../types/voiceLine";
+import { getAccessToken } from "../spotifyWebSDK/spotifyWebSDK";
 import "./app.css";
 
 interface IProps {
@@ -11,7 +12,8 @@ interface IProps {
 }
 interface IState {
 	songs: Song[],
-	transitions: VoiceLineRender[]
+	transitions: VoiceLineRender[],
+	spotifySDKMode: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -21,7 +23,8 @@ export default class App extends React.Component<IProps, IState> {
 
 		this.state = {
 			songs: [],
-			transitions: []
+			transitions: [],
+			spotifySDKMode: false
 		};
 	}
 
@@ -29,8 +32,6 @@ export default class App extends React.Component<IProps, IState> {
 		axios.get(`../api/v1/playlists/${encodeURIComponent(this.props.playlist)}`).then(resp => {
 
 			const songs: Song[] = arrayShuffle(resp.data.playlists[0].songs);
-
-			console.dir(songs);
 
 			const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
 				if(i === 0){
@@ -43,9 +44,17 @@ export default class App extends React.Component<IProps, IState> {
 
 			Promise.all(transitions).then(resps => {
 				const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
-				this.setState({
+
+				const setStateSDK = (spotifySDKMode: boolean) => this.setState({
 					songs: songs,
-					transitions: converted
+					transitions: converted,
+					spotifySDKMode
+				});
+
+				getAccessToken().then(() => {
+					setStateSDK(true);
+				}).catch(() => {
+					setStateSDK(false);
 				});
 			});
 		})
@@ -55,7 +64,7 @@ export default class App extends React.Component<IProps, IState> {
 		return <>
 			<div className="App">
 				<h1>GCS Radio</h1>
-				<Player songs={this.state.songs} transitions={this.state.transitions} />
+				<Player spotifySDKMode={this.state.spotifySDKMode} songs={this.state.songs} transitions={this.state.transitions} />
 			</div>
 		</>
 	}

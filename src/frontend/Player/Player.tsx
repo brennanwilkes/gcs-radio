@@ -11,12 +11,11 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import {spotifyPause, spotifyPlayId, spotifySeek} from "../spotifyWebSDK/spotify";
-import { access_token } from "../spotifyWebSDK/spotifyWebSDK";
 
 interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
-	spotifySDKMode?: boolean
+	spotifySDKMode: boolean
 }
 interface IState {
 	paused: boolean,
@@ -63,7 +62,7 @@ export default class App extends React.Component<IProps, IState> {
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false,
-			spotifySDKMode: this.props.spotifySDKMode ?? access_token !== "INVALID"
+			spotifySDKMode: this.props.spotifySDKMode
 		};
 
 		setInterval(this.updateProgress, 1000);

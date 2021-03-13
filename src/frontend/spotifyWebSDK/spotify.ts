@@ -1,4 +1,4 @@
-import {playerSettings, play, access_token } from "./spotifyWebSDK";
+ import {playerSettings, play, getAccessToken } from "./spotifyWebSDK";
 
 var spotifyPlayer: Spotify.SpotifyPlayer;
 var playing: string | undefined;
@@ -6,20 +6,19 @@ var progress: number = 0;
 
 export const spotifyPlayId = (id: string): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {
-		if(access_token === "INVALID"){
-			reject(new Error("Access token not set"));
-		}
-		if(id === playing){
-			spotifyPlayer.resume();
-		}
-		else{
-			play({
-				playerInstance: spotifyPlayer,
-				spotify_uri: `spotify:track:${id}`,
-			});
-			playing = id;
-		}
-		resolve();
+		getAccessToken().then(() => {
+			if(id === playing){
+				spotifyPlayer.resume();
+			}
+			else{
+				play({
+					playerInstance: spotifyPlayer,
+					spotify_uri: `spotify:track:${id}`,
+				});
+				playing = id;
+			}
+			resolve();
+		}).catch(reject);
 	});
 }
 
@@ -36,7 +35,7 @@ export const spotifySeek = (position?: number): number => {
 }
 
 window.onSpotifyWebPlaybackSDKReady = (): void => {
-	if(access_token !== "INVALID"){
+	getAccessToken().then(() => {
 		spotifyPlayer = new Spotify.Player(playerSettings);
 
 		spotifyPlayer.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -59,5 +58,5 @@ window.onSpotifyWebPlaybackSDKReady = (): void => {
 
 		// Connect to the player!
 		spotifyPlayer.connect();
-	}
+	}).catch(console.error);
 };

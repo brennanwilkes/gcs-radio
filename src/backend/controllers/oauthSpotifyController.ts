@@ -27,6 +27,7 @@ const redirectToSpotify = (req: Request, res: Response): void => {
 const redirectFromSpotify = (req: Request, res:Response): void => {
 	const code = req.query.code as string;
 	let user: SpotifyApi.UserObjectPrivate | undefined;
+	let refreshToken: string | undefined;
 
 	connection.then(spotifyApi => {
 		spotifyApi.authorizationCodeGrant(code).then(data => {
@@ -34,6 +35,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 			spotifyApi.setRefreshToken(data.body.refresh_token);
 			res.cookie("sat", data.body.access_token, { httpOnly: false });
 			res.cookie("srt", data.body.refresh_token, { httpOnly: false });
+			refreshToken = data.body.refresh_token;
 
 			return spotifyApi.getMe();
 		}).then(userResp => {
@@ -46,7 +48,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 			if (docs.length > 0) {
 				return generateToken(docs[0]._id);
 			} else {
-				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate);
+				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate, refreshToken);
 				logger.logSignup(userObj.email, UserType.SPOTIFY);
 				fireAndForgetMail(welcomeEmail(userObj.email));
 				const doc = await userDocFromUser(userObj).save();

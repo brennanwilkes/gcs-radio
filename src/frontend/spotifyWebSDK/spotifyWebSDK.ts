@@ -1,3 +1,4 @@
+import axios from "axios";
 import jscookie from "js-cookie";
 
 type getOAuthTokenType = ((token: string) => void);
@@ -14,13 +15,39 @@ interface PlayerArg{
 	playerInstance: PlayerInstanceType
 }
 
-
-export const access_token = jscookie.get("sat") ?? "INVALID";
 export const refresh_token = jscookie.get("srt") ?? "INVALID";
+
+export const getAccessToken = (): Promise<string> => {
+	return new Promise<string>((resolve, reject) => {
+		if(refresh_token === "INVALID"){
+			reject(new Error("Invalid refresh token"));
+		}
+		else{
+			axios.post("https://accounts.spotify.com/api/token",{
+				grant_type: "refresh_token",
+				refresh_token: refresh_token,
+			}).then(res => {
+				if(res.data?.access_token){
+					jscookie.set("sat", res.data.access_token);
+					resolve(res.data.access_token);
+				}
+				else{
+					reject(new Error("Invalid Access token"));
+				}
+			}).catch(reject);
+		}
+	});
+};
+
+const fireAndForgetAccessToken = (): Promise<string> => {
+	return new Promise<string>((resolve, reject) => {
+		getAccessToken().then(resolve).catch(console.error);
+	});
+}
 
 export const playerSettings = {
 	name: "GCS Radio",
-	getOAuthToken: (cb: getOAuthTokenType) => cb(access_token)
+	getOAuthToken: async (cb: getOAuthTokenType) => cb(await fireAndForgetAccessToken())
 };
 
 export const play = (args: PlayerArg) => {

@@ -14,6 +14,7 @@ export interface User{
 	email: string,
 	createdAt: Date,
 	type: UserType,
+	refreshToken?: string,
 	id?: string
 }
 
@@ -25,42 +26,62 @@ export interface UserWithPassword extends UserWithId{
 	password: string
 }
 
+export interface UserOptions{
+	email: string,
+	type: UserType,
+	createdAt?: Date,
+	refreshToken?: string,
+	id?: string
+}
+
 export class UserObj implements User {
 	email: string;
 	createdAt: Date;
 	type: UserType;
 	id?: string;
-	constructor (email: string, type: UserType, createdAt: Date = new Date(), id?: string) {
-		if (id) {
-			this.id = id;
+	refreshToken?: string;
+	constructor (opts: UserOptions) {
+		if (opts.id) {
+			this.id = opts.id;
 		}
-		this.email = email;
-		this.type = type;
-		this.createdAt = createdAt;
+		if (opts.refreshToken) {
+			this.refreshToken = opts.refreshToken;
+		}
+		this.email = opts.email;
+		this.type = opts.type;
+		this.createdAt = opts.createdAt ?? new Date();
 	}
 }
 
-export class UserFromDoc implements UserWithId {
-	email: string;
-	createdAt: Date;
-	type: UserType;
+export class UserFromDoc extends UserObj implements UserWithId {
 	id: string;
 	constructor (doc: UserDoc) {
+		super({
+			id: doc.id,
+			email: doc.email,
+			type: doc.type as UserType,
+			createdAt: doc.createdAt,
+			refreshToken: doc.refreshToken
+		});
 		this.id = doc.id;
-		this.email = doc.email;
-		this.type = doc.type as UserType;
-		this.createdAt = doc.createdAt;
 	}
 }
 
 export class UserFromGoogleCredentials extends UserObj {
 	constructor (credentials: GoogleCredential) {
-		super(credentials.email, UserType.GOOGLE);
+		super({
+			email: credentials.email,
+			type: UserType.GOOGLE
+		});
 	}
 }
 
 export class UserFromSpotifyCredentials extends UserObj {
-	constructor (credentials: SpotifyApi.UserObjectPrivate) {
-		super(credentials.email, UserType.SPOTIFY);
+	constructor (credentials: SpotifyApi.UserObjectPrivate, refreshToken?: string) {
+		super({
+			email: credentials.email,
+			type: UserType.SPOTIFY,
+			refreshToken
+		});
 	}
 }

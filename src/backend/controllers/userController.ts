@@ -22,6 +22,9 @@ export async function login (req: Request, res: Response): Promise<void> {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
 					generateToken(user.id).then(token => {
+						if (user.refreshToken) {
+							res.cookie("srt", user.refreshToken, { httpOnly: false });
+						}
 						res.cookie("jwt", token, { httpOnly: false });
 						res.status(200).json({ token });
 					}).catch(internalErrorHandler(req, res));
@@ -69,8 +72,12 @@ export function getUser (req: Request, res: Response): void {
 	getUserFromToken(req.header("token") as string).then(user => {
 		User.findById(user.id).then(userDoc => {
 			if (userDoc) {
+				const userObj = new UserFromDoc(userDoc);
+				if (userObj.refreshToken) {
+					res.cookie("srt", userObj.refreshToken, { httpOnly: false });
+				}
 				res.status(200).json({
-					users: [new UserFromDoc(userDoc)]
+					users: [userObj]
 				});
 			} else {
 				notFoundErrorHandler(req, res)("user", user.id);
