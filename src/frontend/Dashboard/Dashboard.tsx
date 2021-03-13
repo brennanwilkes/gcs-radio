@@ -2,6 +2,7 @@ import * as React from "react";
 import axios from "axios";
 import {Playlist} from "../../types/playlist";
 import {User} from "../../types/user";
+import jscookie from "js-cookie";
 
 import "./dashboard.css";
 
@@ -26,17 +27,18 @@ export default class Dashboard extends React.Component<IProps, IState> {
 			this.setState({
 				user: resp.data.users[0]
 			});
-			console.dir(resp.data);
 
 			axios.get("/api/v1/playlists").then(resp2 => {
 				this.setState({
 					playlists: resp2.data.playlists.filter((playlist: Playlist) => playlist.details?.user === resp.data.users[0].id )
 				});
-				console.dir(resp2.data);
 			});
+		}).catch(() => {
+			jscookie.remove("jwt");
+			jscookie.remove("sat");
+			jscookie.remove("srt");
+			window.location.href = "../login";
 		});
-
-
 	}
 
 	render(){

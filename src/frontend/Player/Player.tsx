@@ -29,7 +29,6 @@ interface IState {
 	seekLock: boolean,
 	lastTransition: number,
 	playedIntro: boolean,
-	spotifySDKMode: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -62,7 +61,6 @@ export default class App extends React.Component<IProps, IState> {
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false,
-			spotifySDKMode: this.props.spotifySDKMode
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -177,7 +175,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	playSong(index: number = this.state.index){
-		if(this.state.spotifySDKMode){
+		if(this.props.spotifySDKMode){
 			spotifyPlayId(this.props.songs[index].spotifyId);
 		}
 		else{
@@ -186,7 +184,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	pauseSong(index: number = this.state.index){
-		if(this.state.spotifySDKMode){
+		if(this.props.spotifySDKMode){
 			spotifyPause();
 		}
 		else{
@@ -195,7 +193,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	getProgress(): number{
-		if(this.state.spotifySDKMode){
+		if(this.props.spotifySDKMode){
 			return spotifySeek();
 		}
 		else{
@@ -214,7 +212,7 @@ export default class App extends React.Component<IProps, IState> {
 			this.state.index + direction >= 0){
 
 			//Reset current audio
-			if(this.state.spotifySDKMode){
+			if(this.props.spotifySDKMode){
 				this.pauseSong();
 				this.setProgress(0);
 			}
@@ -266,7 +264,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	setProgress(value: number){
 		if(this.state.index < this.state.queue.length && !this.state.seekLock){
-			if(this.state.spotifySDKMode){
+			if(this.props.spotifySDKMode){
 				spotifySeek(value);
 			}
 			else{

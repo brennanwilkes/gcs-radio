@@ -52,6 +52,7 @@ export default class App extends React.Component<IProps, IState> {
 				});
 
 				getAccessToken().then(() => {
+					console.dir("Spotify Mode");
 					setStateSDK(true);
 				}).catch(() => {
 					setStateSDK(false);

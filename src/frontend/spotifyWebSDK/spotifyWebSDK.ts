@@ -23,9 +23,8 @@ export const getAccessToken = (): Promise<string> => {
 			reject(new Error("Invalid refresh token"));
 		}
 		else{
-			axios.post("https://accounts.spotify.com/api/token",{
-				grant_type: "refresh_token",
-				refresh_token: refresh_token,
+			axios.patch(`../auth/spotify`,{
+				refresh_token
 			}).then(res => {
 				if(res.data?.access_token){
 					jscookie.set("sat", res.data.access_token);
