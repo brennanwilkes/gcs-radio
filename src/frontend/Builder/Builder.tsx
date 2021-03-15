@@ -12,7 +12,8 @@ import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetai
 import {UserWithId} from "../../types/user";
 
 interface IProps {
-	redirectCallback: ((playlist: string) => void)
+	redirectCallback: ((playlist: string) => void),
+	playlist?: string
 }
 interface IState {
 	songs: Song[],
@@ -22,7 +23,12 @@ interface IState {
 	rendered : boolean,
 	details: Details,
 	completeSongs?: Song[],
-	user?: UserWithId
+	user?: UserWithId,
+	patchMode: boolean,
+	initialName?: string,
+	initialDescription?: string,
+	initialPrivate?: boolean
+
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -41,7 +47,22 @@ export default class Builder extends React.Component<IProps, IState> {
 			processing: false,
 			loadedProgress: 0,
 			rendered: false,
-			details: {}
+			details: {},
+			patchMode: false
+		}
+
+		if(this.props.playlist){
+			axios.get(`../api/v1/playlists/${this.props.playlist}`).then(res => {
+				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
+					this.setState({
+						songs: res.data.playlists[0].songs,
+						patchMode: true,
+						initialName: res.data.playlists[0].details.name,
+						initialDescription: res.data.playlists[0].details.description,
+						initialPrivate: res.data.playlists[0].private
+					});
+				}
+			}).catch(console.error);
 		}
 	}
 
@@ -68,7 +89,12 @@ export default class Builder extends React.Component<IProps, IState> {
 				private: false,
 				songs: this.state.completeSongs?.map(song => song.id)
 			};
-		axios.post('/api/v1/playlists', args, { withCredentials: true }).then(resp => {
+
+		axios[this.state.patchMode ? "patch" : "post"](
+			`/api/v1/playlists${this.state.patchMode ? `/${this.props.playlist}` : ""}`,
+			args,
+			{ withCredentials: true }
+		).then(resp => {
 			if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
 				this.props.redirectCallback(resp.data.playlists[0].id);
 			}
@@ -112,8 +138,15 @@ export default class Builder extends React.Component<IProps, IState> {
 				<div className="Builder">
 					{
 						this.state.rendered
-						? <PlaylistDetailAdder detailCallback={this.updateDetails} />
-						: <Selector songChangeCallback={this.songChangeCallback} setProcessing={this.proccessingCallback} />
+						? <PlaylistDetailAdder
+							detailCallback={this.updateDetails}
+							initialName={this.state.initialName}
+							initialDescription={this.state.initialDescription}
+							initialPrivate={this.state.initialPrivate} />
+						: <Selector
+							initialSongs={this.state.songs}
+							songChangeCallback={this.songChangeCallback}
+							setProcessing={this.proccessingCallback} />
 					}
 					<button
 						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}

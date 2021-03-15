@@ -57,7 +57,9 @@ export default class App extends React.Component<IProps, IState> {
 				}).catch(() => {
 					setStateSDK(false);
 				});
-			});
+			}).catch(console.error);
+		}).catch(() => {
+			window.location.href = "../builder";
 		})
 	}
 

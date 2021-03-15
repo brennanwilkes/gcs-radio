@@ -8,6 +8,9 @@ import "./playlistDetailAdder.css";
 
 interface IProps {
 	detailCallback: ((details: IState) => void),
+	initialName?: string,
+	initialDescription?: string,
+	initialPrivate?: boolean
 }
 interface IState {
 	name?: string
@@ -50,10 +53,12 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 					<h2>Details</h2>
 				} />
 				<FloatingLabel
+					initialValue={this.props.initialName}
 					label="Name"
 					onChange={(event) => this.setState({name: (event.target as HTMLTextAreaElement).value})}
 					onChangeDelay={150} />
 				<FloatingLabel
+					initialValue={this.props.initialDescription}
 					label="Description"
 					onChange={(event) => this.setState({description: (event.target as HTMLTextAreaElement).value})}
 					onChangeDelay={150} />

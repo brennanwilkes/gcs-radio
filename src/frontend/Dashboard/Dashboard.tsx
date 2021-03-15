@@ -22,6 +22,14 @@ export default class Dashboard extends React.Component<IProps, IState> {
 		}
 	}
 
+	deletePlaylist(playlist: Playlist, i: number){
+		axios.delete(`../api/v1/playlists/${playlist.id}`).then(() => {
+			this.setState({
+				playlists: this.state.playlists.filter((p:Playlist, ii: number) => i !== ii)
+			});
+		}).catch(console.error);
+	}
+
 	componentDidMount(){
 		axios.get("/auth").then(resp => {
 			this.setState({
@@ -48,7 +56,14 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				this.state.user?.refreshToken ? "Spotify Connected" : <a href="../auth/spotify">Connect Spotify</a>
 			}</h3>
 			<ul>{
-				this.state.playlists.map(playlist => <li key={playlist.details?.name}><a href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>{playlist.details?.name}</a></li>)
+				this.state.playlists.map((playlist, i) => (
+					<li key={playlist.details?.name}>
+						{playlist.details?.name}
+						<a href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>Play</a>
+						<a href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}>Edit</a>
+						<button onClick={() => this.deletePlaylist(playlist, i)} className="btn btn-danger">Delete</button>
+						</li>
+				))
 			}</ul>
 			<a href="../builder">Build a playlist</a>
 		</>

@@ -11,7 +11,8 @@ import HrWrapper from "../HrWrapper/HrWrapper";
 
 interface IProps {
 	songChangeCallback: ((songs: Song[]) => void),
-	setProcessing: ((state: boolean) => void)
+	setProcessing: ((state: boolean) => void),
+	initialSongs?: Song[]
 }
 interface IState {
 	queriedSongs: Song[],
@@ -32,9 +33,14 @@ export default class Selector extends React.Component<IProps, IState> {
 		}
 	}
 
-	componentDidUpdate(_prevProps: IProps, prevState: IState){
+	componentDidUpdate(prevProps: IProps, prevState: IState){
 		if(this.state.songs !== prevState.songs){
 			this.props.songChangeCallback(this.state.songs);
+		}
+		if(this.props.initialSongs !== prevProps.initialSongs && this.props.initialSongs){
+			this.setState({
+				songs: this.props.initialSongs
+			});
 		}
 	}
 

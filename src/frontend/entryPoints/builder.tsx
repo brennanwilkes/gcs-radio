@@ -7,9 +7,17 @@ import * as ReactDOM from "react-dom";
 import ResponsiveContainer from "../ResponsiveContainer/ResponsiveContainer";
 import Builder from "../Builder/Builder";
 
+//https://stackoverflow.com/questions/9870512/how-to-obtain-the-query-string-from-the-current-url-with-javascript
+const getQueryStringValue = (key: string): string  => decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+
+const playlist = getQueryStringValue("playlist");
+console.dir(playlist);
+
 // Main render
 ReactDOM.render(<ResponsiveContainer children={
-	<Builder redirectCallback={(playlist: string) => {
-		window.location.href = `../app?playlist=${encodeURIComponent(playlist)}`
-	}} />
+	<Builder
+		redirectCallback={(playlist: string) => {
+			window.location.href = playlist ? `../dashboard` : `../app?playlist=${encodeURIComponent(playlist)}`
+		}}
+		playlist={playlist} />
 } />, document.getElementsByTagName("MAIN")[0]);
