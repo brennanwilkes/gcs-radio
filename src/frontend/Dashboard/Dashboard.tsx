@@ -45,7 +45,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 		return <>
 			<h1>{this.state.user?.email}</h1>
 			<h3 className={this.state.user?.refreshToken ? "spotifyConnected" : ""}>{
-				this.state.user?.refreshToken ? "Spotify Connected" : <a href="../auth/connect">Connect Spotify</a>
+				this.state.user?.refreshToken ? "Spotify Connected" : <a href="../auth/spotify">Connect Spotify</a>
 			}</h3>
 			<ul>{
 				this.state.playlists.map(playlist => <li key={playlist.details?.name}><a href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>{playlist.details?.name}</a></li>)

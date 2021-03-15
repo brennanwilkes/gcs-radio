@@ -15,7 +15,8 @@ export interface User{
 	createdAt: Date,
 	type: UserType,
 	refreshToken?: string,
-	id?: string
+	id?: string,
+	password?: string
 }
 
 export interface UserWithId extends User{

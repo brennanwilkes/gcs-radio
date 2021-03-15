@@ -23,7 +23,7 @@ export const getAccessToken = (): Promise<string> => {
 			reject(new Error("Invalid refresh token"));
 		}
 		else{
-			axios.patch(`../auth/spotify`,{
+			axios.post(`../auth/spotify`,{
 				refresh_token
 			}).then(res => {
 				if(res.data?.access_token){

@@ -12,8 +12,8 @@ const authRouter = Router();
 authRouter.get("/google", existingTokenRedirect, redirectToGoogle);
 authRouter.get("/oauth/google", oauthValidator, redirectFromGoogle);
 
-authRouter.patch("/spotify", refreshTokenValidator, refreshTokenController);
-authRouter.get("/spotify", existingTokenRedirect, redirectToSpotify);
+authRouter.post("/spotify", refreshTokenValidator, refreshTokenController);
+authRouter.get("/spotify", redirectToSpotify);
 authRouter.get("/oauth/spotify", oauthValidator, redirectFromSpotify);
 
 authRouter.post("/", signUpValidator, signUp);
