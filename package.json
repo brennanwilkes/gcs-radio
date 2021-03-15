@@ -22,8 +22,8 @@
 		"lint": "eslint \"src/**/*.[jt]s\" --fix",
 		"clearCache": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearCache.js",
 		"clearUsers": "mongo \"$( cat .env | grep DB_CONNECTION | cut -d'=' -f2 )\" < src/dev/clearUsers.js",
-		"deploy": "bash ./src/dev/deploy.sh gcs-radio",
-		"deploy:beta": "bash ./src/dev/deploy.sh gcs-radio-beta"
+		"deploy": "npm run lint && bash ./src/dev/deploy.sh gcs-radio",
+		"deploy:beta": "npm run lint && bash ./src/dev/deploy.sh gcs-radio-beta"
 	},
 	"repository": {
 		"type": "git",
