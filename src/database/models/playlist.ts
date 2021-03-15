@@ -5,6 +5,7 @@ import { mongoose } from "../connection";
 import { Playlist, PlaylistObj } from "../../types/playlist";
 import { SongObjFromQuery } from "../../types/song";
 import SongModel, { SongDoc } from "./song";
+import { Query } from "mongoose";
 const Schema = mongoose.Schema;
 
 const PlaylistSchema = new Schema({
@@ -64,5 +65,16 @@ export function PlaylistObjFromQuery (docs: PlaylistDoc): Promise<Playlist> {
 		}).catch(reject);
 	});
 }
+
+export const findById = (id: string, user?: string): Query<PlaylistDoc | null, PlaylistDoc> => {
+	return user
+		? PlaylistModel.findOne({
+			_id: new mongoose.Types.ObjectId(id),
+			user: new mongoose.Types.ObjectId(user)
+		})
+		: PlaylistModel.findOne({
+			_id: new mongoose.Types.ObjectId(id)
+		});
+};
 
 export { PlaylistSchema };

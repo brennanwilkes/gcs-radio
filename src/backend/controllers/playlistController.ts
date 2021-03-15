@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Playlist, { PlaylistDoc, PlaylistObjFromQuery } from "../../database/models/playlist";
+import Playlist, { PlaylistDoc, PlaylistObjFromQuery, findById as findPlaylistById } from "../../database/models/playlist";
 import { SongApiObj } from "../../types/song";
 import { print } from "../util/util";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
@@ -63,9 +63,7 @@ const getPlaylists = (req: Request, res: Response): void => {
 const getPlaylist = (req: Request, res: Response): void => {
 	print(`Handling request for playlist resource ${req.params.id}`);
 
-	Playlist.findOne({
-		_id: new mongoose.Types.ObjectId(req.params.id)
-	}).then(playlistResults => {
+	findPlaylistById(req.params.id).then(playlistResults => {
 		if (playlistResults) {
 			if (playlistResults.private) {
 				getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
@@ -104,4 +102,60 @@ const postPlaylist = (req: Request, res: Response): void => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-export { getPlaylists, getPlaylist, postPlaylist };
+const patchPlaylist = (req: Request, res: Response): void => {
+	const id: string = req.params.id;
+	const name: string | undefined = req.body.name;
+	const songs: string[] | undefined = req.body.songs;
+	const description: string | undefined = req.body.description;
+	const features: string[] | undefined = req.body.features;
+	const privacy: boolean | undefined = req.body.private;
+
+	getUserIdFromToken(req.header("token") ?? "INVALID").then(userId => {
+		findPlaylistById(id, userId).then(playlist => {
+			if (playlist) {
+				if (name) {
+					playlist.name = name;
+				}
+				if (songs) {
+					playlist.songs = songs.map(song => new mongoose.Types.ObjectId(song));
+				}
+				if (description) {
+					playlist.description = description;
+				}
+				if (features) {
+					playlist.features = features.map(song => new mongoose.Types.ObjectId(song));
+				}
+				if (privacy) {
+					playlist.private = privacy;
+				}
+				playlist.save().then(results => {
+					sendPlaylistResponse([results], req, res);
+				}).catch(internalErrorHandler(req, res));
+			} else {
+				notFoundErrorHandler(req, res)("playlist", id);
+			}
+		}).catch(internalErrorHandler(req, res));
+	}).catch(() => {
+		accessDeniedErrorHandler(req, res)(id);
+	});
+};
+
+const deletePlaylist = (req: Request, res: Response): void => {
+	const id: string = req.params.id;
+
+	getUserIdFromToken(req.header("token") ?? "INVALID").then(userId => {
+		findPlaylistById(id, userId).then(playlist => {
+			if (playlist) {
+				playlist.delete().then(() => {
+					res.status(200).json({});
+				}).catch(internalErrorHandler(req, res));
+			} else {
+				notFoundErrorHandler(req, res)("playlist", id);
+			}
+		}).catch(internalErrorHandler(req, res));
+	}).catch(() => {
+		accessDeniedErrorHandler(req, res)(id);
+	});
+};
+
+export { getPlaylists, getPlaylist, postPlaylist, patchPlaylist, deletePlaylist };
