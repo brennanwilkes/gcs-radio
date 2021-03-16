@@ -84,7 +84,7 @@ deploy-beta:
     - beta
 
 build-serverless:
-    image: image: node:alpine
+    image: node:alpine
     stage: build
     script:
         - npm install
