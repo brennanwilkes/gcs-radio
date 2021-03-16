@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { query } from "express-validator";
+import { query, ValidationChain } from "express-validator";
 import Song from "../../database/models/song";
 import { verifyUrlExistance, youtubeIdValidator, spotifyIdValidator } from "./validatorUtil";
 import { print } from "../util/util";
@@ -30,4 +30,4 @@ export default [
 			next();
 		});
 	}
-];
+] as ValidationChain[];

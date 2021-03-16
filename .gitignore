@@ -117,5 +117,6 @@ dist
 
 
 **/bundle*
-build/
+build*/
 cpsc2650bwilkes-82437d726ff6.json
+
