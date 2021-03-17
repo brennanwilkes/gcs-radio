@@ -4,7 +4,7 @@ import { Song, SongObjFromQuery } from "../../types/song";
 import { SongDoc } from "../../database/models/song";
 import { SpotifyResult } from "../../types/spotifyResult";
 import { YoutubeResult } from "../../types/youtubeResult";
-import { print } from "../util/util";
+import { CONFIG, print } from "../util/util";
 import { mongoVerifyBucketExistance } from "../validators/validatorUtil";
 import downloadURLToStream from "../youtube/downloadURLToStream";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
@@ -51,7 +51,7 @@ export const cacheSongFromResults = (youtubeResults: YoutubeResult, spotifyResul
 };
 
 const cacheSong = (youtubeId: string, formats: ytdl.videoFormat[], title: string, artist: string, album: string): Promise<string> => {
-	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
+	const url = CONFIG.youtubeURLMethod(youtubeId);
 	return new Promise<string>((resolve, reject) => {
 		downloadURLToStream(url, formats).then(dummy => {
 			print("Created audio conversion stream");
