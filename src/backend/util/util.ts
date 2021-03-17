@@ -1,14 +1,14 @@
 import { Request } from "express";
 
+// Store all backend config vars here
+import "dotenv/config";
+
 import analyticsConfig from "../../config/analytics";
 import emailConfig from "../../config/email";
 import googleConfig from "../../config/google";
 import spotifyConfig from "../../config/spotify";
 import miscConfig from "../../config/miscellaneous";
 import youtubeURLMethod from "../../config/youtubeURL";
-
-// Store all backend config vars here
-import "dotenv/config";
 
 export const CONFIG = {
 	...miscConfig,
@@ -20,9 +20,6 @@ export const CONFIG = {
 	...analyticsConfig,
 	youtubeURLMethod
 };
-
-console.dir(process.env.DB_CONNECTION);
-console.dir(CONFIG);
 
 /**
 	Prints to stdout if verbose config mode is set
