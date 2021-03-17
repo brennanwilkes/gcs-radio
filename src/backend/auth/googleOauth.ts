@@ -2,20 +2,21 @@ import { google } from "googleapis";
 import { Credentials, OAuth2Client } from "google-auth-library";
 import signPayload from "./signPayload";
 import { GoogleCredential, googleCredentialFromApi } from "../../types/googleCredential";
+import { CONFIG } from "../util/util";
 
 const oauth2 = google.oauth2("v2");
 const OAuth2 = google.auth.OAuth2;
 
 export function getGoogleEnv (): Promise<{id:string, secret: string}> {
 	return new Promise<{id:string, secret: string}>((resolve, reject) => {
-		if (!process.env.GOOGLE_CLIENT_ID) {
+		if (!CONFIG.googleClientId) {
 			reject(new Error("Google OAUTH ID not set"));
-		} else if (!process.env.GOOGLE_CLIENT_SECRET) {
+		} else if (!CONFIG.googleClientSecret) {
 			reject(new Error("Google OAUTH secret not set"));
 		} else {
 			resolve({
-				id: process.env.GOOGLE_CLIENT_ID,
-				secret: process.env.GOOGLE_CLIENT_SECRET
+				id: CONFIG.googleClientId,
+				secret: CONFIG.googleClientSecret
 			});
 		}
 	});

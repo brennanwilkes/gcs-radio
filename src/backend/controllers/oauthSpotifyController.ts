@@ -15,7 +15,7 @@ const generateSpotifyRedirectURI = (req: Request): string => `${req.protocol}://
 export { generateSpotifyRedirectURI };
 
 const redirectToSpotify = (req: Request, res: Response): void => {
-	if (!process.env.SPOTIFY_ID) {
+	if (!CONFIG.spotifyClientId) {
 		internalErrorHandler(req, res)("Spotify application ID not set");
 	} else {
 		connection.then(spotifyApi => {
