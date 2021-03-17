@@ -15,17 +15,20 @@ const getSongs = (req: Request, res: Response): void => {
 
 	Song.find({}).then(result => {
 		if (result) {
-			res.send({
-				songs: result.map(async result => {
-					const validResult = await ensureSongValidity(result);
-					const song = new SongObjFromQuery(validResult);
-					return new SongApiObj(song, [
-						new PlayAudioLink(req, song),
-						new SelfLink(req, result._id, "songs")
-					]);
-				})
+			const songProcessing = result.map(async result => {
+				const validResult = await ensureSongValidity(result);
+				const song = new SongObjFromQuery(validResult);
+				return new SongApiObj(song, [
+					new PlayAudioLink(req, song),
+					new SelfLink(req, result._id, "songs")
+				]);
 			});
-			res.end();
+			Promise.all(songProcessing).then(songs => {
+				res.send({
+					songs: songs
+				});
+				res.end();
+			}).catch(internalErrorHandler(req, res));
 		} else {
 			notFoundErrorHandler(req, res)("song", req.params.id);
 		}
