@@ -54,12 +54,13 @@ export default class Builder extends React.Component<IProps, IState> {
 		if(this.props.playlist){
 			axios.get(`../api/v1/playlists/${this.props.playlist}`).then(res => {
 				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
+					const p = res.data.playlists[0];
 					this.setState({
-						songs: res.data.playlists[0].songs,
+						songs: p.songs,
 						patchMode: true,
-						initialName: res.data.playlists[0].details.name,
-						initialDescription: res.data.playlists[0].details.description,
-						initialPrivate: res.data.playlists[0].private
+						initialName: p.details.name,
+						initialDescription: p.details.description,
+						initialPrivate: p.private,
 					});
 				}
 			}).catch(console.error);
@@ -95,7 +96,6 @@ export default class Builder extends React.Component<IProps, IState> {
 			args,
 			{ withCredentials: true }
 		).then(resp => {
-			console.dir(resp);
 			if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
 				this.props.redirectCallback(resp.data.playlists[0].id);
 			}

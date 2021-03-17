@@ -27,6 +27,14 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 		}
 	}
 
+	componentDidMount(){
+		this.setState({
+			name: this.props.initialName,
+			description: this.props.initialDescription,
+			private: this.props.initialPrivate
+		});
+	}
+
 	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
 		return new Promise<Song[]>((resolve, reject) => {
 			const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);

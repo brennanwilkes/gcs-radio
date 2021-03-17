@@ -5,12 +5,12 @@ import { print } from "../util/util";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
-import { PlayAudioLink, SelfLink } from "../../types/link";
+import { PlayAudioLink, SelfLink, PatchLink } from "../../types/link";
 import { PlaylistApiObj } from "../../types/playlist";
 import accessDeniedErrorHandler from "../errorHandlers/accessDeniedErrorHandler";
 import { getUserIdFromToken } from "../auth/getUser";
 
-const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response) => {
+const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response, userId?: string) => {
 	const playlists = playlistResults.map(async result => {
 		const playlist = await PlaylistObjFromQuery(result);
 
@@ -19,9 +19,14 @@ const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:
 			new SelfLink(req, song.id ?? "UNKNOWN", "songs")
 		]));
 
+		const links = [new SelfLink(req, result._id, "playlists")];
+		if (userId && playlist.details?.user === userId) {
+			links.push(new PatchLink(req, result._id, "playlists"));
+		}
+
 		return new PlaylistApiObj(
 			playlist,
-			[new SelfLink(req, result._id, "playlists")]
+			links
 		);
 	});
 
@@ -37,12 +42,14 @@ const getPlaylists = (req: Request, res: Response): void => {
 	print(`Handling request for playlist resources`);
 
 	let total: PlaylistDoc[] = [];
+	let userId: string | undefined;
 	Playlist.find({
 		private: false
 	}).then(playlistResults => {
 		total = [...playlistResults];
 		return new Promise<PlaylistDoc[]>((resolve, reject) => {
 			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
+				userId = user;
 				Playlist.find({
 					user: new mongoose.Types.ObjectId(user)
 				}).then(resolve).catch(reject);
@@ -53,7 +60,7 @@ const getPlaylists = (req: Request, res: Response): void => {
 	}).then(playlistResults => {
 		total = [...total, ...playlistResults];
 		if (total && total.length) {
-			sendPlaylistResponse(total, req, res);
+			sendPlaylistResponse(total, req, res, userId);
 		} else {
 			notFoundErrorHandler(req, res)("playlist");
 		}
@@ -62,22 +69,21 @@ const getPlaylists = (req: Request, res: Response): void => {
 
 const getPlaylist = (req: Request, res: Response): void => {
 	print(`Handling request for playlist resource ${req.params.id}`);
-
 	findPlaylistById(req.params.id).then(playlistResults => {
 		if (playlistResults) {
-			if (playlistResults.private) {
-				getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
-					if (user === String(playlistResults.user)) {
-						sendPlaylistResponse([playlistResults], req, res);
-					} else {
-						accessDeniedErrorHandler(req, res)(playlistResults._id);
-					}
-				}).catch(() => {
+			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
+				if (!playlistResults.private || user === String(playlistResults.user)) {
+					sendPlaylistResponse([playlistResults], req, res, user);
+				} else {
 					accessDeniedErrorHandler(req, res)(playlistResults._id);
-				});
-			} else {
-				sendPlaylistResponse([playlistResults], req, res);
-			}
+				}
+			}).catch(() => {
+				if (playlistResults.private) {
+					accessDeniedErrorHandler(req, res)(playlistResults._id);
+				} else {
+					sendPlaylistResponse([playlistResults], req, res);
+				}
+			});
 		} else {
 			notFoundErrorHandler(req, res)("playlist", req.params.id);
 		}
