@@ -8,7 +8,7 @@ import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotifyTrack } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfLink } from "../../types/link";
-import { cacheSongFromResults } from "../util/cacheSong";
+import { cacheSongFromResults, ensureSongValidity } from "../util/cacheSong";
 
 const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
@@ -16,8 +16,9 @@ const getSongs = (req: Request, res: Response): void => {
 	Song.find({}).then(result => {
 		if (result) {
 			res.send({
-				songs: result.map(result => {
-					const song = new SongObjFromQuery(result);
+				songs: result.map(async result => {
+					const validResult = await ensureSongValidity(result);
+					const song = new SongObjFromQuery(validResult);
 					return new SongApiObj(song, [
 						new PlayAudioLink(req, song),
 						new SelfLink(req, result._id, "songs")
@@ -34,9 +35,10 @@ const getSongs = (req: Request, res: Response): void => {
 const getSong = (req: Request, res: Response): void => {
 	print(`Handling request for song resource ${req.params.id}`);
 
-	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
+	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(async result => {
 		if (result) {
-			const song = new SongObjFromQuery(result);
+			const validResult = await ensureSongValidity(result);
+			const song = new SongObjFromQuery(validResult);
 			res.send({
 				songs: [new SongApiObj(song, [
 					new PlayAudioLink(req, song),

@@ -1,11 +1,38 @@
 import ytdl from "ytdl-core";
 import streamToMongo from "../../database/streamToMongo";
-import { Song } from "../../types/song";
+import { Song, SongObjFromQuery } from "../../types/song";
+import { SongDoc } from "../../database/models/song";
 import { SpotifyResult } from "../../types/spotifyResult";
 import { YoutubeResult } from "../../types/youtubeResult";
 import { print } from "../util/util";
+import { mongoVerifyBucketExistance } from "../validators/validatorUtil";
 import downloadURLToStream from "../youtube/downloadURLToStream";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
+import { mongoose } from "../../database/connection";
+
+export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]): Promise<SongDoc> => {
+	return new Promise<SongDoc>((resolve, reject) => {
+		mongoVerifyBucketExistance(String(song.audioId)).then(exists => {
+			if (exists) {
+				resolve(song);
+			} else {
+				cacheSongFromSong(new SongObjFromQuery(song), formats).then(audioId => {
+					song.audioId = new mongoose.Schema.Types.ObjectId(audioId);
+					return song.save();
+				}).then(newDoc => {
+					resolve(newDoc);
+				}).catch(reject);
+			}
+		}).catch(() => {
+			cacheSongFromSong(new SongObjFromQuery(song), formats).then(audioId => {
+				song.audioId = new mongoose.Schema.Types.ObjectId(audioId);
+				return song.save();
+			}).then(newDoc => {
+				resolve(newDoc);
+			}).catch(reject);
+		});
+	});
+};
 
 export const cacheSongFromSong = (song: Song, formats?: ytdl.videoFormat[]): Promise<string> => {
 	if (formats) {
