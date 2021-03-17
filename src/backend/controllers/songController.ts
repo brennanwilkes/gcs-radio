@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import Song, { SongModelFromSong } from "../../database/models/song";
-import streamToMongo from "../../database/streamToMongo";
-import downloadURLToStream from "../youtube/downloadURLToStream";
 import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../../types/song";
 import { print } from "../util/util";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
@@ -10,6 +8,7 @@ import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotifyTrack } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfLink } from "../../types/link";
+import { cacheSongFromResults } from "../util/cacheSong";
 
 const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
@@ -56,7 +55,6 @@ const postSong = (req: Request, res: Response): void => {
 
 	const youtubeId = String(req.query.youtubeId);
 	const spotifyId = String(req.query.spotifyId);
-	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
 
 	print(`Handling request for audio cache ${youtubeId} - ${spotifyId}`);
 
@@ -66,27 +64,21 @@ const postSong = (req: Request, res: Response): void => {
 		getSpotifyTrack(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
 
-			downloadURLToStream(url, youtubeInfo.formats).then(dummy => {
-				print("Created audio conversion stream");
-
-				streamToMongo(`${spotifyInfo.title} - ${spotifyInfo.artist} - ${spotifyInfo.album}`, dummy).then(audioId => {
-					print(`Created audio resource ${audioId}`);
-
-					const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
-					SongModelFromSong(newSong).save().then((resp) => {
-						print(`Created song resource ${resp}`);
-						res.send({
-							songs: [
-								new SongApiObj(new SongObjFromQuery(resp), [
-									new PlayAudioLink(req, newSong),
-									new SelfLink(req, resp._id, "songs")
-								])
-							]
-						});
-						res.end();
-					}).catch(errorHandler);
+			cacheSongFromResults(youtubeInfo, spotifyInfo).then(audioId => {
+				const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
+				SongModelFromSong(newSong).save().then((resp) => {
+					print(`Created song resource ${resp}`);
+					res.send({
+						songs: [
+							new SongApiObj(new SongObjFromQuery(resp), [
+								new PlayAudioLink(req, newSong),
+								new SelfLink(req, resp._id, "songs")
+							])
+						]
+					});
+					res.end();
 				}).catch(errorHandler);
-			}).catch(errorHandler);
+			});
 		}).catch(errorHandler);
 	}).catch(errorHandler);
 };
