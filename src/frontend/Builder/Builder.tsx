@@ -95,6 +95,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			args,
 			{ withCredentials: true }
 		).then(resp => {
+			console.dir(resp);
 			if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
 				this.props.redirectCallback(resp.data.playlists[0].id);
 			}

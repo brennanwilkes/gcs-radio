@@ -14,6 +14,7 @@ export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]):
 	return new Promise<SongDoc>((resolve, reject) => {
 		mongoVerifyBucketExistance(String(song.audioId)).then(exists => {
 			if (exists) {
+				print(`${song.title} already cached`);
 				resolve(song);
 			} else {
 				cacheSongFromSong(new SongObjFromQuery(song), formats).then(audioId => {
