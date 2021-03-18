@@ -1,5 +1,6 @@
 import axios from "axios";
 import jscookie from "js-cookie";
+import { getDeviceId } from "./spotify";
 
 type getOAuthTokenType = ((token: string) => void);
 
@@ -51,7 +52,7 @@ export const playerSettings = {
 
 export const play = (args: PlayerArg) => {
 	args.playerInstance._options.getOAuthToken((token: string) => {
-		fetch(`https://api.spotify.com/v1/me/player/play?device_id=${args.playerInstance._options.id}`, {
+		fetch(`https://api.spotify.com/v1/me/player/play?device_id=${args.playerInstance?._options?.id ?? getDeviceId()}`, {
 			method: 'PUT',
 			body: JSON.stringify({ uris: [args.spotify_uri] }),
 			headers: {

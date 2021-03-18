@@ -4,6 +4,9 @@ var spotifyPlayer: Spotify.SpotifyPlayer;
 var playing: string | undefined;
 var progress: number = 0;
 
+var deviceId: string | undefined;
+export const getDeviceId = (): string => deviceId ?? "INVALID";
+
 export const spotifyPlayId = (id: string): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {
 		getAccessToken().then(() => {
@@ -47,10 +50,9 @@ window.onSpotifyWebPlaybackSDKReady = (): void => {
 			progress = position;
 		});
 
-
 		// Ready
 		spotifyPlayer.addListener('ready', ({ device_id }) => {
-			console.log('Ready with Device ID', device_id);
+			deviceId = device_id;
 		});
 		spotifyPlayer.addListener('not_ready', ({ device_id }) => {
 			console.log('Device ID has gone offline', device_id);
