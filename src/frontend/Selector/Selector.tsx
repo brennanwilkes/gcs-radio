@@ -6,6 +6,7 @@ import "./selector.css";
 
 import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
+import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 import HrWrapper from "../HrWrapper/HrWrapper";
 
 
@@ -81,8 +82,6 @@ export default class Selector extends React.Component<IProps, IState> {
 			}}
 		/> );
 
-		const songsDisplay = this.state.songs.map((song) => <SongRow key={getSongKey(song)} song={song} keyExtension="selected" />);
-
 		return <>
 			<div className="Selector">
 				<HrWrapper style={{
@@ -136,7 +135,9 @@ export default class Selector extends React.Component<IProps, IState> {
 				}} children={
 					<h2>Selected Songs</h2>
 				} />
-				<ul className="songsDisplay">{songsDisplay}</ul>
+				<div className="songsDisplay container-fluid row">{
+					this.state.songs.map((song) => <WrappedSongPolaroid className="col-4 mb-0" song={song} keyExtension="selected" />)
+				}</div>
 			</div>
 		</>
 	}
