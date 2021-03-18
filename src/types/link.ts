@@ -55,3 +55,14 @@ export class SelfLink extends LinkObj implements Link {
 		);
 	}
 }
+
+export class PatchLink extends LinkObj implements Link {
+	constructor (req: Request, id: string, resourcePath: string) {
+		super(
+			"edit",
+			"PATCH",
+			`${req.baseUrl}/${resourcePath}/${id}`,
+			["application/json"]
+		);
+	}
+}

@@ -6,11 +6,12 @@ import "dotenv/config";
 import { VoiceLineRender } from "../../types/voiceLine";
 import DummyPipe from "../util/dummyPipe";
 import { Readable, Transform } from "stream";
+import { CONFIG } from "../util/util";
 
 // Creates a client
 const client = new TextToSpeechClient({
-	projectId: process.env.GOOGLE_PROJECT,
-	keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+	projectId: CONFIG.googleProjectId,
+	keyFilename: CONFIG.googleCredentialsFile
 });
 
 export async function recordVoiceLine (voiceLine: VoiceLineRender): Promise<Transform> {

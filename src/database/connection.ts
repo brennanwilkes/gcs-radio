@@ -4,10 +4,8 @@
 import "dotenv/config";
 
 import mongoose from "mongoose";
-const mongoDB = `${process.env.DB_CONNECTION}?retryWrites=true&w=majority`;
-
-// Set timeout limit
-// mongoose.set("maxTimeMS", 25000);
+import { CONFIG } from "../backend/util/util";
+const mongoDB = `${CONFIG.databaseConnectionString}?retryWrites=true&w=majority`;
 
 const connection = mongoose.connect(mongoDB, {
 	useUnifiedTopology: true,

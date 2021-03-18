@@ -3,20 +3,22 @@ import { Request } from "express";
 // Store all backend config vars here
 import "dotenv/config";
 
+import analyticsConfig from "../../config/analytics";
+import emailConfig from "../../config/email";
+import googleConfig from "../../config/google";
+import spotifyConfig from "../../config/spotify";
+import miscConfig from "../../config/miscellaneous";
+import youtubeURLMethod from "../../config/youtubeURL";
+
 export const CONFIG = {
-	port: parseInt(process.env.PORT ?? "8080"),
-	verbose: !!(process.env.VERBOSE ?? false),
-	googleOauth2Credentials: {
-		auth_uri: "https://accounts.google.com/o/oauth2/auth",
-		token_uri: "https://oauth2.googleapis.com/token",
-		auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-		scope: ["email", "profile", "openid"]
-	},
-	spotifyOauth2Credentials: {
-		scope: ["user-read-private", "user-read-email", "streaming"]
-	},
-	fromEmail: "GCS Radio <noreply@494913.xyz>",
-	googleTrackingId: "UA-191739899-2"
+	...miscConfig,
+	googleOauth2Credentials: googleConfig.oauth2,
+	...googleConfig.credentials,
+	spotifyOauth2Credentials: spotifyConfig.oauth2,
+	...spotifyConfig.credentials,
+	...emailConfig,
+	...analyticsConfig,
+	youtubeURLMethod
 };
 
 /**

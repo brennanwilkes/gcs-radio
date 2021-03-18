@@ -1,0 +1,62 @@
+:root {
+	--polaroid-bg: #FFF;
+	--polaroid-border: 1px 1px 5px 1px #222222A0;
+	--polaroid-shine: radial-gradient(ellipse at 40px 10px , #ffffff20 0%, #ffffff40 5%, #00000020 100%);
+}
+
+.songPolaroid {
+	width: 100%;
+	padding-top: 122.5%;
+	position: relative;
+	background-color: var(--polaroid-bg);
+	border-radius: 2%;
+	z-index: 0;
+	-webkit-box-shadow: var(--polaroid-border);
+	-moz-box-shadow: var(--polaroid-border);
+	box-shadow: var(--polaroid-border);
+}
+
+.songPolaroid > div {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.songPolaroid img {
+	border-radius: 2%;
+	height: auto;
+	width: 100%;
+	position: relative;
+	z-index: -1;
+	-webkit-box-shadow: var(--polaroid-border);
+	-moz-box-shadow: var(--polaroid-border);
+	box-shadow: var(--polaroid-border);
+}
+
+.songPolaroid > div > div:first-of-type {
+	border-radius: 2%;
+	background-image: var(--polaroid-shine);
+	width: 80%;
+	margin: 10%;
+	margin-bottom: 0;
+}
+
+.songPolaroid > div > div:last-of-type {
+	display: flex;
+	height: 26.25%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+.songPolaroid h5, .songPolaroid h4 {
+	text-align: center;
+}
+
+.songPolaroid h5 {
+	color: #444;
+}

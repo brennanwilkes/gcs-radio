@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import Song, { SongModelFromSong } from "../../database/models/song";
-import streamToMongo from "../../database/streamToMongo";
-import downloadURLToStream from "../youtube/downloadURLToStream";
 import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../../types/song";
 import { print } from "../util/util";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
@@ -10,22 +8,27 @@ import { mongoose } from "../../database/connection";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { getSpotifyTrack } from "../spotify/searchSpotify";
 import { PlayAudioLink, SelfLink } from "../../types/link";
+import { cacheSongFromResults, ensureSongValidity } from "../util/cacheSong";
 
 const getSongs = (req: Request, res: Response): void => {
 	print(`Handling request for song resources`);
 
 	Song.find({}).then(result => {
 		if (result) {
-			res.send({
-				songs: result.map(result => {
-					const song = new SongObjFromQuery(result);
-					return new SongApiObj(song, [
-						new PlayAudioLink(req, song),
-						new SelfLink(req, result._id, "songs")
-					]);
-				})
+			const songProcessing = result.map(async result => {
+				const validResult = await ensureSongValidity(result);
+				const song = new SongObjFromQuery(validResult);
+				return new SongApiObj(song, [
+					new PlayAudioLink(req, song),
+					new SelfLink(req, result._id, "songs")
+				]);
 			});
-			res.end();
+			Promise.all(songProcessing).then(songs => {
+				res.send({
+					songs: songs
+				});
+				res.end();
+			}).catch(internalErrorHandler(req, res));
 		} else {
 			notFoundErrorHandler(req, res)("song", req.params.id);
 		}
@@ -35,9 +38,10 @@ const getSongs = (req: Request, res: Response): void => {
 const getSong = (req: Request, res: Response): void => {
 	print(`Handling request for song resource ${req.params.id}`);
 
-	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(result => {
+	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(async result => {
 		if (result) {
-			const song = new SongObjFromQuery(result);
+			const validResult = await ensureSongValidity(result);
+			const song = new SongObjFromQuery(validResult);
 			res.send({
 				songs: [new SongApiObj(song, [
 					new PlayAudioLink(req, song),
@@ -56,7 +60,6 @@ const postSong = (req: Request, res: Response): void => {
 
 	const youtubeId = String(req.query.youtubeId);
 	const spotifyId = String(req.query.spotifyId);
-	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
 
 	print(`Handling request for audio cache ${youtubeId} - ${spotifyId}`);
 
@@ -66,27 +69,21 @@ const postSong = (req: Request, res: Response): void => {
 		getSpotifyTrack(spotifyId).then(spotifyInfo => {
 			print(`Retrieved spotify information for "${spotifyInfo.title}"`);
 
-			downloadURLToStream(url, youtubeInfo.formats).then(dummy => {
-				print("Created audio conversion stream");
-
-				streamToMongo(`${spotifyInfo.title} - ${spotifyInfo.artist} - ${spotifyInfo.album}`, dummy).then(audioId => {
-					print(`Created audio resource ${audioId}`);
-
-					const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
-					SongModelFromSong(newSong).save().then((resp) => {
-						print(`Created song resource ${resp}`);
-						res.send({
-							songs: [
-								new SongApiObj(new SongObjFromQuery(resp), [
-									new PlayAudioLink(req, newSong),
-									new SelfLink(req, resp._id, "songs")
-								])
-							]
-						});
-						res.end();
-					}).catch(errorHandler);
+			cacheSongFromResults(youtubeInfo, spotifyInfo).then(audioId => {
+				const newSong = new SongFromSearch(youtubeInfo, spotifyInfo, audioId);
+				SongModelFromSong(newSong).save().then((resp) => {
+					print(`Created song resource ${resp}`);
+					res.send({
+						songs: [
+							new SongApiObj(new SongObjFromQuery(resp), [
+								new PlayAudioLink(req, newSong),
+								new SelfLink(req, resp._id, "songs")
+							])
+						]
+					});
+					res.end();
 				}).catch(errorHandler);
-			}).catch(errorHandler);
+			});
 		}).catch(errorHandler);
 	}).catch(errorHandler);
 };

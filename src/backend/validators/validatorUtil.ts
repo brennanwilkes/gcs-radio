@@ -7,7 +7,7 @@ const mongoVerifyExistance = (id: string, Collection: Model<Document<any>>): Pro
 	return Collection.exists({ _id: new mongoose.Types.ObjectId(id) });
 };
 
-const mongoVerifyBucketExistance = async (id: string, bucketName: string): Promise<boolean> => {
+const mongoVerifyBucketExistance = async (id: string, bucketName = "audio"): Promise<boolean> => {
 	return new Promise((resolve, reject) => {
 		const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
 			bucketName: bucketName

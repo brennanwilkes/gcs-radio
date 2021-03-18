@@ -1,10 +1,10 @@
-const COOKIE = process.env.YTDL_COOKIE;
+import { CONFIG } from "../util/util";
 
-export default (COOKIE
+export default (CONFIG.youtubeCookie
 	? {
 		requestOptions: {
 			headers: {
-				Cookie: COOKIE
+				Cookie: CONFIG.youtubeCookie
 			}
 		}
 	}

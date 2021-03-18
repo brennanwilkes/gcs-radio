@@ -3,6 +3,7 @@
 	width: 100%;
 	position: absolute;
 	overflow: visible;
+	z-index: 1;
 }
 
 .Selector .floating-label > input:focus{
@@ -21,7 +22,7 @@
 	margin: 0;
 }
 
-.Selector ul:last-of-type{
+.Selector .songsDisplay{
 	overflow-y: auto;
 	max-height: 42vh;
 }

@@ -33,7 +33,7 @@ export default class RadioServer {
 	*/
 	constructor () {
 		// Initialize port
-		this.port = process.env.PORT ?? CONFIG.port ?? 8080;
+		this.port = CONFIG.port ?? 8080;
 
 		// Initialize express
 		this.app = express();

@@ -17,7 +17,7 @@ console.dir(playlist);
 ReactDOM.render(<ResponsiveContainer children={
 	<Builder
 		redirectCallback={(playlist: string) => {
-			window.location.href = playlist ? `../dashboard` : `../app?playlist=${encodeURIComponent(playlist)}`
+			window.location.href = playlist ? `../app?playlist=${encodeURIComponent(playlist)}` : `../dashboard`;
 		}}
 		playlist={playlist} />
 } />, document.getElementsByTagName("MAIN")[0]);

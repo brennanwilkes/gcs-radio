@@ -1,10 +1,10 @@
 import "dotenv/config";
 import SpotifyWebApi from "spotify-web-api-node";
-import { print } from "../util/util";
+import { CONFIG, print } from "../util/util";
 
 export default new Promise<SpotifyWebApi>((resolve, reject) => {
-	const clientId = process.env.SPOTIFY_ID;
-	const clientSecret = process.env.SPOTIFY_SECRET;
+	const clientId = CONFIG.spotifyClientId;
+	const clientSecret = CONFIG.spotifyClientSecret;
 	if (!clientId || !clientSecret) {
 		print("No spotify credentials detected");
 		reject(new Error("No spotify credentials detected"));

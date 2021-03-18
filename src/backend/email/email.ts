@@ -15,8 +15,8 @@ export interface MailService{
 }
 
 const MailServiceObj = new Promise<MailService>((resolve, reject) => {
-	if (process.env.SENDGRID_API_KEY) {
-		sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+	if (CONFIG.emailApiKey) {
+		sgMail.setApiKey(CONFIG.emailApiKey);
 		resolve({
 			fromEmail: CONFIG.fromEmail,
 			send: ({ email, subject, message, htmlEnable = false }) => {
@@ -33,7 +33,7 @@ const MailServiceObj = new Promise<MailService>((resolve, reject) => {
 			}
 		});
 	} else {
-		reject(new Error("SENDGRID_API_KEY not set!"));
+		reject(new Error("SENDGRID API KEY not set!"));
 	}
 });
 /* eslint-enable @typescript-eslint/ban-types */

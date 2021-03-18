@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import axios from "axios";
 import querystring from "querystring";
+import { CONFIG } from "../util/util";
 
 export default (req: Request, res: Response): void => {
 	const refreshToken = req.body.refresh_token;
 
-	const clientId = process.env.SPOTIFY_ID;
-	const clientSecret = process.env.SPOTIFY_SECRET;
+	const clientId = CONFIG.spotifyClientId;
+	const clientSecret = CONFIG.spotifyClientSecret;
 	if (!clientId || !clientSecret) {
 		internalErrorHandler(req, res)("No spotify credentials detected");
 	} else {
