@@ -1,11 +1,11 @@
 import { SpotifyResult, SpotifyResultFromApi, SpotifyResultFromApiSimple } from "../../types/spotifyResult";
-import connection from "./connection";
+import { generateRefreshedCredential } from "./connection";
 
 const invalidDataResponse = "Spotify returned invalid data";
 
 export default async (query: string): Promise<SpotifyResult[]> => {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		connection.then(spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.searchTracks(query).then(data => {
 				if (data.body?.tracks?.items) {
 					resolve(data.body.tracks.items.filter(item => !!item).map(item => new SpotifyResultFromApi(item)));
@@ -31,7 +31,7 @@ export async function getSpotify (id: string): Promise<SpotifyResult[]> {
 
 export async function getSpotifyTrack (id: string): Promise<SpotifyResult> {
 	return new Promise<SpotifyResult>((resolve, reject) => {
-		connection.then(spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.getTracks([id]).then(data => {
 				if (data.body?.tracks && data.body.tracks.length > 0) {
 					resolve(new SpotifyResultFromApi(data.body.tracks[0]));
@@ -45,7 +45,7 @@ export async function getSpotifyTrack (id: string): Promise<SpotifyResult> {
 
 export async function getSpotifyTracksByPlaylist (id: string): Promise<SpotifyResult[]> {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		connection.then(spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.getPlaylist(id).then(data => {
 				if (data.body?.tracks?.items) {
 					resolve(data.body.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
@@ -59,7 +59,7 @@ export async function getSpotifyTracksByPlaylist (id: string): Promise<SpotifyRe
 
 export async function getSpotifyTracksByAlbum (id: string): Promise<SpotifyResult[]> {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		connection.then(spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.getAlbum(id).then(album => {
 				spotifyApi.getAlbumTracks(id).then(data => {
 					if (data.body?.items && album.body) {
@@ -75,7 +75,7 @@ export async function getSpotifyTracksByAlbum (id: string): Promise<SpotifyResul
 
 export async function getSpotifyTracksByArtist (id: string, countrycode = "CA"): Promise<SpotifyResult[]> {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		connection.then(spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.getArtistTopTracks(id, countrycode).then(data => {
 				if (data.body?.tracks) {
 					resolve(data.body.tracks.map(song => new SpotifyResultFromApi(song)));
