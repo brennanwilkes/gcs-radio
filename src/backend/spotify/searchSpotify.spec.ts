@@ -93,7 +93,7 @@ describe("Return invalid data handlers", () => {
 		jest.resetModules();
 		jest.doMock('./connection', () => ({
 			__esModule: true,
-			default: {
+			generateRefreshedCredential: () => { return {
 				then: jest.fn((callback) => {
 					callback({
 						getArtistTopTracks: dummyResponse,
@@ -104,7 +104,7 @@ describe("Return invalid data handlers", () => {
 						getAlbum: dummyResponse
 					});
 				})
-			}
+			}}
 		}));
 	});
 
@@ -134,14 +134,14 @@ describe("Albumn method fails", () => {
 		jest.resetModules();
 		jest.doMock('./connection', () => ({
 			__esModule: true,
-			default: {
+			generateRefreshedCredential: () => { return {
 				then: jest.fn((callback) => {
 					callback({
 						getAlbumTracks: dummyResponseErr,
 						getAlbum: dummyResponse
 					});
 				})
-			}
+			}}
 		}));
 	});
 	test("Rejects on spotify error (album) (on tracks)", done => {
@@ -161,7 +161,7 @@ describe("Search methods fail", () => {
 		jest.resetModules();
 		jest.doMock('./connection', () => ({
 			__esModule: true,
-			default: {
+			generateRefreshedCredential: () => { return {
 				then: jest.fn((callback) => {
 					callback({
 						getArtistTopTracks: dummyResponseErr,
@@ -172,7 +172,7 @@ describe("Search methods fail", () => {
 						getAlbum: dummyResponseErr
 					});
 				})
-			}
+			}}
 		}));
 	});
 
@@ -205,7 +205,7 @@ describe("Connection fails", () => {
 		jest.resetModules();
 		jest.doMock('./connection', () => ({
 			__esModule: true,
-			default: dummyResponseErr()
+			generateRefreshedCredential: dummyResponseErr
 		}));
 	});
 
