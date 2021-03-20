@@ -43,9 +43,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 			let search = true;
 			if (req.headers.token && typeof req.headers.token === "string") {
 				search = false;
-				const existingUserId = await getUserIdFromToken(req.headers.token).catch(() => {
-					return null;
-				});
+				const existingUserId = await getUserIdFromToken(req.headers.token);
 				if (!existingUserId) {
 					search = true;
 				} else {
