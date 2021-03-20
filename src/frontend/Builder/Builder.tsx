@@ -4,12 +4,12 @@ import {Song} from '../../types/song';
 import {PlaylistObj} from "../../types/playlist";
 
 import "./builder.css";
-import "../App/app.css";
 
 import Selector from "../Selector/Selector";
 import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetailAdder";
 
 import {UserWithId} from "../../types/user";
+import ReactBootstrapCheckbox from "../ReactBootstrapCheckbox/ReactBootstrapCheckbox";
 
 interface IProps {
 	redirectCallback: ((playlist: string) => void),
@@ -110,7 +110,10 @@ export default class Builder extends React.Component<IProps, IState> {
 			this.setState({
 				rendering: true
 			});
-			new PlaylistObj(this.state.songs).render(song => {
+
+			//Gotta love ES6 amiright??
+			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
+			new PlaylistObj(songs).render(song => {
 				console.log(`Loaded "${song.title}"`);
 				this.setState({
 					loadedProgress: this.state.loadedProgress + 1
@@ -134,30 +137,28 @@ export default class Builder extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
-			<div className="App">
+			<div className="Builder p-2 py-sm-3 py-md-4 px-sm-1 px-md-0">
 				<h1>GCS Radio</h1>
-				<div className="Builder">
-					{
-						this.state.rendered
-						? <PlaylistDetailAdder
-							detailCallback={this.updateDetails}
-							initialName={this.state.initialName}
-							initialDescription={this.state.initialDescription}
-							initialPrivate={this.state.initialPrivate} />
-						: <Selector
-							initialSongs={this.state.songs}
-							songChangeCallback={this.songChangeCallback}
-							setProcessing={this.proccessingCallback} />
-					}
-					<button
-						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
-						onClick={this.renderPlaylist}
-						className={`btn btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
-						this.state.rendering
-						? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
-						: (this.state.rendered ? "Submit" : "Build Playlist")
-					}</button>
-				</div>
+				{
+					this.state.rendered
+					? <PlaylistDetailAdder
+						detailCallback={this.updateDetails}
+						initialName={this.state.initialName}
+						initialDescription={this.state.initialDescription}
+						initialPrivate={this.state.initialPrivate} />
+					: <Selector
+						initialSongs={this.state.songs}
+						songChangeCallback={this.songChangeCallback}
+						setProcessing={this.proccessingCallback} />
+				}
+				<button
+					disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
+					onClick={this.renderPlaylist}
+					className={`container mb-0 btn btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
+					this.state.rendering
+					? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
+					: (this.state.rendered ? "Submit" : "Build Playlist")
+				}</button>
 			</div>
 		</>
 	}

@@ -12,10 +12,11 @@
 	background-color: #DDD;
 	width: 100%;
 	overflow: visible;
+	transform: scale(0.975,1);
 }
 
 .songRowHoverable:hover{
-	transform: scale(1.05);
+	transform: scale(1.0);
 	cursor: pointer;
 	z-index: 2;
 	overflow: visible;

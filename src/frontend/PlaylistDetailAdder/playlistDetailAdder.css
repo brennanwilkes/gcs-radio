@@ -5,3 +5,14 @@
 .floating-label > input:focus{
 	outline-offset: -10px;
 }
+
+.nameCheckWrapper{
+	display: flex;
+
+}
+.nameCheckWrapper > *:first-child{
+	width: 85%;
+}
+.nameCheckWrapper > *:last-child{
+	width: 15%
+}

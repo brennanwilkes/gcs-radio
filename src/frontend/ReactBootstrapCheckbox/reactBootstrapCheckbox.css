@@ -1,0 +1,17 @@
+.reactBootstrapCheckboxWrapper{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.reactBootstrapCheckbox {
+	opacity: 0;
+}
+
+.reactBootstrapCheckbox + span {
+	width: 30px;
+}
+
+.reactBootstrapCheckbox:focus {
+	box-shadow: inset 0px 0px 5px;
+}

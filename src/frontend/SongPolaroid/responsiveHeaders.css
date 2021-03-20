@@ -1,24 +1,24 @@
 
 .rh1{
-	font-size: 1.75rem;
+	font-size: 2rem;
 }
 .rh2{
-	font-size: 1.5rem;
+	font-size: 1.75rem;
 }
 .rh3{
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 }
 .rh4{
-	font-size: 1rem;
+	font-size: 1.25rem;
 }
 .rh5{
-	font-size: 0.75rem;
+	font-size: 1rem;
 }
 .rh6{
-	font-size: 0.5rem;
+	font-size: 0.75rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
 	.rh1{
 		font-size: 2rem;
 	}
@@ -36,27 +36,5 @@
 	}
 	.rh6{
 		font-size: 0.75rem;
-	}
-}
-
-
-@media (min-width: 1024px) {
-	.rh1{
-		font-size: 2.5rem;
-	}
-	.rh2{
-		font-size: 2rem;
-	}
-	.rh3{
-		font-size: 1.75rem;
-	}
-	.rh4{
-		font-size: 1.5rem;
-	}
-	.rh5{
-		font-size: 1.25rem;
-	}
-	.rh6{
-		font-size: 1rem;
 	}
 }
