@@ -136,7 +136,7 @@ export default class Selector extends React.Component<IProps, IState> {
 					<h2>Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
-					this.state.songs.map((song) => <WrappedSongPolaroid className="col-4 mb-0" song={song} keyExtension="selected" />)
+					this.state.songs.map((song) => <WrappedSongPolaroid className="col-6 mb-0" song={song} keyExtension="selected" />)
 				}</div>
 			</div>
 		</>
