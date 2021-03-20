@@ -8,7 +8,9 @@ export default (req: Request, res: Response, next: NextFunction): Response | und
 	if (!errors.isEmpty()) {
 		const err = new ValidationError(errors, req);
 		print(JSON.stringify(err, null, 4));
-		return res.status(422).json(err);
+		return res.status(422).json({
+			errors: [err]
+		});
 	}
 	next();
 };

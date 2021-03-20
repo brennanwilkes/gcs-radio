@@ -2,6 +2,7 @@ import * as React from "react";
 import "./login.css";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap-floating-label";
+import jscookie from "js-cookie";
 
 
 interface IProps {
@@ -29,7 +30,10 @@ export default class Landing extends React.Component<IProps, IState> {
 	componentDidMount(){
 		axios.get("/auth", {withCredentials: true}).then(() => {
 			window.location.pathname = "../dashboard";
-		}).catch(() => {});
+		}).catch((err) => {
+			jscookie.remove("jwt");
+			console.dir(err.response.data.errors[0]);
+		});
 	}
 
 	login(_event: React.FormEvent){
@@ -47,7 +51,7 @@ export default class Landing extends React.Component<IProps, IState> {
 		}).then(() => {
 			window.location.pathname = "../dashboard";
 		}).catch(err => {
-			alert(err.response.data);
+			alert(err.response?.data?.errors[0]?.message);
 		}).finally(() => {
 			this.setState({
 				processing: false
