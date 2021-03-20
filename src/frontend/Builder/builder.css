@@ -1,15 +1,17 @@
 .Builder{
+	text-align: center;
+	min-height: 100vh;
 	height: 100%;
 	width: 100%;
 	position: relative;
+	display: flex;
+	flex-direction: column;
 }
 
 .Builder > *{
 	margin-bottom: 1.5vh;
 }
 
-.Builder > :last-child{
-	position: absolute;
-	width: 100%;
-	bottom: 0;
+.Builder > :nth-last-child(2){
+	flex-grow: 1;
 }

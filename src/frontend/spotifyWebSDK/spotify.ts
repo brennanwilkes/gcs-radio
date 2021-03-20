@@ -26,17 +26,18 @@ export const spotifyPlayId = (id: string): Promise<void> => {
 }
 
 export const spotifyPause = () => spotifyPlayer.pause();
-export const spotifySeek = (position?: number): number => {
-	if(position){
-		spotifyPlayer.seek(position);
-		progress = position;
-		return position;
+export const spotifySeek = (position: number = -1): number => {
+	if(position > -1){
+		spotifyPlayer.seek(position + 1);
+		progress = position + 1;
+		return position + 1;
 	}
 	else{
 		return progress;
 	}
 }
 
+var isReady = false;
 window.onSpotifyWebPlaybackSDKReady = (): void => {
 	getAccessToken().then(() => {
 		spotifyPlayer = new Spotify.Player(playerSettings);
@@ -46,12 +47,17 @@ window.onSpotifyWebPlaybackSDKReady = (): void => {
 		spotifyPlayer.addListener('account_error', ({ message }) => { console.error(message); });
 		spotifyPlayer.addListener('playback_error', ({ message }) => { console.error(message); });
 
-		spotifyPlayer.addListener('player_state_changed', ({position}) => {
-			progress = position;
-		});
+		setInterval(() => {
+			if(spotifyPlayer && isReady){
+				spotifyPlayer.getCurrentState().then(state => {
+					progress = state?.position ?? 0;
+				}).catch(console.error);
+			}
+		}, 250);
 
 		// Ready
 		spotifyPlayer.addListener('ready', ({ device_id }) => {
+			isReady = true;
 			deviceId = device_id;
 		});
 		spotifyPlayer.addListener('not_ready', ({ device_id }) => {

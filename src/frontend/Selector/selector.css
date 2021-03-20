@@ -1,3 +1,12 @@
+.Selector{
+	position: relative;
+	overflow-x: visible;
+}
+
+.searchResultsWrapper{
+	position: relative;
+	overflow-x: visible;
+}
 
 .Selector .searchResults{
 	width: 100%;
@@ -24,7 +33,6 @@
 
 .Selector .songsDisplay{
 	overflow-y: auto;
-	max-height: 42vh;
 }
 
 .Selector .searchWrapper{
@@ -32,11 +40,16 @@
 }
 
 @media only screen and (max-width: 1024px) {
-	.Selector ul:last-of-type{
-		max-height: 36vh;
-	}
+
 	.Selector .searchResults{
 		max-height: 35vh;
 		overflow-y: scroll;
+		overflow-x: visible;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
+	.Selector .searchResults::-webkit-scrollbar {
+		display: none;
+	}
+
 }

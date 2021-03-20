@@ -75,6 +75,7 @@ export default class Selector extends React.Component<IProps, IState> {
 			song={song}
 			isHoverable={true}
 			onClick={(song) => {
+
 				this.setState({
 					queriedSongs: [],
 					songs: [...this.state.songs, song]
@@ -83,7 +84,7 @@ export default class Selector extends React.Component<IProps, IState> {
 		/> );
 
 		return <>
-			<div className="Selector">
+			<div className="Selector container-lg">
 				<HrWrapper style={{
 					borderBottomColor: "#CCC"
 				}} children={
@@ -129,14 +130,16 @@ export default class Selector extends React.Component<IProps, IState> {
 					loadingCog={this.state.cogs[2]}
 					loadingCogSpinning={this.state.cogs[2]} />
 
-				<ul className="searchResults">{querySongsDisplay}</ul>
+				<div className="searchResultsWrapper container-lg p-0 m-0">
+					<ul className="searchResults p-0 mt-n2">{querySongsDisplay}</ul>
+				</div>
 				<HrWrapper style={{
 					borderBottomColor: "#CCC"
 				}} children={
 					<h2>Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
-					this.state.songs.map((song) => <WrappedSongPolaroid className="col-4 mb-0" song={song} keyExtension="selected" />)
+					this.state.songs.map((song) => <WrappedSongPolaroid className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0" song={song} keyExtension="selected" />)
 				}</div>
 			</div>
 		</>

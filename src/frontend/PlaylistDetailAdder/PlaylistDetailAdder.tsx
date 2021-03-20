@@ -4,6 +4,7 @@ import {Song} from '../../types/song';
 
 import FloatingLabel from "react-bootstrap-floating-label";
 import HrWrapper from "../HrWrapper/HrWrapper";
+import ReactBootstrapCheckbox from "../ReactBootstrapCheckbox/ReactBootstrapCheckbox";
 import "./playlistDetailAdder.css";
 
 interface IProps {
@@ -21,6 +22,14 @@ interface IState {
 export {IState as Details};
 export default class PlaylistDetailAdder extends React.Component<IProps, IState> {
 
+	constructor(props: IProps){
+		super(props);
+
+		this.state = {
+			private: true
+		}
+	}
+
 	componentDidUpdate(_prevProps: IProps, prevState: IState){
 		if(prevState !== this.state){
 			this.props.detailCallback(this.state);
@@ -31,7 +40,7 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 		this.setState({
 			name: this.props.initialName,
 			description: this.props.initialDescription,
-			private: this.props.initialPrivate
+			private: this.props.initialPrivate ?? true
 		});
 	}
 
@@ -54,22 +63,33 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 
 
 		return <>
-			<div className="DetailAdder">
+			<div className="DetailAdder container-lg">
 				<HrWrapper style={{
 					borderBottomColor: "#CCC"
 				}} children={
 					<h2>Details</h2>
 				} />
-				<FloatingLabel
-					initialValue={this.props.initialName}
-					label="Name"
-					onChange={(event) => this.setState({name: (event.target as HTMLTextAreaElement).value})}
-					onChangeDelay={150} />
+				<div className="nameCheckWrapper">
+					<FloatingLabel
+						initialValue={this.props.initialName}
+						label="Name"
+						onChange={(event) => this.setState({name: (event.target as HTMLTextAreaElement).value})}
+						onChangeDelay={150} />
+					<ReactBootstrapCheckbox
+						default={!(this.props.initialPrivate ?? true)}
+						label={this.state.private ? "PRIVATE" : "PUBLIC "}
+						colour={this.state.private ? "danger" : "success"}
+						onChange={(checked) => this.setState({private: !checked})} />
+				</div>
 				<FloatingLabel
 					initialValue={this.props.initialDescription}
 					label="Description"
 					onChange={(event) => this.setState({description: (event.target as HTMLTextAreaElement).value})}
 					onChangeDelay={150} />
+
+
+
+
 			</div>
 		</>
 	}
