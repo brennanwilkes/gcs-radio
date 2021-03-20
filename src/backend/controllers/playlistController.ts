@@ -59,6 +59,8 @@ const getPlaylists = (req: Request, res: Response): void => {
 		});
 	}).then(playlistResults => {
 		total = [...total, ...playlistResults];
+		total = total.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+
 		if (total && total.length) {
 			sendPlaylistResponse(total, req, res, userId);
 		} else {
