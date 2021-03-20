@@ -68,7 +68,7 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 			}
 		}).then(async docs => {
 			const arrDocs = Array.isArray(docs) ? docs : [docs as UserDoc];
-			if (arrDocs.length > 0) {
+			if (docs && arrDocs.length > 0) {
 				return generateToken(arrDocs[0]._id);
 			} else {
 				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate, refreshToken);
