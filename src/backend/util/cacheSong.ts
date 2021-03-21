@@ -12,7 +12,7 @@ import { mongoose } from "../../database/connection";
 
 export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]): Promise<SongDoc> => {
 	return new Promise<SongDoc>((resolve, reject) => {
-		mongoVerifyBucketExistance(String(song.audioId)).then(exists => {
+		mongoVerifyBucketExistance(String(song.audioId), (CONFIG.defaultAudioId && String(song.audioId) === CONFIG.defaultAudioId) ? "defaultAudio" : "audio").then(exists => {
 			if (exists) {
 				print(`${song.title} already cached`);
 				resolve(song);
@@ -52,7 +52,14 @@ export const cacheSongFromResults = (youtubeResults: YoutubeResult, spotifyResul
 };
 
 const cacheSong = (youtubeId: string, formats: ytdl.videoFormat[], title: string, artist: string, album: string): Promise<string> => {
-	const url = CONFIG.youtubeURLMethod(youtubeId);
+	if (!CONFIG.matchWithYoutube) {
+		if (CONFIG.defaultAudioId) {
+			return Promise.resolve(CONFIG.defaultAudioId);
+		}
+		return Promise.reject(new Error("Default audio ID is not set"));
+	}
+
+	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
 	return new Promise<string>((resolve, reject) => {
 		downloadURLToStream(url, formats).then(dummy => {
 			print("Created audio conversion stream");

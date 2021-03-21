@@ -31,7 +31,7 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 };
 
 const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
-const youtubeIdRegex = /^[0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]$/;
+const youtubeIdRegex = /^([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]|DEFAULT)$/;
 const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;
 const spotifyWebRegex = /^https?:\/\/open.spotify.com\/[a-zA-Z]+\/([0-9A-Za-z]{22})\?si=.*$/;
 const spotifyURIRegex = /^spotify:[a-zA-Z]+:([0-9A-Za-z]{22})$/;

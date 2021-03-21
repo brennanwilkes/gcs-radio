@@ -91,6 +91,8 @@ const postFirstVoiceLine = async (req: Request, res: Response): Promise<void> =>
 const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> => {
 	const errorHandler = internalErrorHandler(req, res);
 
+	const hasSpotify = (!!req.cookies.sat) && (!!req.cookies.srt);
+
 	const prevId = String(req.query.prevId);
 	const nextId = String(req.query.nextId);
 	const voice = (req.query.voice ?? Voice.DEFAULT) as Voice;
@@ -102,7 +104,7 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 		const nextSong = new SongObjFromQuery(nextRes);
 		print(`Handling request for VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 
-		selectVoiceLine(prevSong, nextSong).then(template => {
+		selectVoiceLine(prevSong, nextSong, hasSpotify).then(template => {
 			const render = renderVoiceLineFromTemplate(template, prevSong, nextSong, voice);
 			uploadVoiceLine(render, req, res, errorHandler, `VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 		}).catch(errorHandler);

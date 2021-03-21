@@ -1,9 +1,9 @@
 import { Readable } from "stream";
 import { mongoose } from "./connection";
 
-export default function (name:string, stdin: Readable): Promise<string> {
+export default function (name:string, stdin: Readable, bucketName = "audio"): Promise<string> {
 	const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-		bucketName: "audio",
+		bucketName,
 		chunkSizeBytes: Math.pow(2, 20) * 8
 	});
 

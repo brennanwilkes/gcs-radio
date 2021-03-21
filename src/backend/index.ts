@@ -3,10 +3,15 @@
 import RadioServer from "./server";
 import { mongoose } from "../database/connection";
 import mainRouter from "./routes/index";
+import generateDefaultAudio from "./controllers/generateDefaultAudioController";
 
 const server = new RadioServer();
 
 server.route("/", mainRouter);
+
+if (process.env.ENABLE_GENERATE_DEFAULT_AUDIO) {
+	server.app.get("/generateDefaultAudio", generateDefaultAudio(server));
+}
 
 /*
 

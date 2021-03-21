@@ -1,6 +1,7 @@
 import { YoutubeResult } from "../../types/youtubeResult";
 import { SpotifyResult } from "../../types/spotifyResult";
 import levenshtein from "fast-levenshtein";
+import { CONFIG } from "./util";
 
 const sani = (inp: string): string => {
 	return inp
@@ -18,6 +19,10 @@ const sani = (inp: string): string => {
 };
 
 export default function (spotify: SpotifyResult, youtube: YoutubeResult): boolean {
+	if (!CONFIG.matchWithYoutube) {
+		return true;
+	}
+
 	const titDis = levenshtein.get(sani(youtube.title), sani(spotify.title));
 	const titDis2 = levenshtein.get(sani(youtube.youtubeTitle).replace(new RegExp(sani(spotify.artist), "g"), ""), sani(spotify.title));
 	const titThresh = (spotify.title.length + youtube.title.length) / 2;
