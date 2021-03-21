@@ -84,7 +84,7 @@ export default class Selector extends React.Component<IProps, IState> {
 		/> );
 
 		return <>
-			<div className="Selector container-lg">
+			<div className={`Selector container-lg${this.state.cogs.reduce((prev, cur) => prev || cur) ? " SelectorProcessing" : ""}`}>
 				<HrWrapper style={{
 					borderBottomColor: "#CCC"
 				}} children={
@@ -139,7 +139,18 @@ export default class Selector extends React.Component<IProps, IState> {
 					<h2>Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
-					this.state.songs.map((song) => <WrappedSongPolaroid className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0" song={song} keyExtension="selected" />)
+					this.state.songs.map((song) => <WrappedSongPolaroid
+						key={getSongKey(song)}
+						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"
+						song={song}
+						isHoverable={true}
+						isDeletable={true}
+						onClick={(toDelete: Song) => {
+							this.setState({
+								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId && s.youtubeId !== toDelete.youtubeId)
+							});
+						}}
+						keyExtension="selected" />)
 				}</div>
 			</div>
 		</>

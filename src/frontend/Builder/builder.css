@@ -12,6 +12,10 @@
 	margin-bottom: 1.5vh;
 }
 
+.Builder button{
+	text-transform: uppercase;
+}
+
 .Builder > :nth-last-child(2){
 	flex-grow: 1;
 }

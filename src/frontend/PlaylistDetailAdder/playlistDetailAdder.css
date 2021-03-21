@@ -8,11 +8,15 @@
 
 .nameCheckWrapper{
 	display: flex;
-
+	gap: 1.25%;
 }
 .nameCheckWrapper > *:first-child{
-	width: 85%;
+	width: 83.75%;
 }
 .nameCheckWrapper > *:last-child{
 	width: 15%
+}
+
+.DetailAdder p{
+	font-size: 16pt;
 }
