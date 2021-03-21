@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { query } from "express-validator";
 import Song from "../../database/models/song";
 import { verifyUrlExistance, youtubeIdValidator, spotifyIdValidator } from "./validatorUtil";
-import { print } from "../util/util";
+import { CONFIG, print } from "../util/util";
 import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 import { ensureSongValidity } from "../util/cacheSong";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
@@ -10,6 +10,9 @@ import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 export default [
 	youtubeIdValidator(query("youtubeId")),
 	query("youtubeId").custom(async id => {
+		if (CONFIG.defaultAudioId && id === CONFIG.defaultAudioId) {
+			return Promise.resolve();
+		}
 		verifyUrlExistance(`https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}&format=json`).then(exists => {
 			if (!exists) {
 				return Promise.reject(new Error("youtube ID doesn't exist"));

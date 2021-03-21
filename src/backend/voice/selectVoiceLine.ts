@@ -2,15 +2,18 @@ import { Song } from "../../types/song";
 import { validateVoiceLine } from "../voice/validateVoiceLine";
 import { VoiceLineTemplate, VoiceLineTemplateObjFromQuery } from "../../types/voiceLine";
 import VoiceLineTemplateModel, { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
-import { print } from "../util/util";
+import { CONFIG, print } from "../util/util";
 
-export default async function (prev: Song, next: Song): Promise<VoiceLineTemplate> {
+export default async function (prev: Song, next: Song, spotifyOverride = false): Promise<VoiceLineTemplate> {
 	let template: VoiceLineTemplate | undefined;
 	let templateQuery: VoiceLineTemplateDoc[] | void;
+
+	const type = (CONFIG.matchWithYoutube || spotifyOverride) ? { $match: { type: { $ne: "INTRO" } } } : { $match: { type: "NORMAL" } };
+
 	do {
 		print("Querying database for template");
 		templateQuery = await VoiceLineTemplateModel.aggregate([
-			{ $match: { type: { $ne: "INTRO" } } },
+			type,
 			{ $sample: { size: 1 } }
 		]);
 		if (templateQuery) {

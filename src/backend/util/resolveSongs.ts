@@ -1,7 +1,7 @@
 import { Song, SongFromSearch } from "../../types/song";
 import { SpotifyResult } from "../../types/spotifyResult";
 import resultMatches from "./resultMatches";
-import { print } from "./util";
+import { CONFIG, print } from "./util";
 import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
 
 export default function (spotifyResults: SpotifyResult[], searchAttempts = 10): Promise<Song[]> {
@@ -14,7 +14,7 @@ export default function (spotifyResults: SpotifyResult[], searchAttempts = 10): 
 					print(`Querying youtube for ${youtubeIds[i]} metadata`);
 					const youtubeDetails = await searchYoutubeDetailed(youtubeIds[i]).catch(reject);
 
-					if (youtubeDetails && youtubeDetails.formats.length > 0 && resultMatches(spotifySong, youtubeDetails)) {
+					if (youtubeDetails && (youtubeDetails.formats.length || (!CONFIG.matchWithYoutube)) > 0 && resultMatches(spotifySong, youtubeDetails)) {
 						print(`Success finding match on try ${i + 1} for ${spotifySong.title}`);
 						return new SongFromSearch(youtubeDetails, spotifySong);
 					}

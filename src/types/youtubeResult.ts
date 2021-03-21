@@ -34,3 +34,26 @@ export class YoutubeResultFromApi implements YoutubeResult {
 		this.formats = results.formats ?? [];
 	}
 }
+
+export class DummyYoutubeResult implements YoutubeResult {
+	title: string;
+	artist: string;
+	youtubeArtist: string;
+	youtubeTitle: string;
+	album: string;
+	youtubeId: string;
+	tags: string[];
+	duration: number;
+	formats: ytdl.videoFormat[];
+	constructor (id = "Unknown") {
+		this.title = "Unknown";
+		this.artist = "Unknown";
+		this.youtubeArtist = "Unknown";
+		this.youtubeTitle = "Unknown";
+		this.album = "Unknown";
+		this.youtubeId = id;
+		this.tags = [];
+		this.duration = 0;
+		this.formats = [];
+	}
+}

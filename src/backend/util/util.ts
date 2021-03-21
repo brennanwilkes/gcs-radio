@@ -8,7 +8,6 @@ import emailConfig from "../../config/email";
 import googleConfig from "../../config/google";
 import spotifyConfig from "../../config/spotify";
 import miscConfig from "../../config/miscellaneous";
-import youtubeURLMethod from "../../config/youtubeURL";
 
 export const CONFIG = {
 	...miscConfig,
@@ -17,8 +16,7 @@ export const CONFIG = {
 	spotifyOauth2Credentials: spotifyConfig.oauth2,
 	...spotifyConfig.credentials,
 	...emailConfig,
-	...analyticsConfig,
-	youtubeURLMethod
+	...analyticsConfig
 };
 
 /**
