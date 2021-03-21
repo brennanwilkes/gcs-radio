@@ -3,6 +3,7 @@ import ytsr from "ytsr";
 import { mocked } from "ts-jest/utils";
 import { YoutubeResultFromApi } from "../../types/youtubeResult";
 import cookie from "../util/cookies";
+import { CONFIG } from "../util/util";
 
 const query = "test";
 const id = "d7pA7lWrN-4";
@@ -24,6 +25,9 @@ const sampleResp = {
 		thumbnail: "testUrl"
 	}
 }
+
+process.env.MATCH_WITH_YOUTUBE = "true";
+CONFIG.matchWithYoutube = true;
 
 jest.mock('ytsr', () => ({
 	__esModule: true,

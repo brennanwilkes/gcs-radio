@@ -1,4 +1,9 @@
 import resolveSongs from "./resolveSongs";
+import { CONFIG } from "./util";
+
+process.env.MATCH_WITH_YOUTUBE = "true";
+CONFIG.matchWithYoutube = true;
+
 
 const validSong = {
 	title: "Next Year - RAC remix",
