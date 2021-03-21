@@ -32,7 +32,6 @@ export default class Landing extends React.Component<IProps, IState> {
 			window.location.pathname = "../dashboard";
 		}).catch((err) => {
 			jscookie.remove("jwt");
-			console.dir(err.response.data.errors[0]);
 		});
 	}
 

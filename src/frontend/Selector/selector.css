@@ -3,6 +3,10 @@
 	overflow-x: visible;
 }
 
+.SelectorProcessing:hover, .SelectorProcessing *:hover{
+	cursor: wait !important;
+}
+
 .searchResultsWrapper{
 	position: relative;
 	overflow-x: visible;

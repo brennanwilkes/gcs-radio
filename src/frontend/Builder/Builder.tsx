@@ -9,7 +9,6 @@ import Selector from "../Selector/Selector";
 import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetailAdder";
 
 import {UserWithId} from "../../types/user";
-import ReactBootstrapCheckbox from "../ReactBootstrapCheckbox/ReactBootstrapCheckbox";
 
 interface IProps {
 	redirectCallback: ((playlist: string) => void),
@@ -78,13 +77,26 @@ export default class Builder extends React.Component<IProps, IState> {
 	}
 
 	postPlaylist(){
+
+		let features = this.state.details?.selected ?? [];
+		features = features.map(id =>
+			this.state.completeSongs?.filter(
+				s => s.spotifyId === id.split(":")[0] && s.youtubeId === id.split(":")[1]
+			)[0]?.id ?? "UNDEFINED"
+		);
+		features = [...features, ...((this.state.completeSongs ?? []).filter(
+			s => !features.includes(s.id ?? "UNDEFINED")
+		).map(
+			song => song.id ?? "UNDEFINED"
+		))].slice(0,3);
+
 		const args = (this.state.details.name && this.state.details.name.length)
 			? {
 				songs: this.state.completeSongs?.map(song => song.id),
 				user: this.state.user?.id,
 				name: this.state.details?.name,
 				description: this.state.details?.description,
-				features: this.state.completeSongs?.map(song => song.id).slice(0,3),
+				features,
 				private: this.state.details?.private ?? true
 			} : {
 				private: false,
@@ -143,6 +155,7 @@ export default class Builder extends React.Component<IProps, IState> {
 					this.state.rendered
 					? <PlaylistDetailAdder
 						detailCallback={this.updateDetails}
+						songs={this.state.songs}
 						initialName={this.state.initialName}
 						initialDescription={this.state.initialDescription}
 						initialPrivate={this.state.initialPrivate} />
@@ -154,7 +167,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				<button
 					disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
 					onClick={this.renderPlaylist}
-					className={`container mb-0 btn btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
+					className={`container mb-0 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
 					this.state.rendering
 					? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
 					: (this.state.rendered ? "Submit" : "Build Playlist")
