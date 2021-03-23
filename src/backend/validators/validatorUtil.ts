@@ -35,16 +35,16 @@ const spotifyURIRegex = /^spotify:[a-zA-Z]+:([0-9A-Za-z]{22})$/;
 const youtubeIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(youtubeIdRegex)
-	.withMessage("youtube ID is not valid");
+	.withMessage("Youtube ID is not valid");
 
 const mongoIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(mongoIdRegex)
-	.withMessage("internal ID is not valid");
+	.withMessage("Internal ID is not valid");
 
 const spotifyIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()
 	.matches(spotifyIdRegex)
-	.withMessage("spotify ID is not valid");
+	.withMessage("Spotify ID is not valid");
 
 export { mongoVerifyExistance, mongoVerifyBucketExistance, verifyUrlExistance, mongoIdRegex, youtubeIdRegex, spotifyIdRegex, youtubeIdValidator, mongoIdValidator, spotifyIdValidator, spotifyWebRegex, spotifyURIRegex };

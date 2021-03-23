@@ -13,7 +13,7 @@ export default [
 		.exists()
 		.trim()
 		.matches(mongoIdRegex)
-		.withMessage("internal song ID is not valid"),
+		.withMessage("Internal song ID is not valid"),
 	oneOf([
 		[
 			body("user").exists().isString().not().isEmpty().trim().escape().matches(mongoIdRegex).withMessage("User ID is not valid"),
@@ -25,7 +25,7 @@ export default [
 				}
 				throw new Error("Song features must contain 1-3 song IDS");
 			}).withMessage("Invalid features"),
-			body("features.*").exists().trim().matches(mongoIdRegex).withMessage("internal ID is not valid")
+			body("features.*").exists().trim().matches(mongoIdRegex).withMessage("Internal ID is not valid")
 		],
 		[
 			body("user").not().exists().withMessage("Playlist must specify both a user ID and name or neither"),

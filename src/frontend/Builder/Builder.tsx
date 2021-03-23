@@ -9,6 +9,8 @@ import Selector from "../Selector/Selector";
 import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetailAdder";
 
 import {UserWithId} from "../../types/user";
+import Response, {ResponseBody, StatusType, errorFromAxios} from "../Response/Response";
+
 
 interface IProps {
 	redirectCallback: ((playlist: string) => void),
@@ -30,6 +32,7 @@ interface IState {
 	addDetails: boolean,
 	postedPlaylistId?: string,
 	shouldRedirect: boolean,
+	response?: ResponseBody
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -61,7 +64,11 @@ export default class Builder extends React.Component<IProps, IState> {
 				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
 					this.setPlayList(res.data.playlists[0]);
 				}
-			}).catch(console.error);
+			}).catch(res => {
+				this.setState({
+					response: errorFromAxios(res)
+				})
+			});
 		}
 	}
 
@@ -89,7 +96,6 @@ export default class Builder extends React.Component<IProps, IState> {
 	}
 
 	setPlayList(p: Playlist){
-
 		if(p.id){
 			this.setState({
 				postedPlaylistId: p.id
@@ -105,6 +111,12 @@ export default class Builder extends React.Component<IProps, IState> {
 				initialDescription: p.details.description,
 			});
 		}
+		this.setState({
+			response: {
+				type: StatusType.SUCCESS,
+				message: `Loaded ${p.details?.name ?? "playlist"}`
+			}
+		});
 		this.setUser(p);
 	}
 
@@ -180,7 +192,12 @@ export default class Builder extends React.Component<IProps, IState> {
 			//Gotta love ES6 amiright??
 			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
 			new PlaylistObj(songs).render(song => {
-				console.log(`Loaded "${song.title}"`);
+				this.setState({
+					response: {
+						type: StatusType.SUCCESS,
+						message: `Loaded "${song.title}"`
+					}
+				})
 				this.setState({
 					loadedProgress: this.state.loadedProgress + 1
 				})
@@ -224,8 +241,20 @@ export default class Builder extends React.Component<IProps, IState> {
 									this.renderPlaylist().then(() => {
 										return this.postPlaylist();
 									}).then(() => {
-
-									}).catch(console.error);
+										this.setState({
+											response: {
+												type: StatusType.SUCCESS,
+												message: `${this.state.initialName ?? "Playlist"} saved`
+											}
+										});
+									}).catch(err => {
+										this.setState({
+											response: {
+												type: StatusType.FAILURE,
+												message: err
+											}
+										});
+									});
 								}
 								else{
 									this.setState({
@@ -242,20 +271,35 @@ export default class Builder extends React.Component<IProps, IState> {
 					}
 					<button
 						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
-						onClick={async () => {
+						onClick={() => {
 							if(!(this.state.rendered && this.state.completeSongs && this.state.completeSongs.length === this.state.songs.length)){
-								await this.renderPlaylist();
-								await this.postPlaylist();
+								this.renderPlaylist().then(() => {
+									return this.postPlaylist();
+								}).then(() => {
+									this.setState({
+										shouldRedirect: true
+									});
+								}).catch(err => {
+									this.setState({
+										response: {
+											type: StatusType.FAILURE,
+											message: err
+										}
+									});
+								});
 							}
-							this.setState({
-								shouldRedirect: true
-							});
+							else{
+								this.setState({
+									shouldRedirect: true
+								});
+							}
 						}}
 						className={`container mb-0 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>
 						PLAY PLAYLIST
 					</button>
 				</div>
 			</div>
+			<Response response={this.state.response} lifetime={750} fadeTime={250} />
 		</>
 	}
 }
