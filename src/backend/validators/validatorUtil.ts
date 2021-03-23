@@ -14,9 +14,7 @@ const mongoVerifyBucketExistance = async (id: string, bucketName = "audio"): Pro
 		});
 		bucket.find({ _id: new mongoose.Types.ObjectId(id) }).toArray().then(res => {
 			resolve(res.length > 0);
-		}).catch(err => {
-			reject(err);
-		});
+		}).catch(() => resolve(false));
 	});
 };
 
@@ -24,9 +22,7 @@ const verifyUrlExistance = async (url: string): Promise<boolean> => {
 	return new Promise((resolve, reject) => {
 		axios.get(url).then(res => {
 			resolve(res.status === 200);
-		}).catch(err => {
-			reject(err);
-		});
+		}).catch(() => resolve(false));
 	});
 };
 

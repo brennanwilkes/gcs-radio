@@ -13,7 +13,7 @@ import HrWrapper from "../HrWrapper/HrWrapper";
 interface IProps {
 	songChangeCallback: ((songs: Song[]) => void),
 	setProcessing: ((state: boolean) => void),
-	initialSongs?: Song[]
+	initialSongs?: Song[],
 }
 interface IState {
 	queriedSongs: Song[],
@@ -29,7 +29,7 @@ export default class Selector extends React.Component<IProps, IState> {
 
 		this.state = {
 			queriedSongs: [],
-			songs: [],
+			songs: this.props.initialSongs ?? [],
 			cogs: [false, false, false]
 		}
 	}
@@ -147,7 +147,7 @@ export default class Selector extends React.Component<IProps, IState> {
 						isDeletable={true}
 						onClick={(toDelete: Song) => {
 							this.setState({
-								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId && s.youtubeId !== toDelete.youtubeId)
+								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId || s.youtubeId !== toDelete.youtubeId)
 							});
 						}}
 						keyExtension="selected" />)

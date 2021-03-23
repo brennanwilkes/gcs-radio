@@ -11,14 +11,12 @@ export default [
 	youtubeIdValidator(query("youtubeId")),
 	query("youtubeId").custom(async id => {
 		if (CONFIG.defaultAudioId && id === CONFIG.defaultAudioId) {
-			return Promise.resolve();
+			return Promise.resolve(true);
 		}
-		verifyUrlExistance(`https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}&format=json`).then(exists => {
-			if (!exists) {
-				return Promise.reject(new Error("youtube ID doesn't exist"));
-			}
-		}).catch(err => {
-			return Promise.reject(err);
+		return verifyUrlExistance(`https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v=${id}&format=json`).then(exists => {
+			return Promise.resolve(!!exists);
+		}).catch(() => {
+			return Promise.resolve(false);
 		});
 	}).withMessage("youtube ID doesn't exist"),
 	spotifyIdValidator(query("spotifyId")),

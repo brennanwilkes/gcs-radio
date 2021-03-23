@@ -57,7 +57,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 			}</h3>
 			<ul>{
 				this.state.playlists.map((playlist, i) => (
-					<li key={playlist.details?.name}>
+					<li key={`${playlist.details?.name}-${i}`}>
 						{playlist.details?.name}
 						<a href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>Play</a>
 						<a href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}>Edit</a>

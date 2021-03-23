@@ -1,7 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 import {Song} from '../../types/song';
-import {PlaylistObj} from "../../types/playlist";
+import {Playlist, PlaylistObj} from "../../types/playlist";
 
 import "./builder.css";
 
@@ -26,8 +26,10 @@ interface IState {
 	patchMode: boolean,
 	initialName?: string,
 	initialDescription?: string,
-	initialPrivate?: boolean
-
+	initialPrivate?: boolean,
+	addDetails: boolean,
+	postedPlaylistId?: string,
+	shouldRedirect: boolean,
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -39,6 +41,8 @@ export default class Builder extends React.Component<IProps, IState> {
 		this.proccessingCallback = this.proccessingCallback.bind(this);
 		this.updateDetails = this.updateDetails.bind(this);
 		this.postPlaylist = this.postPlaylist.bind(this);
+		this.setPlayList = this.setPlayList.bind(this);
+		this.setUser = this.setUser.bind(this);
 
 		this.state = {
 			songs: [],
@@ -47,23 +51,65 @@ export default class Builder extends React.Component<IProps, IState> {
 			loadedProgress: 0,
 			rendered: false,
 			details: {},
-			patchMode: false
+			patchMode: false,
+			addDetails: false,
+			shouldRedirect: false,
 		}
 
 		if(this.props.playlist){
 			axios.get(`../api/v1/playlists/${this.props.playlist}`).then(res => {
 				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
-					const p = res.data.playlists[0];
-					this.setState({
-						songs: p.songs,
-						patchMode: true,
-						initialName: p.details.name,
-						initialDescription: p.details.description,
-						initialPrivate: p.private,
-					});
+					this.setPlayList(res.data.playlists[0]);
 				}
 			}).catch(console.error);
 		}
+	}
+
+	componentDidUpdate(_: IProps, prevState: IState){
+		if((prevState.postedPlaylistId !== this.state.postedPlaylistId || prevState.shouldRedirect !== this.state.shouldRedirect) && this.state.postedPlaylistId && this.state.shouldRedirect){
+			this.setState({
+				shouldRedirect: false
+			});
+			this.props.redirectCallback(this.state.postedPlaylistId);
+		}
+	}
+
+	setUser(playlistCompare?: Playlist){
+		axios.get("/auth").then(resp => {
+			this.setState({
+				user: resp.data.users[0],
+				patchMode: playlistCompare?.details?.user && resp.data.users[0] && playlistCompare.details.user === resp.data.users[0]?.id
+			});
+		}).catch(() => {
+			this.setState({
+				patchMode: false,
+				user: undefined
+			});
+		});
+	}
+
+	setPlayList(p: Playlist){
+
+		if(p.id){
+			this.setState({
+				postedPlaylistId: p.id
+			});
+		}
+		this.setState({
+			songs: p.songs,
+			initialPrivate: p.private,
+		});
+		if(p.details){
+			this.setState({
+				initialName: p.details.name,
+				initialDescription: p.details.description,
+			});
+		}
+		this.setUser(p);
+	}
+
+	componentDidMount(){
+		this.setUser();
 	}
 
 	songChangeCallback(songs: Song[]){
@@ -76,49 +122,57 @@ export default class Builder extends React.Component<IProps, IState> {
 		this.setState({details});
 	}
 
-	postPlaylist(){
-
-		let features = this.state.details?.selected ?? [];
-		features = features.map(id =>
-			this.state.completeSongs?.filter(
-				s => s.spotifyId === id.split(":")[0] && s.youtubeId === id.split(":")[1]
-			)[0]?.id ?? "UNDEFINED"
-		);
-		features = [...features, ...((this.state.completeSongs ?? []).filter(
-			s => !features.includes(s.id ?? "UNDEFINED")
-		).map(
-			song => song.id ?? "UNDEFINED"
-		))].slice(0,3);
-
-		const args = (this.state.details.name && this.state.details.name.length)
-			? {
-				songs: this.state.completeSongs?.map(song => song.id),
-				user: this.state.user?.id,
-				name: this.state.details?.name,
-				description: this.state.details?.description,
-				features,
-				private: this.state.details?.private ?? true
-			} : {
-				private: false,
-				songs: this.state.completeSongs?.map(song => song.id)
-			};
-
-		axios[this.state.patchMode ? "patch" : "post"](
-			`/api/v1/playlists${this.state.patchMode ? `/${this.props.playlist}` : ""}`,
-			args,
-			{ withCredentials: true }
-		).then(resp => {
-			if(resp.data.playlists && resp.data.playlists.length > 0 && resp.data.playlists[0].songs){
-				this.props.redirectCallback(resp.data.playlists[0].id);
-			}
-		}).catch(console.error);
+	switchToAddDetails(){
+		this.setState({
+			addDetails: true
+		});
 	}
 
-	renderPlaylist(){
-		if(this.state.rendered){
-			this.postPlaylist();
-		}
-		else{
+	postPlaylist(): Promise<void>{
+		return new Promise<void>((resolve, reject) => {
+			let features = this.state.details?.selected ?? [];
+			features = features.map(id =>
+				this.state.completeSongs?.filter(
+					s => s.spotifyId === id.split(":")[0] && s.youtubeId === id.split(":")[1]
+				)[0]?.id ?? "UNDEFINED"
+			);
+			features = [...features, ...((this.state.completeSongs ?? []).filter(
+				s => !features.includes(s.id ?? "UNDEFINED")
+			).map(
+				song => song.id ?? "UNDEFINED"
+			))].slice(0,3);
+
+			const args = (this.state.details.name && this.state.details.name.length)
+				? {
+					songs: this.state.completeSongs?.map(song => song.id),
+					user: this.state.user?.id,
+					name: this.state.details?.name,
+					description: this.state.details?.description,
+					features,
+					private: this.state.details?.private ?? true
+				} : {
+					private: false,
+					songs: this.state.completeSongs?.map(song => song.id)
+				};
+
+			axios[this.state.patchMode ? "patch" : "post"](
+				`/api/v1/playlists${this.state.patchMode ? `/${this.props.playlist}` : ""}`,
+				args,
+				{ withCredentials: true }
+			).then(resp => {
+				if(resp.data.playlists && resp.data.playlists.length > 0){
+					this.setPlayList(resp.data.playlists[0]);
+				}
+				this.setState({
+					addDetails: false
+				});
+				resolve();
+			}).catch(reject);
+		});
+	}
+
+	renderPlaylist(): Promise<void>{
+		return new Promise<void>((resolve, reject) => {
 			this.setState({
 				rendering: true
 			});
@@ -134,17 +188,13 @@ export default class Builder extends React.Component<IProps, IState> {
 				this.setState({
 					completeSongs: complete.songs
 				});
-				axios.get("/auth").then(resp => {
-					this.setState({
-						rendered: true,
-						rendering: false,
-						user: resp.data.users[0]
-					});
-				}).catch(() => {
-					this.postPlaylist();
+				this.setState({
+					rendered: true,
+					rendering: false
 				});
-			}).catch(console.error);
-		}
+				resolve();
+			}).catch(reject);
+		});
 	}
 
 	render(){
@@ -152,7 +202,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			<div className="Builder p-2 py-sm-3 py-md-4 px-sm-1 px-md-0">
 				<h1>GCS Radio</h1>
 				{
-					this.state.rendered
+					this.state.addDetails
 					? <PlaylistDetailAdder
 						detailCallback={this.updateDetails}
 						songs={this.state.songs}
@@ -164,14 +214,47 @@ export default class Builder extends React.Component<IProps, IState> {
 						songChangeCallback={this.songChangeCallback}
 						setProcessing={this.proccessingCallback} />
 				}
-				<button
-					disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
-					onClick={this.renderPlaylist}
-					className={`container mb-0 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
-					this.state.rendering
-					? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
-					: (this.state.rendered ? "Submit" : "Build Playlist")
-				}</button>
+				<div>
+					{
+						this.state.user ? <>
+						<button
+							disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
+							onClick={() => {
+								if(this.state.addDetails){
+									this.renderPlaylist().then(() => {
+										return this.postPlaylist();
+									}).then(() => {
+
+									}).catch(console.error);
+								}
+								else{
+									this.setState({
+										addDetails: true
+									});
+								}
+							}}
+							className={`container mb-2 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
+							this.state.rendering
+							? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
+							: (this.state.addDetails ? "SAVE PLAYLIST" : `${this.state.patchMode ? "EDIT" : "ADD"} DETAILS`)
+						}</button>
+						</> : <></>
+					}
+					<button
+						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
+						onClick={async () => {
+							if(!(this.state.rendered && this.state.completeSongs && this.state.completeSongs.length === this.state.songs.length)){
+								await this.renderPlaylist();
+								await this.postPlaylist();
+							}
+							this.setState({
+								shouldRedirect: true
+							});
+						}}
+						className={`container mb-0 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>
+						PLAY PLAYLIST
+					</button>
+				</div>
 			</div>
 		</>
 	}

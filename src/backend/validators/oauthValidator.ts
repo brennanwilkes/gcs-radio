@@ -19,10 +19,10 @@ const isValidToken: CustomValidator = (token: string | undefined): Promise<boole
 			resolveSignedPayload(token).then(() => {
 				resolve(true);
 			}).catch(() => {
-				reject(new Error("Invalid token"));
+				resolve(false);
 			});
 		} else {
-			reject(new Error("Invalid token"));
+			resolve(false);
 		}
 	});
 };
@@ -42,13 +42,13 @@ const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) 
 					) {
 						resolve(true);
 					} else {
-						reject(new Error("Invalid id"));
+						resolve(false);
 					}
 				}).catch(() => {
-					reject(new Error("Invalid token"));
+					resolve(false);
 				});
 			} else {
-				reject(new Error("Invalid token"));
+				resolve(false);
 			}
 		});
 	};
