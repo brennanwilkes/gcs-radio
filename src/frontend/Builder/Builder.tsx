@@ -7,6 +7,7 @@ import "./builder.css";
 
 import Selector from "../Selector/Selector";
 import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetailAdder";
+import NavBar from "../Navbar/Navbar";
 
 import {UserWithId} from "../../types/user";
 import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler, successResponseHandler} from "../Response/Response";
@@ -208,8 +209,8 @@ export default class Builder extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
+			<NavBar />
 			<div className="Builder p-2 py-sm-3 py-md-4 px-sm-1 px-md-0">
-				<h1>GCS Radio</h1>
 				{
 					this.state.addDetails
 					? <PlaylistDetailAdder
@@ -273,7 +274,7 @@ export default class Builder extends React.Component<IProps, IState> {
 								});
 							}
 						}}
-						className={`container mb-0 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>
+						className="container mb-0 btn btn-lg btn-gcs-bright">
 						PLAY PLAYLIST
 					</button>
 				</div>
