@@ -9,14 +9,14 @@ import Selector from "../Selector/Selector";
 import PlaylistDetailAdder, {Details} from "../PlaylistDetailAdder/PlaylistDetailAdder";
 
 import {UserWithId} from "../../types/user";
-import Response, {ResponseBody, StatusType, errorFromAxios} from "../Response/Response";
+import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler, successResponseHandler} from "../Response/Response";
 
 
 interface IProps {
 	redirectCallback: ((playlist: string) => void),
 	playlist?: string
 }
-interface IState {
+interface IState extends HasResponse{
 	songs: Song[],
 	rendering: boolean,
 	processing: boolean,
@@ -32,7 +32,6 @@ interface IState {
 	addDetails: boolean,
 	postedPlaylistId?: string,
 	shouldRedirect: boolean,
-	response?: ResponseBody
 }
 
 export default class Builder extends React.Component<IProps, IState> {
@@ -64,10 +63,9 @@ export default class Builder extends React.Component<IProps, IState> {
 				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
 					this.setPlayList(res.data.playlists[0]);
 				}
-			}).catch(res => {
-				this.setState({
-					response: errorFromAxios(res)
-				})
+			}).catch(err => {
+				console.dir(err);
+				axiosErrorResponseHandler(this)(err);
 			});
 		}
 	}
@@ -111,12 +109,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				initialDescription: p.details.description,
 			});
 		}
-		this.setState({
-			response: {
-				type: StatusType.SUCCESS,
-				message: `Loaded ${p.details?.name ?? "playlist"}`
-			}
-		});
+		successResponseHandler(this)(`Loaded ${p.details?.name ?? "playlist"}`);
 		this.setUser(p);
 	}
 
@@ -192,12 +185,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			//Gotta love ES6 amiright??
 			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
 			new PlaylistObj(songs).render(song => {
-				this.setState({
-					response: {
-						type: StatusType.SUCCESS,
-						message: `Loaded "${song.title}"`
-					}
-				})
+				successResponseHandler(this)(`Loaded "${song.title}"`);
 				this.setState({
 					loadedProgress: this.state.loadedProgress + 1
 				})
@@ -241,20 +229,8 @@ export default class Builder extends React.Component<IProps, IState> {
 									this.renderPlaylist().then(() => {
 										return this.postPlaylist();
 									}).then(() => {
-										this.setState({
-											response: {
-												type: StatusType.SUCCESS,
-												message: `${this.state.initialName ?? "Playlist"} saved`
-											}
-										});
-									}).catch(err => {
-										this.setState({
-											response: {
-												type: StatusType.FAILURE,
-												message: err
-											}
-										});
-									});
+										successResponseHandler(this)(`${this.state.initialName ?? "Playlist"} saved`);
+									}).catch(errorResponseHandler(this));
 								}
 								else{
 									this.setState({
@@ -279,14 +255,7 @@ export default class Builder extends React.Component<IProps, IState> {
 									this.setState({
 										shouldRedirect: true
 									});
-								}).catch(err => {
-									this.setState({
-										response: {
-											type: StatusType.FAILURE,
-											message: err
-										}
-									});
-								});
+								}).catch(errorResponseHandler);
 							}
 							else{
 								this.setState({
@@ -299,7 +268,7 @@ export default class Builder extends React.Component<IProps, IState> {
 					</button>
 				</div>
 			</div>
-			<Response response={this.state.response} lifetime={750} fadeTime={250} />
+			<Response response={this.state} />
 		</>
 	}
 }

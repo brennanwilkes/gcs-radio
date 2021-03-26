@@ -8,6 +8,7 @@ import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 import HrWrapper from "../HrWrapper/HrWrapper";
+import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
 
 
 interface IProps {
@@ -15,7 +16,7 @@ interface IProps {
 	setProcessing: ((state: boolean) => void),
 	initialSongs?: Song[],
 }
-interface IState {
+interface IState extends HasResponse{
 	queriedSongs: Song[],
 	songs: Song[],
 	cogs: boolean[],
@@ -98,10 +99,10 @@ export default class Selector extends React.Component<IProps, IState> {
 							this.setCog(0,false);
 							this.setState({
 								queriedSongs: songs
-							})
+							});
 						}).catch(err => {
 							this.setCog(0,false);
-							console.error(err);
+							axiosErrorResponseHandler(this)(err);
 						});
 					}}
 					onChangeDelay={500}
@@ -119,7 +120,7 @@ export default class Selector extends React.Component<IProps, IState> {
 							})
 						}).catch(err => {
 							this.setCog(1,false);
-							console.error(err);
+							axiosErrorResponseHandler(this)(err);
 						});
 					}}
 					onChangeDelay={250}
@@ -153,6 +154,7 @@ export default class Selector extends React.Component<IProps, IState> {
 						keyExtension="selected" />)
 				}</div>
 			</div>
+			<Response response={this.state} />
 		</>
 	}
 }

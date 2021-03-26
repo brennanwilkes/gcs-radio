@@ -3,12 +3,13 @@ import axios from "axios";
 import {Playlist} from "../../types/playlist";
 import {User} from "../../types/user";
 import jscookie from "js-cookie";
+import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
 
 
 import "./dashboard.css";
 
 interface IProps {}
-interface IState {
+interface IState extends HasResponse{
 	playlists: Playlist[],
 	user?: User
 }
@@ -28,7 +29,8 @@ export default class Dashboard extends React.Component<IProps, IState> {
 			this.setState({
 				playlists: this.state.playlists.filter((p:Playlist, ii: number) => i !== ii)
 			});
-		}).catch(console.error);
+			successResponseHandler(this)(`Deleted ${playlist.details?.name ?? playlist.id}`);
+		}).catch(axiosErrorResponseHandler);
 	}
 
 	componentDidMount(){
@@ -41,7 +43,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				this.setState({
 					playlists: resp2.data.playlists.filter((playlist: Playlist) => playlist.details?.user === resp.data.users[0].id )
 				});
-			});
+			}).catch(axiosErrorResponseHandler);
 		}).catch(() => {
 			jscookie.remove("jwt");
 			jscookie.remove("sat");
@@ -67,6 +69,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				))
 			}</ul>
 			<a href="../builder">Build a playlist</a>
+			<Response response={this.state} />
 		</>
 	}
 }

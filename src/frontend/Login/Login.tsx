@@ -3,12 +3,13 @@ import "./login.css";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap-floating-label";
 import jscookie from "js-cookie";
+import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
 
 
 interface IProps {
 	signup: boolean
 }
-interface IState {
+interface IState extends HasResponse{
 	processing: boolean
 }
 
@@ -30,7 +31,7 @@ export default class Landing extends React.Component<IProps, IState> {
 	componentDidMount(){
 		axios.get("/auth", {withCredentials: true}).then(() => {
 			window.location.pathname = "../dashboard";
-		}).catch((err) => {
+		}).catch(() => {
 			jscookie.remove("jwt");
 		});
 	}
@@ -49,9 +50,7 @@ export default class Landing extends React.Component<IProps, IState> {
 			password
 		}).then(() => {
 			window.location.pathname = "../dashboard";
-		}).catch(err => {
-			alert(err.response?.data?.errors[0]?.message);
-		}).finally(() => {
+		}).catch(axiosErrorResponseHandler(this)).finally(() => {
 			this.setState({
 				processing: false
 			})
@@ -60,7 +59,11 @@ export default class Landing extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
-			<div className="Login">
+			<div className="Login" onKeyDown={(event) => {
+				if (event.key === 'Enter') {
+					this.login(event);
+				}
+			}}>
 				<h1>GCS Radio</h1>
 				<FloatingLabel id="email" label="Email" />
 				<FloatingLabel id="password1" label="Password" type="password" />
@@ -82,6 +85,7 @@ export default class Landing extends React.Component<IProps, IState> {
 					: `${this.props.signup ? "Sign Up" : "Login"}`
 				}</button>
 			</div>
+			<Response response={this.state} lifetime={3000} />
 		</>
 	}
 }

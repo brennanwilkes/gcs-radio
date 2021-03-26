@@ -15,8 +15,10 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	pointer-events: none;
 	width: 100vw;
 	top: 10%;
+	left: 0;
 }
 
 .Response > div {

@@ -53,21 +53,6 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 		});
 	}
 
-	handleSearch(event: React.FormEvent, queryParam: string): Promise<Song[]>{
-		return new Promise<Song[]>((resolve, reject) => {
-			const query = encodeURIComponent((event.target as HTMLTextAreaElement).value);
-			if(query){
-				axios.get(`/api/v1/search?${queryParam}=${query}`).then(res => {
-					resolve(res.data.songs);
-				}).catch(reject);
-			}
-			else {
-				resolve([])
-			}
-		});
-	}
-
-
 	render(){
 
 

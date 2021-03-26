@@ -11,13 +11,14 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import {spotifyPause, spotifyPlayId, spotifySeek, setTransitionCallback} from "../spotifyWebSDK/spotify";
+import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler, errorResponseHandler} from "../Response/Response";
 
 interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
 	spotifySDKMode: boolean
 }
-interface IState {
+interface IState extends HasResponse{
 	paused: boolean,
 	queue: Howl[],
 	transitions: Howl[],
@@ -93,7 +94,12 @@ export default class App extends React.Component<IProps, IState> {
 
 		queue.forEach((audio,i) => {
 			audio.on("end", () => this.transitionSong(1));
-			audio.on("load", () => this.loadedSongCallback(i, queue));
+			audio.on("load", () => {
+				this.loadedSongCallback(i, queue)
+				if(i === queue.length - 1){
+					successResponseHandler(this)(`Loaded ${queue.length} songs`);
+				}
+			});
 		});
 		if(queue.length){
 			queue[0].load();
@@ -107,7 +113,7 @@ export default class App extends React.Component<IProps, IState> {
 	unlockMobileAudio(){
 		document.body.addEventListener('touchstart', () => {
 			if(!this.state.unlocked){
-				alert("unlock");
+				successResponseHandler(this)(`Mobile audio unlocked`);
 				this.state.queue.forEach(audio => {
 					audio.play();
 					audio.pause();
@@ -137,7 +143,12 @@ export default class App extends React.Component<IProps, IState> {
 
 		transitions.forEach((trans, i) => {
 			trans.on("end", () => trans.stop());
-			trans.on("load", () => this.loadedTransitionCallback(i, transitions));
+			trans.on("load", () => {
+				this.loadedTransitionCallback(i, transitions);
+				if(i === transitions.length - 1){
+					successResponseHandler(this)(`Loaded ${transitions.length} audio transitions`);
+				}
+			});
 		});
 		if(transitions.length){
 			transitions[0].load();
@@ -249,8 +260,7 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		}
 		else{
-			console.error("Can't transition to song!!");
-			this.togglePause();
+			errorResponseHandler(this)(`Playlist has ended`);
 		}
 	}
 
@@ -333,6 +343,7 @@ export default class App extends React.Component<IProps, IState> {
 					/>
 				</div>
 			</IconContext.Provider>
+			<Response response={this.state} />
 		</>
 	}
 }
