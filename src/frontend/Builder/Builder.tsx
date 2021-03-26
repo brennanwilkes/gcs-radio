@@ -93,7 +93,7 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
-	setPlayList(p: Playlist){
+	setPlayList(p: Playlist, printMessage: boolean = true){
 		if(p.id){
 			this.setState({
 				postedPlaylistId: p.id
@@ -109,7 +109,9 @@ export default class Builder extends React.Component<IProps, IState> {
 				initialDescription: p.details.description,
 			});
 		}
-		successResponseHandler(this)(`Loaded ${p.details?.name ?? "playlist"}`);
+		if(printMessage){
+			successResponseHandler(this)(`Loaded ${p.details?.name ?? "playlist"}`);
+		}
 		this.setUser(p);
 	}
 
@@ -133,7 +135,7 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
-	postPlaylist(): Promise<void>{
+	postPlaylist(printMessage: boolean = true): Promise<void>{
 		return new Promise<void>((resolve, reject) => {
 			let features = this.state.details?.selected ?? [];
 			features = features.map(id =>
@@ -166,7 +168,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				{ withCredentials: true }
 			).then(resp => {
 				if(resp.data.playlists && resp.data.playlists.length > 0){
-					this.setPlayList(resp.data.playlists[0]);
+					this.setPlayList(resp.data.playlists[0], printMessage);
 				}
 				this.setState({
 					addDetails: false
@@ -176,7 +178,7 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
-	renderPlaylist(): Promise<void>{
+	renderPlaylist(printMessage: boolean = true): Promise<void>{
 		return new Promise<void>((resolve, reject) => {
 			this.setState({
 				rendering: true
@@ -185,7 +187,9 @@ export default class Builder extends React.Component<IProps, IState> {
 			//Gotta love ES6 amiright??
 			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
 			new PlaylistObj(songs).render(song => {
-				successResponseHandler(this)(`Loaded "${song.title}"`);
+				if(printMessage){
+					successResponseHandler(this)(`Loaded "${song.title}"`);
+				}
 				this.setState({
 					loadedProgress: this.state.loadedProgress + 1
 				})
@@ -226,16 +230,22 @@ export default class Builder extends React.Component<IProps, IState> {
 							disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
 							onClick={() => {
 								if(this.state.addDetails){
-									this.renderPlaylist().then(() => {
-										return this.postPlaylist();
-									}).then(() => {
-										successResponseHandler(this)(`${this.state.initialName ?? "Playlist"} saved`);
-									}).catch(errorResponseHandler(this));
+									if(this.state.details.name && this.state.details.name.length){
+										this.renderPlaylist(!this.state.addDetails).then(() => {
+											return this.postPlaylist(!this.state.addDetails);
+										}).then(() => {
+											successResponseHandler(this)(`${this.state.initialName ?? "Playlist"} saved`);
+										}).catch(errorResponseHandler(this));
+									}
+									else{
+										errorResponseHandler(this)(`Playlist saving requires a name`);
+									}
 								}
 								else{
 									this.setState({
 										addDetails: true
 									});
+									$("html, body").animate({ scrollTop: 0 }, "slow");
 								}
 							}}
 							className={`container mb-2 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{

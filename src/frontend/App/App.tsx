@@ -56,7 +56,7 @@ export default class App extends React.Component<IProps, IState> {
 					setStateSDK(true);
 				}).catch(() => {
 					setStateSDK(false);
-				}).finally(() => successResponseHandler(this)(`Loaded ${transitions.length} audio transitions`));
+				});
 			}).catch(axiosErrorResponseHandler(this));
 		}).catch(() => {
 			window.location.href = "../builder";
