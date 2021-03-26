@@ -112,8 +112,8 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 				} />
 
 				<div className="songsDisplay container-fluid row">{
-					this.props.songs.map((song) => <WrappedSongPolaroid
-						key={getSongKey(song)}
+					this.props.songs.map((song, i) => <WrappedSongPolaroid
+						key={getSongKey(song, i)}
 						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"
 						song={song}
 						isHoverable={true}

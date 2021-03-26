@@ -70,8 +70,8 @@ export default class Selector extends React.Component<IProps, IState> {
 
 	render(){
 
-		const querySongsDisplay = this.state.queriedSongs.map((song) => <SongRow
-			key={getSongKey(song)}
+		const querySongsDisplay = this.state.queriedSongs.map((song, i) => <SongRow
+			key={getSongKey(song, i)}
 			song={song}
 			isHoverable={true}
 			onClick={(song) => {
@@ -139,8 +139,8 @@ export default class Selector extends React.Component<IProps, IState> {
 					<h2>Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
-					this.state.songs.map((song) => <WrappedSongPolaroid
-						key={getSongKey(song)}
+					this.state.songs.map((song, i) => <WrappedSongPolaroid
+						key={getSongKey(song, `main-${i}`)}
 						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"
 						song={song}
 						isHoverable={true}
