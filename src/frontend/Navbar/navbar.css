@@ -1,0 +1,39 @@
+header{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+nav{
+    display: flex;
+    flex-direction: row;
+}
+
+nav a{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+}
+
+nav a, nav a:hover{
+    text-decoration: none;
+}
+
+
+.rh3{
+	font-size: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .rh3{
+    	font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+	.rh3{
+		font-size: 2rem;
+	}
+}

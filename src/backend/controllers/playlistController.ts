@@ -41,6 +41,8 @@ const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:
 const getPlaylists = (req: Request, res: Response): void => {
 	print(`Handling request for playlist resources`);
 
+	const isNamed = !!req.query.isNamed;
+
 	let total: PlaylistDoc[] = [];
 	let userId: string | undefined;
 	Playlist.find({
@@ -60,6 +62,10 @@ const getPlaylists = (req: Request, res: Response): void => {
 	}).then(playlistResults => {
 		total = [...total, ...playlistResults];
 		total = total.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+
+		if (isNamed) {
+			total = total.filter(p => !!(p.name));
+		}
 
 		if (total && total.length) {
 			sendPlaylistResponse(total, req, res, userId);
