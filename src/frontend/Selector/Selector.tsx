@@ -8,14 +8,15 @@ import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 import HrWrapper from "../HrWrapper/HrWrapper";
+import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
 
 
 interface IProps {
 	songChangeCallback: ((songs: Song[]) => void),
 	setProcessing: ((state: boolean) => void),
-	initialSongs?: Song[]
+	initialSongs?: Song[],
 }
-interface IState {
+interface IState extends HasResponse{
 	queriedSongs: Song[],
 	songs: Song[],
 	cogs: boolean[],
@@ -29,7 +30,7 @@ export default class Selector extends React.Component<IProps, IState> {
 
 		this.state = {
 			queriedSongs: [],
-			songs: [],
+			songs: this.props.initialSongs ?? [],
 			cogs: [false, false, false]
 		}
 	}
@@ -70,8 +71,8 @@ export default class Selector extends React.Component<IProps, IState> {
 
 	render(){
 
-		const querySongsDisplay = this.state.queriedSongs.map((song) => <SongRow
-			key={getSongKey(song)}
+		const querySongsDisplay = this.state.queriedSongs.map((song, i) => <SongRow
+			key={getSongKey(song, i)}
 			song={song}
 			isHoverable={true}
 			onClick={(song) => {
@@ -98,10 +99,10 @@ export default class Selector extends React.Component<IProps, IState> {
 							this.setCog(0,false);
 							this.setState({
 								queriedSongs: songs
-							})
+							});
 						}).catch(err => {
 							this.setCog(0,false);
-							console.error(err);
+							axiosErrorResponseHandler(this)(err);
 						});
 					}}
 					onChangeDelay={500}
@@ -119,7 +120,7 @@ export default class Selector extends React.Component<IProps, IState> {
 							})
 						}).catch(err => {
 							this.setCog(1,false);
-							console.error(err);
+							axiosErrorResponseHandler(this)(err);
 						});
 					}}
 					onChangeDelay={250}
@@ -139,20 +140,21 @@ export default class Selector extends React.Component<IProps, IState> {
 					<h2>Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
-					this.state.songs.map((song) => <WrappedSongPolaroid
-						key={getSongKey(song)}
+					this.state.songs.map((song, i) => <WrappedSongPolaroid
+						key={getSongKey(song, `main-${i}`)}
 						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"
 						song={song}
 						isHoverable={true}
 						isDeletable={true}
 						onClick={(toDelete: Song) => {
 							this.setState({
-								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId && s.youtubeId !== toDelete.youtubeId)
+								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId || s.youtubeId !== toDelete.youtubeId)
 							});
 						}}
 						keyExtension="selected" />)
 				}</div>
 			</div>
+			<Response response={this.state} />
 		</>
 	}
 }

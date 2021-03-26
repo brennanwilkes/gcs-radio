@@ -10,7 +10,7 @@ export default [
 		.trim()
 		.optional()
 		.matches(mongoIdRegex)
-		.withMessage("internal song ID is not valid"),
+		.withMessage("Internal song ID is not valid"),
 	body("name").optional().isString().not().isEmpty().trim().escape().withMessage("Playlist name is not valid"),
 	body("description").optional().isString().trim().escape().withMessage("Playlist description is not valid").default("GCS Radio playlist"),
 	body("features").optional().isArray().custom((value: string[]) => {

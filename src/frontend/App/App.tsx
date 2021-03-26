@@ -6,11 +6,12 @@ import arrayShuffle from "array-shuffle";
 import { VoiceLineRender } from "../../types/voiceLine";
 import { getAccessToken } from "../spotifyWebSDK/spotifyWebSDK";
 import "./app.css";
+import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
 
 interface IProps {
 	playlist: string
 }
-interface IState {
+interface IState extends HasResponse{
 	songs: Song[],
 	transitions: VoiceLineRender[],
 	spotifySDKMode: boolean
@@ -55,8 +56,8 @@ export default class App extends React.Component<IProps, IState> {
 					setStateSDK(true);
 				}).catch(() => {
 					setStateSDK(false);
-				});
-			}).catch(console.error);
+				}).finally(() => successResponseHandler(this)(`Loaded ${transitions.length} audio transitions`));
+			}).catch(axiosErrorResponseHandler(this));
 		}).catch(() => {
 			window.location.href = "../builder";
 		})
@@ -68,6 +69,7 @@ export default class App extends React.Component<IProps, IState> {
 				<h1>GCS Radio</h1>
 				<Player spotifySDKMode={this.state.spotifySDKMode} songs={this.state.songs} transitions={this.state.transitions} />
 			</div>
+			<Response response={this.state} />
 		</>
 	}
 }

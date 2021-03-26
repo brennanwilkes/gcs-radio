@@ -37,7 +37,13 @@ export const spotifySeek = (position: number = -1): number => {
 	}
 }
 
+var transitionCallback: (() => void) | undefined;
+export const setTransitionCallback = (callback: () => void) => {
+	transitionCallback = callback;
+}
+
 var isReady = false;
+var hasMadeProgress = false;
 window.onSpotifyWebPlaybackSDKReady = (): void => {
 	getAccessToken().then(() => {
 		spotifyPlayer = new Spotify.Player(playerSettings);
@@ -50,10 +56,16 @@ window.onSpotifyWebPlaybackSDKReady = (): void => {
 		setInterval(() => {
 			if(spotifyPlayer && isReady){
 				spotifyPlayer.getCurrentState().then(state => {
+					if(hasMadeProgress && progress !== 0 && state?.position === 0 && transitionCallback){
+						transitionCallback();
+						hasMadeProgress = false;
+					}
+					hasMadeProgress = ((state?.position ?? 0) > 0);
+
 					progress = state?.position ?? 0;
 				}).catch(console.error);
 			}
-		}, 250);
+		}, 100);
 
 		// Ready
 		spotifyPlayer.addListener('ready', ({ device_id }) => {

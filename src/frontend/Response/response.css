@@ -1,0 +1,49 @@
+:root{
+	--error-colour: #FBB;
+	--error-border-colour: #F44;
+	--failure-ring-colour: var(--error-border-colour);
+
+	--success-colour: #BFB;
+	--success-border-colour: #3B3;
+
+	--success-primary-colour: var(--success-border-colour);
+	--success-ring-colour: #33BB3380;
+}
+
+.Response{
+	position: fixed;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	width: 100vw;
+	top: 10%;
+	left: 0;
+}
+
+.Response > div {
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	max-width: min(90vw, 600px);
+	max-height: min(20vw, 80px);
+	width: auto;
+	z-index: 100;
+	border-radius: 20px;
+}
+
+.ResponseSuccess > div{
+	background-color: var(--success-colour);
+	border: 2px solid var(--success-border-colour);
+}
+
+.ResponseSuccess .swal2-success-circular-line-left,
+.ResponseSuccess .swal2-success-fix,
+.ResponseSuccess .swal2-success-circular-line-right{
+	background-color: var(--success-colour);
+}
+.ResponseFailure > div{
+	background-color: var(--error-colour);
+	border: 2px solid var(--error-border-colour);
+}

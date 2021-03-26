@@ -76,3 +76,16 @@ export class AuthorizationError extends ErrorObj implements Error {
 		super("Authorization Error", req.originalUrl, `Invalid token "${err.value}"`, status);
 	}
 }
+
+/*
+export class ErrorFromAxios extends ErrorObj implements Error {
+	constructor (possibleErr: any) {
+		super(
+			possibleErr.response?.data?.errors[0]?.error ?? "Unknown Error",
+			possibleErr.response?.data?.errors[0]?.path ?? "Unknown Path",
+			possibleErr.response?.data?.errors[0]?.message ?? "An error occurred",
+			possibleErr.response?.data?.errors[0]?.status ?? 500,
+			possibleErr.response?.data?.errors[0]?.timestamp ?? new Date(),
+		);
+	}
+} */
