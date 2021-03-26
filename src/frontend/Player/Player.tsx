@@ -10,7 +10,7 @@ import {Howl} from "howler";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {spotifyPause, spotifyPlayId, spotifySeek} from "../spotifyWebSDK/spotify";
+import {spotifyPause, spotifyPlayId, spotifySeek, setTransitionCallback} from "../spotifyWebSDK/spotify";
 
 interface IProps {
 	songs: Song[],
@@ -64,6 +64,7 @@ export default class App extends React.Component<IProps, IState> {
 		};
 
 		setInterval(this.updateProgress, 1000);
+		setTransitionCallback(() => this.transitionSong(1));
 	}
 
 	updateProgress(){
