@@ -6,6 +6,7 @@ import jscookie from "js-cookie";
 import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler} from "../Response/Response";
 import Navbar from "../Navbar/Navbar";
 import HrWrapper from "../HrWrapper/HrWrapper";
+import {FaSpotify, FaGoogle} from "react-icons/fa";
 
 interface IProps {
 	signup: boolean
@@ -81,10 +82,10 @@ export default class Landing extends React.Component<IProps, IState> {
 				} />
 
 				<a href="../auth/google" className="col-12 col-md-5 btn btn-lg mt-3 mb-2 mb-md-4 mr-md-4 btn-info">
-					GOOGLE
+					<FaGoogle style={{marginTop: "-1%"}}/> Google
 				</a>
 				<a href="../auth/spotify" className="col-12 col-md-5 btn btn-lg mt-md-3 mb-4 ml-md-4 btn-success">
-					SPOTIFY
+					<FaSpotify style={{marginTop: "-1%"}}/> Spotify
 				</a>
 
 				<HrWrapper style={{
@@ -136,13 +137,13 @@ export default class Landing extends React.Component<IProps, IState> {
 
 				<button
 					onClick={this.login}
-					className={`col-12 mb-1 btn btn-${this.state.processing ? "warning" : "primary"}`}>{
+					className={`col-12 mb-1 btn btn-${this.state.processing ? "gcs-elevated" : "gcs-bright text-gcs-base"}`}>{
 					this.state.processing
 					? `Processing`
 					: `${this.props.signup ? "Sign Up" : "Login"}`
 				}</button>
 
-				<a href={this.props.signup ? "../login" : "../login?signup=1"} className="text-secondary">
+				<a href={this.props.signup ? "../login" : "../login?signup=1"} className="text-gcs-alpine">
 					{!this.props.signup ? "No account? Sign up" : "Have an account? Login"}
 				</a>
 
