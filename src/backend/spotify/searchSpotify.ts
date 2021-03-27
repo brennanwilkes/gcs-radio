@@ -45,14 +45,24 @@ export async function getSpotifyTrack (id: string): Promise<SpotifyResult> {
 
 export async function getSpotifyTracksByPlaylist (id: string): Promise<SpotifyResult[]> {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		generateRefreshedCredential().then(spotifyApi => {
-			spotifyApi.getPlaylist(id).then(data => {
-				if (data.body?.tracks?.items) {
-					resolve(data.body.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
+		generateRefreshedCredential().then(async spotifyApi => {
+			const playlist = (await spotifyApi.getPlaylist(id)).body;
+
+			if (playlist.tracks.total > playlist.tracks.limit) {
+				for (let i = 1; i < Math.ceil(playlist.tracks.total / playlist.tracks.limit); i++) {
+					const trackToAdd = (await spotifyApi.getPlaylistTracks(id, {
+						offset: playlist.tracks.limit * i
+					})).body;
+					trackToAdd.items.forEach((item) => playlist.tracks.items.push(item));
+				}
+				resolve(playlist.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
+			} else {
+				if (playlist?.tracks?.items) {
+					resolve(playlist.tracks.items.map(song => new SpotifyResultFromApi(song.track)));
 				} else {
 					reject(new Error(invalidDataResponse));
 				}
-			}).catch(err => reject(new Error(err)));
+			}
 		}).catch(err => reject(new Error(err)));
 	});
 }
