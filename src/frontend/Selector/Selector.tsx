@@ -87,12 +87,16 @@ export default class Selector extends React.Component<IProps, IState> {
 		return <>
 			<div className={`Selector container-lg${this.state.cogs.reduce((prev, cur) => prev || cur) ? " SelectorProcessing" : ""}`}>
 				<HrWrapper style={{
-					borderBottomColor: "#CCC"
+					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<h2>Search</h2>
+					<h2 className="text-gcs-faded" >Search</h2>
 				} />
 				<FloatingLabel
-					label="Search Text"
+					inputClassName="bg-gcs-elevated text-gcs-alpine"
+					labelClassName="text-gcs-alpine"
+					inputStyle={{
+						border: "none"
+					}}
 					onChange={(event) => {
 						this.setCog(0,true);
 						this.handleSearch(event, "query").then(songs => {
@@ -105,11 +109,17 @@ export default class Selector extends React.Component<IProps, IState> {
 							axiosErrorResponseHandler(this)(err);
 						});
 					}}
+					label="Search Text"
 					onChangeDelay={500}
 					loadingCog={this.state.cogs[0]}
 					loadingCogSpinning={this.state.cogs[0]} />
 
 				<FloatingLabel
+					inputClassName="bg-gcs-elevated text-gcs-alpine"
+					labelClassName="text-gcs-alpine"
+					inputStyle={{
+						border: "none"
+					}}
 					label="Load Spotify URL"
 					onChange={(event) => {
 						this.setCog(1,true);
@@ -127,6 +137,11 @@ export default class Selector extends React.Component<IProps, IState> {
 					loadingCog={this.state.cogs[1]}
 					loadingCogSpinning={this.state.cogs[1]} />
 				<FloatingLabel
+					inputClassName="bg-gcs-elevated text-gcs-alpine"
+					labelClassName="text-gcs-alpine"
+					inputStyle={{
+						border: "none"
+					}}
 					label="Load YouTube URL (Coming soon)"
 					loadingCog={this.state.cogs[2]}
 					loadingCogSpinning={this.state.cogs[2]} />
@@ -135,9 +150,9 @@ export default class Selector extends React.Component<IProps, IState> {
 					<ul className="searchResults p-0 mt-n2">{querySongsDisplay}</ul>
 				</div>
 				<HrWrapper style={{
-					borderBottomColor: "#CCC"
+					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<h2>Selected Songs</h2>
+					<h2 className="text-gcs-faded" >Selected Songs</h2>
 				} />
 				<div className="songsDisplay container-fluid row">{
 					this.state.songs.map((song, i) => <WrappedSongPolaroid

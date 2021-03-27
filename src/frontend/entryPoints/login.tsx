@@ -4,7 +4,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-//import Demo from "./Demo";
+import "../index.scss";
 import ResponsiveContainer from "../ResponsiveContainer/ResponsiveContainer";
 import Login from "../Login/Login";
 

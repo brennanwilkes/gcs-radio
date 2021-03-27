@@ -17,6 +17,17 @@ module.exports = {
 	module: {
 		rules: [
 			{
+		        test: /\.s[ac]ss$/i,
+		        use: [
+		          // Creates `style` nodes from JS strings
+		          "style-loader",
+		          // Translates CSS into CommonJS
+		          "css-loader",
+		          // Compiles Sass to CSS
+		          "sass-loader",
+		        ],
+			},
+			{
 				test: /\.css$/,
 				use: ["style-loader", "css-loader"]
 			},
@@ -30,7 +41,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(png|jpg)$/,
+				test: /\.(png|jpg|otf)$/,
 				use: {
 					loader: "url-loader?limit=8192"
 				}
