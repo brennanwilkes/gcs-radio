@@ -4,6 +4,7 @@ import "./browser.css";
 
 import Navbar from "../Navbar/Navbar";
 import { Playlist } from "../../types/playlist";
+import PlaylistView from "../PlaylistView/PlaylistView";
 
 interface IProps {}
 interface IState {
@@ -32,10 +33,15 @@ export default class Browser extends React.Component<IProps, IState> {
 	render(){
 		return <>
             <Navbar />
-			<div className="Browser">
-				<ul>{
-					this.state.playlists.map(playlist => <li key={playlist.id}><a href={`../app?playlist=${encodeURIComponent(playlist.id ?? "")}`}>{playlist.details?.name}</a></li>)
-				}</ul>
+			<div className="Browser container-lg mt-md-5">
+				{
+					this.state.playlists.map((playlist, i) => <PlaylistView
+						first={i===0}
+						key={`${playlist.id}-${i}`}
+						playlist={playlist}
+						keyExtension={i}
+					/>)
+				}
 			</div>
 		</>
 	}

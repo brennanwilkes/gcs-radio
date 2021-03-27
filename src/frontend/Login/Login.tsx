@@ -137,7 +137,7 @@ export default class Landing extends React.Component<IProps, IState> {
 
 				<button
 					onClick={this.login}
-					className={`col-12 mb-1 btn btn-${this.state.processing ? "gcs-elevated" : "gcs-bright text-gcs-base"}`}>{
+					className={`col-12 mb-1 btn btn-${this.state.processing ? "gcs-elevated" : "gcs-bright"}`}>{
 					this.state.processing
 					? `Processing`
 					: `${this.props.signup ? "Sign Up" : "Login"}`

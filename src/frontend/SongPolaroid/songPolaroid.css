@@ -1,6 +1,6 @@
 :root {
 	--polaroid-bg: #FFF;
-	--polaroid-border: 1px 1px 5px 1px #222222A0;
+	--polaroid-border: 2px 2px 7px 1px #000000D0;
 	--polaroid-shine: radial-gradient(ellipse at 40px 10px , #ffffff30 0%, #ffffff40 15%, #00000020 100%);
 	--polaroid-hover-delete: #40000060;
 	--polaroid-hover-select: #00204060;

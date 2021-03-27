@@ -6,6 +6,7 @@ header{
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	overflow: hidden;
 }
 
 header > h1{
@@ -80,27 +81,27 @@ nav a, nav a:hover{
 
 
 
-.rh1{
+header > .rh1{
 	font-size: 4em;
 }
-.rh3{
+header > .rh3{
 	font-size: 1rem;
 }
 
 @media (min-width: 768px) {
-	.rh1{
+	header > .rh1{
 		font-size: 10em;
 	}
-	.rh3{
+	header > .rh3{
 		font-size: 1.5rem;
 	}
 }
 
 @media (min-width: 1200px) {
-	.rh1{
+	header > .rh1{
 		font-size: 12em;
 	}
-	.rh3{
+	header > .rh3{
 		font-size: 2rem;
 	}
 }
