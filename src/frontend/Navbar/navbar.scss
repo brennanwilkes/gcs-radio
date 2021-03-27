@@ -80,28 +80,27 @@ nav a, nav a:hover{
 }
 
 
-
-header > .rh1{
+header > .rh1, header > nav .rh1{
 	font-size: 4em;
 }
-header > .rh3{
+header > .rh3, header > nav .rh3{
 	font-size: 1rem;
 }
 
 @media (min-width: 768px) {
-	header > .rh1{
+	header > .rh1, header > nav .rh1{
 		font-size: 10em;
 	}
-	header > .rh3{
+	header > .rh3, header > nav .rh3{
 		font-size: 1.5rem;
 	}
 }
 
 @media (min-width: 1200px) {
-	header > .rh1{
+	header > .rh1, header > nav .rh1{
 		font-size: 12em;
 	}
-	header > .rh3{
-		font-size: 2rem;
+	header > .rh3, header > nav .rh3{
+		font-size: 2.25rem;
 	}
 }

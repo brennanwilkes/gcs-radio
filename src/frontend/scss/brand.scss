@@ -6,6 +6,7 @@ $indigo-dye: #233d58ff;
 $steel-blue: #4679afff;
 $slate-gray: #5f7a95ff;
 $light-slate-gray: #768798;
+$dark-slate-grey: #454d59;
 
 $maximum-blue-green: #00bbc2ff;
 $lavender-blue: #c8c1f5ff;
@@ -27,6 +28,7 @@ $height-lower-three: rgba($height-lower-base, 0.6);
 $height-lower-four: rgba($height-lower-base, 0.8);
 
 $gcs-elevated: $height-raise-one;
+$gcs-fake-elevated: $dark-slate-grey;
 $gcs-alpine: $height-raise-four;
 $gcs-alpine-hover: $height-raise-three;
 $gcs-alpine-disabled: lighten($gcs-alpine, 7.5%);

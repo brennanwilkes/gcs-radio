@@ -31,7 +31,13 @@
 	text-transform: capitalize;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+
+	.featureDisplay{
+		display: flex;
+		justify-content: center;
+	}
+
 	.featureDisplay > div > div:nth-child(2),
 	.featureDisplay > div > div:nth-child(3){
 		display: none;
@@ -39,10 +45,11 @@
 
 	.playlistDetails{
 		align-items: center;
+		text-align: center;
 	}
 
 	.playlistDetails > h2{
-		font-size: 3.5rem;
+		font-size: 2.5rem;
 	}
 	.playlistDetails > h4{
 		font-size: 2rem;
@@ -51,22 +58,33 @@
 
 @media (min-width: 768px) {
 
+	.playlistDetails > h2{
+		font-size: 3rem;
+	}
+
 	.pl-md-BIG{
-		padding-left: 8rem !important;
+		padding-left: 6rem !important;
 	}
 
 	.featureDisplay > div > div:nth-child(3){
-		left: -20%;
-		top: -13%;
-		z-index: 2;
 		transform: rotate(-20deg) scale(0.8);
+		z-index: 2;
+		left: -24%;
+		top: -8%;
 	}
 
 	.featureDisplay > div > div:nth-child(2){
-		z-index: 4;
-		left: 20.25%;
-		top: 4.5%;
 		transform: rotate(20deg) scale(0.95);
+		z-index: 4;
+		left: 17.25%;
+		top: 9.5%;
+	}
+}
+
+@media (min-width: 1200px) {
+
+	.pl-md-BIG{
+		padding-left: 8rem !important;
 	}
 
 	.playlistControls{
@@ -104,19 +122,5 @@
 		100% {
 			opacity: 1;
 		}
-	}
-
-}
-
-@media (min-width: 1200px) {
-	.featureDisplay > div > div:nth-child(3){
-		left: -24%;
-		top: -8%;
-	}
-
-	.featureDisplay > div > div:nth-child(2){
-		z-index: 4;
-		left: 17.25%;
-		top: 9.5%;
 	}
 }

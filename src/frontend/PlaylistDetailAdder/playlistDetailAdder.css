@@ -8,14 +8,38 @@
 
 .nameCheckWrapper{
 	display: flex;
-	gap: 1.25%;
+	gap: 3%;
 }
+
 .nameCheckWrapper > *:first-child{
-	width: 83.75%;
+	width: 48.5%;
 }
 .nameCheckWrapper > *:last-child{
-	width: 15%
+	width: 48.5%
 }
+
+@media (min-width: 576px) {
+	.nameCheckWrapper > *:first-child{
+		width: 68.5%;
+	}
+	.nameCheckWrapper > *:last-child{
+		width: 28.5%
+	}
+}
+
+@media (min-width: 992px) {
+	.nameCheckWrapper{
+		display: flex;
+		gap: 1.5%;
+	}
+	.nameCheckWrapper > *:first-child{
+		width: 83.5%;
+	}
+	.nameCheckWrapper > *:last-child{
+		width: 15%
+	}
+}
+
 
 .DetailAdder p{
 	font-size: 16pt;

@@ -46,13 +46,14 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 		return <>
 			<div
 				key={`${playlist.id}${ext}`}
-				className={`${this.props.className ?? ""} PlaylistView container-lg row ${ !this.props.first ? "my-BIG" : "mb-BIG mt-4"} pl-md-5`}
+				className={`${this.props.className ?? ""} PlaylistView mx-0 container-lg row ${ !this.props.first ? "my-BIG" : "mb-BIG mt-4"} pl-md-5`}
 			>
-				<div className="featureDisplay px-0 px-0 col-12 col-md-3 col-xl-4"><div className="container-fluid row">{
+				<div className="featureDisplay px-0 px-0 col-12 col-md-3 col-xl-4 mx-0"><div className="container-fluid row">{
 					this.state.features.map((song, i) => <WrappedSongPolaroid
 						key={`${playlist.id}${song.id}-${ext}`}
 						className="col-12 mb-0"
 						song={song}
+						cutoff={screen.width > 1200 ? 24 : 12}
 						keyExtension={`${playlist.id}${ext}-${i}`} />)
 				}</div></div>
 				<div className={`playlistDetails px-0 px-0 col-12 col-md-9 col-xl-8 ${this.state.features.length > 1 ? "pl-md-BIG" : ""}`}>
