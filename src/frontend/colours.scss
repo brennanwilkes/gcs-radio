@@ -1,0 +1,32 @@
+$gunmetal: #1c2630ff;
+
+$prussian-blue: #1a2d40ff;
+$indigo-dye: #233d58ff;
+$steel-blue: #4679afff;
+$slate-gray: #5f7a95ff;
+$light-slate-gray: #768798;
+
+$maximum-blue-green: #00bbc2ff;
+$lavender-blue: #c8c1f5ff;
+$orange-soda: #f2542dff;
+
+
+$gcs-base: $gunmetal;
+$height-raise-base: #DDF;
+$height-lower-base: darken($gcs-base, 5%);
+
+$height-raise-one: rgba($height-raise-base, 0.2);
+$height-raise-two: rgba($height-raise-base, 0.3);
+$height-raise-three: rgba($height-raise-base, 0.4);
+$height-raise-four: rgba($height-raise-base, 0.6);
+
+$height-lower-one: rgba($height-lower-base, 0.2);
+$height-lower-two: rgba($height-lower-base, 0.4);
+$height-lower-three: rgba($height-lower-base, 0.6);
+$height-lower-four: rgba($height-lower-base, 0.8);
+
+$gcs-elevated: $height-raise-one;
+$gcs-alpine: $height-raise-four;
+$gcs-bright: $maximum-blue-green;
+$gcs-faded: $lavender-blue;
+$gcs-loud: $orange-soda;

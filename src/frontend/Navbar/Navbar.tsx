@@ -1,7 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 
-import "./navbar.css";
+import "./navbar.scss";
 import {UserWithId} from "../../types/user";
 
 
@@ -19,7 +19,7 @@ interface NavItemData{
 class NavItem extends React.Component<{item:NavItemData}, IState>{
 	render(){
 		return <>
-			<a className="text-dark col-3 h3 m-0" href={this.props.item.href}>
+			<a className="text-gcs-faded col-2 h3 my-0 p-2" href={this.props.item.href}>
 				<h3 className={`${this.props.item.className ?? ""} rh3 m-0`}>{this.props.item.text}</h3>
 			</a>
 		</>;
@@ -52,7 +52,8 @@ export default class Navbar extends React.Component<IProps, IState> {
 
 		return <>
 			<header>
-				<nav className="container-lg row py-3 mx-0 my-5">{
+				<h1 className="text-gcs-loud mb-0 mt-n4 rh1">GCS Radio</h1>
+				<nav className="container-lg row pt-md-5 py-3 mx-0">{
 					navigation.map(link => <NavItem key={`${link.text}-${link.href}`} item={link} />)
 				}</nav>
 			</header>

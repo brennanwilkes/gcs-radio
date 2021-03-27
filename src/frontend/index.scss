@@ -1,18 +1,9 @@
-$gunmetal: #1c2630ff;
-$prussian-blue: #1a2d40ff;
-$maximum-blue-green: #00bbc2ff;
-$lavender-blue: #c8c1f5ff;
-$orange-soda: #f2542dff;
-
-$gcs-base: $gunmetal;
-$gcs-elevated: $prussian-blue;
-$gcs-bright: $maximum-blue-green;
-$gcs-faded: $lavender-blue;
-$gcs-loud: $orange-soda;
+@import "./colours";
 
 $custom-colors: (
   "gcs-base": $gcs-base,
   "gcs-elevated": $gcs-elevated,
+  "gcs-alpine": $gcs-alpine,
   "gcs-bright": $gcs-bright,
   "gcs-faded": $gcs-faded,
   "gcs-loud": $gcs-loud

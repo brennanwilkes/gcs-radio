@@ -59,6 +59,7 @@
         "express": "^4.17.1",
         "express-validator": "^6.9.2",
         "fast-levenshtein": "^3.0.0",
+        "file-loader": "^6.2.0",
         "fluent-ffmpeg": "^2.1.2",
         "fs": "0.0.1-security",
         "google-auth-library": "^7.0.2",
@@ -82,6 +83,7 @@
         "spotify-web-api-node": "^5.0.2",
         "style-loader": "^2.0.0",
         "universal-analytics": "^0.4.23",
+        "url-loader": "^4.1.1",
         "ytdl-core": "^4.5.0",
         "ytsr": "^3.3.1"
     },

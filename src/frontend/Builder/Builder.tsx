@@ -207,7 +207,10 @@ export default class Builder extends React.Component<IProps, IState> {
 		});
 	}
 
+
 	render(){
+		const disabled = (this.state.rendering || this.state.processing || this.state.songs.length === 0);
+
 		return <>
 			<NavBar />
 			<div className="Builder p-2 py-sm-3 py-md-4 px-sm-1 px-md-0">
@@ -228,7 +231,7 @@ export default class Builder extends React.Component<IProps, IState> {
 					{
 						this.state.user ? <>
 						<button
-							disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
+							disabled={disabled}
 							onClick={() => {
 								if(this.state.addDetails){
 									if(this.state.details.name && this.state.details.name.length){
@@ -249,7 +252,7 @@ export default class Builder extends React.Component<IProps, IState> {
 									$("html, body").animate({ scrollTop: 0 }, "slow");
 								}
 							}}
-							className={`container mb-2 btn btn-lg btn-${this.state.rendering || this.state.processing ? "secondary" : "primary"}`}>{
+							className={`container mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "bright"}`}>{
 							this.state.rendering
 							? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
 							: (this.state.addDetails ? "SAVE PLAYLIST" : `${this.state.patchMode ? "EDIT" : "ADD"} DETAILS`)
@@ -257,7 +260,7 @@ export default class Builder extends React.Component<IProps, IState> {
 						</> : <></>
 					}
 					<button
-						disabled={this.state.rendering || this.state.processing || this.state.songs.length === 0}
+						disabled={disabled}
 						onClick={() => {
 							if(!(this.state.rendered && this.state.completeSongs && this.state.completeSongs.length === this.state.songs.length)){
 								this.renderPlaylist().then(() => {
@@ -274,7 +277,7 @@ export default class Builder extends React.Component<IProps, IState> {
 								});
 							}
 						}}
-						className="container mb-0 btn btn-lg btn-gcs-bright">
+						className={`container mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "bright"}`}>
 						PLAY PLAYLIST
 					</button>
 				</div>
