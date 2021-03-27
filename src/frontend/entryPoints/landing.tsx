@@ -4,7 +4,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import "../index.scss";
+import "../scss/index.scss";
 import Landing from "../Landing/Landing";
 
 // Main render

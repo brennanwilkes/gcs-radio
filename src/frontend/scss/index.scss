@@ -1,4 +1,4 @@
-@import "./colours";
+@import "./brand";
 
 $custom-colors: (
   "gcs-base": $gcs-base,
@@ -11,10 +11,15 @@ $custom-colors: (
 $theme-colors: $custom-colors;
 
 
-@import "../../node_modules/bootstrap-scss/bootstrap";
+@import "../../../node_modules/bootstrap-scss/bootstrap";
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 
 body{
-    background-color: $gcs-base
+	background-color: $gcs-base
+}
+
+* {
+	padding: 0;
+	margin: 0;
 }

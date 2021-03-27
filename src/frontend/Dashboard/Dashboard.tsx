@@ -39,7 +39,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				user: resp.data.users[0]
 			});
 
-			axios.get("/api/v1/playlists").then(resp2 => {
+			axios.get("/api/v1/playlists?noRender=1").then(resp2 => {
 				this.setState({
 					playlists: resp2.data.playlists.filter((playlist: Playlist) => playlist.details?.user === resp.data.users[0].id )
 				});

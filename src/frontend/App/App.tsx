@@ -5,8 +5,8 @@ import Player from "../Player/Player";
 import arrayShuffle from "array-shuffle";
 import { VoiceLineRender } from "../../types/voiceLine";
 import { getAccessToken } from "../spotifyWebSDK/spotifyWebSDK";
-import "./app.css";
-import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
+import "./app.scss";
+import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
 
 interface IProps {
 	playlist: string
@@ -65,7 +65,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
-			<div className="App">
+			<div className="App bg-gcs-elevated">
 				<h1>GCS Radio</h1>
 				<Player spotifySDKMode={this.state.spotifySDKMode} songs={this.state.songs} transitions={this.state.transitions} />
 			</div>

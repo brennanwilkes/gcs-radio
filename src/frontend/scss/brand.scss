@@ -1,3 +1,4 @@
+
 $gunmetal: #1c2630ff;
 
 $prussian-blue: #1a2d40ff;
@@ -27,6 +28,29 @@ $height-lower-four: rgba($height-lower-base, 0.8);
 
 $gcs-elevated: $height-raise-one;
 $gcs-alpine: $height-raise-four;
+$gcs-alpine-hover: $height-raise-three;
+$gcs-alpine-disabled: lighten($gcs-alpine, 10%);
 $gcs-bright: $maximum-blue-green;
 $gcs-faded: $lavender-blue;
+$gcs-faded-hover: darken($gcs-faded, 10%);
+$gcs-faded-disabled: lighten($gcs-faded, 10%);
+
 $gcs-loud: $orange-soda;
+
+
+@font-face {
+	font-family: "Palm Canyon Drive";
+	src: url("../static/PalmCanyonDrive.otf") format("opentype");
+	font-style: normal;
+}
+
+@mixin gcs-radio-header {
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-family: "Mr Dafoe", cursive;
+	font-weight: lighter;
+	color: $gcs-loud;
+}

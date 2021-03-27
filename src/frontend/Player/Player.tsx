@@ -3,7 +3,7 @@ import {Song} from '../../types/song';
 import SongHowl, { iOS } from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';
 import {IconContext} from "react-icons";
-import "./player.css";
+import "./player.scss";
 import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 
@@ -320,7 +320,7 @@ export default class App extends React.Component<IProps, IState> {
 			}}>
 				<div className="Player">
 					<img src={this.props.songs[this.state.index]?.thumbnailUrl} />
-					<div>
+					<div className="text-gcs-alpine">
 						<h2>{this.props.songs[this.state.index]?.title}</h2>
 						<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					</div>

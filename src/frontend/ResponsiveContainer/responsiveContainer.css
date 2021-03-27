@@ -1,7 +1,4 @@
 .ResponsiveContainer{
-
-	background-color: #DDD;
-
 	margin: auto;
 	position: absolute;
 	top: 0;
@@ -9,7 +6,6 @@
 	left: 0;
 	right: 0;
 
-	/*box-shadow: -5px -5px 30px 5px red, 5px 5px 30px 5px blue;*/
 	animation: rainbowInset 5s infinite;
 
 }

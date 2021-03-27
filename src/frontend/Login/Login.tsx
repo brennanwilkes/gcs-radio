@@ -4,7 +4,7 @@ import axios from "axios";
 import FloatingLabel from "react-bootstrap-floating-label";
 import jscookie from "js-cookie";
 import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
-
+import Navbar from "../Navbar/Navbar";
 
 interface IProps {
 	signup: boolean
@@ -59,6 +59,7 @@ export default class Landing extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
+			<Navbar />
 			<div className="Login" onKeyDown={(event) => {
 				if (event.key === 'Enter') {
 					this.login(event);
@@ -84,6 +85,11 @@ export default class Landing extends React.Component<IProps, IState> {
 					? `Processing`
 					: `${this.props.signup ? "Sign Up" : "Login"}`
 				}</button>
+
+				<a href={this.props.signup ? "../login" : "../login?signup=1"} className="text-secondary">
+					{!this.props.signup ? "No account? Sign up" : "Have an account? Login"}
+				</a>
+
 			</div>
 			<Response response={this.state} lifetime={3000} />
 		</>

@@ -21,7 +21,7 @@ export default class Browser extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount(){
-		axios.get("/api/v1/playlists?isNamed=1").then(resp => {
+		axios.get("/api/v1/playlists?isNamed=1&noRender=1").then(resp => {
 			this.setState({
 				playlists: resp.data.playlists.filter((p:Playlist) => !!p.details)
 			});
