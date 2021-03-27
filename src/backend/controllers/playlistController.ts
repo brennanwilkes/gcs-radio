@@ -11,8 +11,10 @@ import accessDeniedErrorHandler from "../errorHandlers/accessDeniedErrorHandler"
 import { getUserIdFromToken } from "../auth/getUser";
 
 const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response, userId?: string) => {
+	const noRender = !!req.query.noRender;
+
 	const playlists = playlistResults.map(async result => {
-		const playlist = await PlaylistObjFromQuery(result);
+		const playlist = await PlaylistObjFromQuery(result, !noRender);
 
 		playlist.songs = playlist.songs.map(song => new SongApiObj(song, [
 			new PlayAudioLink(req, song),

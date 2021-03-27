@@ -1,0 +1,16 @@
+.Login{
+	text-align: center;
+}
+
+.Login button, .Login a{
+	text-transform: uppercase;
+}
+
+.Login a:last-of-type{
+	text-transform: initial;
+}
+
+.Login button:last-of-type{
+	text-transform: initial;
+	font-size: 1.5rem;
+}

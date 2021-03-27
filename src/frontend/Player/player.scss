@@ -1,16 +1,19 @@
+@import "../scss/brand";
+
 .Player button{
 	border: none;
-	color: grey;
 	background-color: inherit;
-}
-
-.Player button:hover{
-	color: black;
+	color: $gcs-alpine;
 }
 
 .Player button:disabled{
-	color: lightgrey;
+	color: $gcs-alpine-disabled;
 }
+
+.Player button:hover{
+	color: $gcs-alpine-hover;
+}
+
 
 .Player{
 	display: flex;
@@ -27,6 +30,7 @@
 .Player img{
 	width: 50vmin;
 	height: 50vmin;
+	border: 2px solid $gcs-alpine;
 }
 
 .Player > h2, .Player > img, .Player button{
@@ -72,6 +76,7 @@
 .Player h2, .Player h4{
 	text-align: center;
 }
+
 
 @media only screen and (max-width: 1024px) {
 	.Player img{

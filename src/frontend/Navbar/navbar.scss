@@ -1,119 +1,106 @@
-@import "../colours";
-
-@font-face {
-    font-family: "Palm Canyon Drive";
-    src: url("../static/PalmCanyonDrive.otf") format("opentype");
-    font-style: normal;
-}
+@import "../scss/brand";
 
 header{
-    text-align: center;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+	text-align: center;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	overflow: hidden;
 }
 
 header > h1{
-    position: absolute;
-    width: 100vw;
-    height: 100%;
-
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-family: 'Mr Dafoe', 'Palm Canyon Drive', cursive;
-    font-weight: lighter;
+	@include gcs-radio-header;
+	position: absolute;
+	width: 100vw;
+	height: 100%;
 }
 
 nav{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 8.5rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	margin-top: 8.5rem;
 }
 
 nav a{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: uppercase;
-    position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-transform: uppercase;
+	position: relative;
 
-    box-shadow: 0 0 1px #00000000;
-    tranform: translateZ(0);
-    transition: transform 0.3s;
+	box-shadow: 0 0 1px #00000000;
+	tranform: translateZ(0);
+	transition: transform 0.3s;
 }
 
 nav a:before{
-    position: absolute;
-    pointer-events: none;
-    z-index: -1;
-    content: "";
-    top: 100%;
-    left: 20%;
-    height: 10px;
-    width: 60%;
-    opacity: 0;
-    background: -webkit-radial-gradient(center, ellipse, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
-    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
-    transition-duration: 0.3s;
-    transition-property: transform, opacity;
+	position: absolute;
+	pointer-events: none;
+	z-index: -1;
+	content: "";
+	top: 100%;
+	left: 20%;
+	height: 10px;
+	width: 60%;
+	opacity: 0;
+	background: -webkit-radial-gradient(center, ellipse, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
+	background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 80%);
+	transition-duration: 0.3s;
+	transition-property: transform, opacity;
 }
 nav a:hover:before, nav a:active:before, nav a:focus:before{
-    opacity: 1;
+	opacity: 1;
 }
 
 nav a h3{
-    transition: transform 0.1s;
+	transition: transform 0.1s;
 }
 
 nav > a.text-gcs-faded:hover, nav > a.text-gcs-faded:focus{
-    color: $gcs-faded !important;
+	color: $gcs-faded !important;
 }
 
 nav > a.text-gcs-faded:hover h3, nav > a.text-gcs-faded:focus h3{
-    color: $gcs-faded !important;
-    transform: scale(1.25);
+	color: $gcs-faded !important;
+	transform: scale(1.25);
 }
 
 nav a:first-of-type{
-    border-radius: 8px 0 0 8px;
+	border-radius: 8px 0 0 8px;
 }
 nav a:last-of-type{
-    border-radius: 0 8px 8px 0;
+	border-radius: 0 8px 8px 0;
 }
 
 nav a, nav a:hover{
-    text-decoration: none;
+	text-decoration: none;
 }
 
 
-
-.rh1{
-    font-size: 6em;
+header > .rh1, header > nav .rh1{
+	font-size: 4em;
 }
-.rh3{
-	font-size: 0.75rem;
+header > .rh3, header > nav .rh3{
+	font-size: 1rem;
 }
 
 @media (min-width: 768px) {
-    .rh1{
-        font-size: 10em;
-    }
-    .rh3{
-    	font-size: 1.5rem;
-    }
+	header > .rh1, header > nav .rh1{
+		font-size: 10em;
+	}
+	header > .rh3, header > nav .rh3{
+		font-size: 1.5rem;
+	}
 }
 
 @media (min-width: 1200px) {
-    .rh1{
-        font-size: 12em;
-    }
-    .rh3{
-		font-size: 2rem;
+	header > .rh1, header > nav .rh1{
+		font-size: 12em;
+	}
+	header > .rh3, header > nav .rh3{
+		font-size: 2.25rem;
 	}
 }

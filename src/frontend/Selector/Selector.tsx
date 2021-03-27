@@ -9,6 +9,7 @@ import SongRow, {getSongKey} from "../SongRow/SongRow";
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 import HrWrapper from "../HrWrapper/HrWrapper";
 import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
+import {FaAngleDoubleDown} from "react-icons/fa";
 
 
 interface IProps {
@@ -152,9 +153,11 @@ export default class Selector extends React.Component<IProps, IState> {
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<h2 className="text-gcs-faded" >Selected Songs</h2>
+					<span style={{display:"inline-flex"}}><h2 className="text-gcs-faded">Selected Songs</h2><button className="ml-2 btn btn-outline-gcs-loud" onClick={() => {
+						$("html, body").animate({ scrollTop: $(document).height() }, "slow");
+					}}><FaAngleDoubleDown /></button></span>
 				} />
-				<div className="songsDisplay container-fluid row">{
+				<div className="songsDisplay container-fluid row mx-0">{
 					this.state.songs.map((song, i) => <WrappedSongPolaroid
 						key={getSongKey(song, `main-${i}`)}
 						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"

@@ -18,6 +18,17 @@ const signUpValidator = [
 	body("password").isLength({
 		min: 6
 	}).withMessage("Password must be atleast six characters long"),
+	body("password2").isLength({
+		min: 6
+	}).withMessage("Password must be atleast six characters long"),
+	body("password").custom((password, meta) => {
+		if (password !== meta.req.body.password2) {
+			throw new Error("Passwords don't match");
+		} else {
+			return password;
+		}
+	}).withMessage("Passwords do not match"),
+
 	validationErrorHandler
 ];
 

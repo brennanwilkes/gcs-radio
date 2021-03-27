@@ -1,3 +1,5 @@
+@import "../scss/brand";
+
 .songRow{
 	list-style: none;
 	display: flex;
@@ -6,22 +8,18 @@
 	padding: 0.5vmin;
 
 	border-radius: 1vmin;
-	border: 2px solid #C0C0C000;
 
 	transition: transform 0.25s, border-color 0.25s, background-color 0.25s;
-	background-color: #DDD;
+	background-color: $gcs-fake-elevated;
 	width: 100%;
 	overflow: visible;
-	transform: scale(0.975,1);
 }
 
 .songRowHoverable:hover{
-	transform: scale(1.0);
 	cursor: pointer;
 	z-index: 2;
 	overflow: visible;
-	background-color: #D0D0D0;
-	border-color: #CCCCCCFF;
+	background-color: lighten($gcs-fake-elevated, 10%);
 }
 
 .songRow > div{
@@ -37,11 +35,32 @@
 }
 
 .songRow h4{
-	color: grey;
+	color: $gcs-alpine;
+}
+
+.songRow h3{
+	color: $gcs-faded;
 }
 
 .songRow h4, .songRow h3{
 	margin: 0;
+}
+
+@media only screen and (min-width: 768px) {
+	.songRow{
+		transform: scale(1.0);
+	}
+	.songRowHoverable:hover{
+		transform: scale(1.025,1.0);
+	}
+}
+@media only screen and (max-width: 768px) {
+	.songRow{
+		transform: scale(0.975,1);
+	}
+	.songRowHoverable:hover{
+		transform: scale(1.0);
+	}
 }
 
 @media only screen and (min-width: 1024px) {

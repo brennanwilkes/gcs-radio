@@ -227,7 +227,7 @@ export default class Builder extends React.Component<IProps, IState> {
 						songChangeCallback={this.songChangeCallback}
 						setProcessing={this.proccessingCallback} />
 				}
-				<div>
+				<div className="container-lg">
 					{
 						this.state.user ? <>
 						<button
@@ -277,7 +277,7 @@ export default class Builder extends React.Component<IProps, IState> {
 								});
 							}
 						}}
-						className={`container mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "bright"}`}>
+						className={`container mt-2 mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>
 						PLAY PLAYLIST
 					</button>
 				</div>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Song} from '../../types/song';
 
-import "./songRow.css";
+import "./songRow.scss";
 
 interface IProps {
 	song: Song,

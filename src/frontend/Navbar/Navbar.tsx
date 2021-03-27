@@ -1,5 +1,6 @@
 import * as React from "react";
 import axios from "axios";
+import jscookie from "js-cookie";
 
 import "./navbar.scss";
 import {UserWithId} from "../../types/user";
@@ -7,7 +8,8 @@ import {UserWithId} from "../../types/user";
 
 interface IProps {}
 interface IState {
-	user?: UserWithId
+	user?: UserWithId,
+	loggedIn: boolean
 }
 
 interface NavItemData{
@@ -19,7 +21,7 @@ interface NavItemData{
 class NavItem extends React.Component<{item:NavItemData}, IState>{
 	render(){
 		return <>
-			<a className="text-gcs-faded col-2 h3 my-0 p-2" href={this.props.item.href}>
+			<a className="text-gcs-faded col-3 col-md-2 h3 my-0 p-2" href={this.props.item.href}>
 				<h3 className={`${this.props.item.className ?? ""} rh3 m-0`}>{this.props.item.text}</h3>
 			</a>
 		</>;
@@ -30,24 +32,31 @@ export default class Navbar extends React.Component<IProps, IState> {
 
 	constructor(props: IProps) {
 		super(props);
-		this.state = {};
+		this.state = {
+			loggedIn: !!jscookie.get("jwt")
+		};
 	}
 
 	componentDidMount(){
 		axios.get("/auth").then(resp => {
 			this.setState({
-				user: resp.data.users[0]
+				user: resp.data.users[0],
+				loggedIn: true
 			});
-		}).catch(console.error);
+		}).catch(() => {
+			this.setState({
+				loggedIn: false
+			});
+		});
 	}
 
 	render(){
 
 		const navigation: NavItemData[] = [
-			{text: "Home", href: `../${this.state.user ? "dashboard" : ""}`},
+			{text: "Home", href: ".."},
 			{text: "Build", href: "../builder"},
 			{text: "Browse", href: "../browser"},
-			{text: (this.state.user ? "Dashboard" : "Login"), href: `../${this.state.user ? "dashboard" : "login"}`},
+			{text: (this.state.user ? "Profile" : "Login"), href: `../${this.state.loggedIn ? "dashboard" : "login"}`},
 		]
 
 		return <>
