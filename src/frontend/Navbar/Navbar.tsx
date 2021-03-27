@@ -19,7 +19,7 @@ interface NavItemData{
 class NavItem extends React.Component<{item:NavItemData}, IState>{
 	render(){
 		return <>
-			<a className="text-gcs-faded col-2 h3 my-0 p-2" href={this.props.item.href}>
+			<a className="text-gcs-faded col-3 col-md-2 h3 my-0 p-2" href={this.props.item.href}>
 				<h3 className={`${this.props.item.className ?? ""} rh3 m-0`}>{this.props.item.text}</h3>
 			</a>
 		</>;

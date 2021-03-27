@@ -13,13 +13,13 @@ $orange-soda: #f2542dff;
 
 
 $gcs-base: $gunmetal;
-$height-raise-base: #DDF;
+$height-raise-base: #E8E8FF;
 $height-lower-base: darken($gcs-base, 5%);
 
 $height-raise-one: rgba($height-raise-base, 0.2);
 $height-raise-two: rgba($height-raise-base, 0.3);
-$height-raise-three: rgba($height-raise-base, 0.4);
-$height-raise-four: rgba($height-raise-base, 0.6);
+$height-raise-three: rgba($height-raise-base, 0.45);
+$height-raise-four: rgba($height-raise-base, 0.7);
 
 $height-lower-one: rgba($height-lower-base, 0.2);
 $height-lower-two: rgba($height-lower-base, 0.4);
@@ -29,7 +29,7 @@ $height-lower-four: rgba($height-lower-base, 0.8);
 $gcs-elevated: $height-raise-one;
 $gcs-alpine: $height-raise-four;
 $gcs-alpine-hover: $height-raise-three;
-$gcs-alpine-disabled: lighten($gcs-alpine, 10%);
+$gcs-alpine-disabled: lighten($gcs-alpine, 7.5%);
 $gcs-bright: $maximum-blue-green;
 $gcs-faded: $lavender-blue;
 $gcs-faded-hover: darken($gcs-faded, 10%);

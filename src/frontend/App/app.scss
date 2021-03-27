@@ -25,13 +25,16 @@
 	.App {
 		padding: 7.5vmin;
 	}
+	.App > h1 {
+		font-size: 2.5rem;
+	}
 }
 
 
 $colour-one: $gcs-bright;
-$colour-two: $gcs-bright;
+$colour-two: lighten($gcs-bright, 30%);
 $colour-three: $gcs-faded;
-$colour-four: $gcs-faded;
+$colour-four: darken($gcs-bright, 30%);
 
 @keyframes rainbow {
 	from, to {
