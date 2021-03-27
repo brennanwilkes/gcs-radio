@@ -37,6 +37,8 @@ export default class Dashboard extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount(){
+		$("body").css("cursor","wait");
+
 		axios.get("/auth").then(resp => {
 			this.setState({
 				user: resp.data.users[0]
@@ -87,15 +89,18 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				}} children={
 					<h2 className="text-gcs-faded" >Your Playlists</h2>
 				} />
+				<div>
 				{
 					this.state.playlists.map((playlist, i) => <PlaylistView
 						first={i===0}
+						last={i===this.state.playlists.length - 1}
 						key={`${playlist.id}-${i}`}
 						playlist={playlist}
 						keyExtension={i}
 						deleteCallback={this.deletePlaylist}
 					/>)
 				}
+				</div>
 			</div>
 			<Response response={this.state} />
 		</>

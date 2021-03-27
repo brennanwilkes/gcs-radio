@@ -37,6 +37,7 @@ export default class Browser extends React.Component<IProps, IState> {
 				{
 					this.state.playlists.map((playlist, i) => <PlaylistView
 						first={i===0}
+						last={i===this.state.playlists.length - 1}
 						key={`${playlist.id}-${i}`}
 						playlist={playlist}
 						keyExtension={i}

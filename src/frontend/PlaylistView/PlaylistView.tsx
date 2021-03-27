@@ -14,6 +14,7 @@ interface IProps {
 	keyExtension: number,
 	className?: string
 	first?: boolean,
+	last?: boolean,
 	deleteCallback?: (playlist: Playlist, i: number) => void
 }
 interface IState {
@@ -37,6 +38,9 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 			this.setState({
 				features
 			});
+			if(this.props.last){
+				$("body").css("cursor","inherit");
+			}
 		});
 	}
 
