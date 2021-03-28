@@ -8,7 +8,7 @@ import NavBar from "../Navbar/Navbar";
 import HrWrapper from "../HrWrapper/HrWrapper";
 import PlaylistView from "../PlaylistView/PlaylistView";
 
-import "./dashboard.css";
+import "./dashboard.scss";
 
 interface IProps {}
 interface IState extends HasResponse{
@@ -48,7 +48,12 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				this.setState({
 					playlists: resp2.data.playlists.filter((playlist: Playlist) => playlist.details?.user === resp.data.users[0].id )
 				});
-			}).catch(axiosErrorResponseHandler);
+
+			}).catch(axiosErrorResponseHandler).finally(() => {
+				if(this.state.playlists.length < 1){
+					$("body").css("cursor", "inherit");
+				}
+			});
 		}).catch(() => {
 			jscookie.remove("jwt");
 			jscookie.remove("sat");
@@ -83,6 +88,15 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				>
 					Create New Playlist
 				</button>
+
+				<div className="col-12 mb-2 mb-lg-4 h6"><a
+					href="../login"
+					onClick={() => {
+					jscookie.remove("jwt");
+					jscookie.remove("sat");
+					jscookie.remove("srt");
+					window.location.href = "../login";
+				}}>Signout</a></div>
 
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
