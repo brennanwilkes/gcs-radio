@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import {Song} from '../../types/song';
 import Player from "../Player/Player";
 import arrayShuffle from "array-shuffle";
+import jscookie from "js-cookie";
 import { VoiceLineRender } from "../../types/voiceLine";
 import { getAccessToken } from "../spotifyWebSDK/spotifyWebSDK";
 import "./app.scss";
@@ -21,6 +22,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	constructor(props: IProps) {
 		super(props);
+		this.updateVoice = this.updateVoice.bind(this);
 
 		this.state = {
 			songs: [],
@@ -30,16 +32,19 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount(){
+
+		const voice = jscookie.get("voice");
+
 		axios.get(`../api/v1/playlists/${encodeURIComponent(this.props.playlist)}`).then(resp => {
 
 			const songs: Song[] = arrayShuffle(resp.data.playlists[0].songs);
 
 			const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
 				if(i === 0){
-					return axios.post(`/api/voiceLines?firstId=${song.id}`);
+					return axios.post(`/api/voiceLines?firstId=${song.id}${voice ? `&voice=${voice}` : "" }`);
 				}
 				else{
-					return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}`);
+					return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}${voice ? `&voice=${voice}` : "" }`);
 				}
 			});
 
@@ -63,11 +68,35 @@ export default class App extends React.Component<IProps, IState> {
 		})
 	}
 
+	updateVoice(voice: string){
+		const transitions:Promise<AxiosResponse>[] = this.state.songs.map((song, i) => {
+			if(i === 0){
+				return axios.post(`/api/voiceLines?firstId=${song.id}&voice=${voice}`);
+			}
+			else{
+				return axios.post(`/api/voiceLines?prevId=${this.state.songs[i-1].id}&nextId=${song.id}&voice=${voice}`);
+			}
+		});
+
+		Promise.all(transitions).then(resps => {
+			const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
+			this.setState({
+				transitions: converted
+			});
+		}).catch(axiosErrorResponseHandler(this));
+
+
+	}
+
 	render(){
 		return <>
 			<div className="App bg-gcs-base">
 				<h1>GCS Radio</h1>
-				<Player spotifySDKMode={this.state.spotifySDKMode} songs={this.state.songs} transitions={this.state.transitions} />
+				<Player
+					updateVoice={this.updateVoice}
+					spotifySDKMode={this.state.spotifySDKMode}
+					songs={this.state.songs}
+					transitions={this.state.transitions} />
 			</div>
 			<Response response={this.state} />
 		</>

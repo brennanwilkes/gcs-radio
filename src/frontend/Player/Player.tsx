@@ -7,6 +7,8 @@ import "./player.scss";
 import { VoiceLineRender } from "../../types/voiceLine";
 import {Howl} from "howler";
 
+import jscookie from "js-cookie";
+
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -16,7 +18,8 @@ import Response, {HasResponse, successResponseHandler, errorResponseHandler} fro
 interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
-	spotifySDKMode: boolean
+	spotifySDKMode: boolean,
+	updateVoice: (voice: string) => void
 }
 interface IState extends HasResponse{
 	paused: boolean,
@@ -30,7 +33,8 @@ interface IState extends HasResponse{
 	seekLock: boolean,
 	lastTransition: number,
 	playedIntro: boolean,
-	volume: number
+	volume: number,
+	voice: string
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -51,6 +55,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.pauseSong = this.pauseSong.bind(this);
 		this.getProgress = this.getProgress.bind(this);
 		this.setVolume = this.setVolume.bind(this);
+		this.changeVoice = this.changeVoice.bind(this);
 
 		this.state = {
 			queue: [],
@@ -64,7 +69,8 @@ export default class App extends React.Component<IProps, IState> {
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false,
-			volume: 100
+			volume: 100,
+			voice: jscookie.get("voice") ?? "en-US-Wavenet-D"
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -337,6 +343,19 @@ export default class App extends React.Component<IProps, IState> {
 		this.setState({paused: !this.state.paused});
 	}
 
+	changeVoice(event: React.ChangeEvent<HTMLSelectElement>){
+		const voice = event.target.value;
+
+		this.setState({
+			voice: voice
+		});
+
+		jscookie.set("voice", voice);
+		this.props.updateVoice(voice);
+
+		successResponseHandler(this)(`Updated Voice to ${$('.Player select option:selected').text()}`);
+	}
+
 	render(){
 		return <>
 			<IconContext.Provider value={{
@@ -350,11 +369,28 @@ export default class App extends React.Component<IProps, IState> {
 						<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					</div>
 					<div>
+						<button className="btn btn-gcs-alpine" onClick={() => {
+							window.location.href = `../builder?${window.location.href.split("?")[1]}`;
+						}}>Edit</button>
 						<button disabled={!this.state.ready || !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.rewind}><FaStepBackward /></button>
 						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
 						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
+						<select
+							className="form-select form-control btn btn-gcs-alpine"
+							value={this.state.voice}
+							onChange={this.changeVoice}>
+							<option value="en-US-Wavenet-B">Hank Stewart</option>
+							<option value="en-US-Wavenet-D">Carswell Cooper</option>
+							<option value="en-IN-Wavenet-C">Sukhdeep Kaur</option>
+							<option value="en-AU-Wavenet-B">Oscar Hicks</option>
+							<option value="en-AU-Wavenet-C">Shelley Steele</option>
+							<option value="en-GB-Wavenet-F">Courtney Howe</option>
+							<option value="en-GB-Wavenet-B">Ned Burns</option>
+							<option value="en-GB-Wavenet-D">Barry Reynolds</option>
+						</select>
+
 					</div>
 					<Slider
 						min={0}
