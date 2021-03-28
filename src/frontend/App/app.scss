@@ -1,5 +1,9 @@
 @import "../scss/brand";
 
+body{
+	background-color: darken($gcs-base, 10%) !important;
+}
+
 .App {
 	display: flex;
 	flex-direction: column;

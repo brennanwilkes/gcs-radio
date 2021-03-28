@@ -10,8 +10,8 @@ import {Howl} from "howler";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {spotifyPause, spotifyPlayId, spotifySeek, setTransitionCallback} from "../spotifyWebSDK/spotify";
-import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler, errorResponseHandler} from "../Response/Response";
+import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback} from "../spotifyWebSDK/spotify";
+import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
 
 interface IProps {
 	songs: Song[],
@@ -30,6 +30,7 @@ interface IState extends HasResponse{
 	seekLock: boolean,
 	lastTransition: number,
 	playedIntro: boolean,
+	volume: number
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -49,6 +50,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.playSong = this.playSong.bind(this);
 		this.pauseSong = this.pauseSong.bind(this);
 		this.getProgress = this.getProgress.bind(this);
+		this.setVolume = this.setVolume.bind(this);
 
 		this.state = {
 			queue: [],
@@ -62,6 +64,7 @@ export default class App extends React.Component<IProps, IState> {
 			seekLock: false,
 			lastTransition: 0,
 			playedIntro: false,
+			volume: 100
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -159,7 +162,7 @@ export default class App extends React.Component<IProps, IState> {
 		});
 	}
 
-	componentDidUpdate(prevProps: IProps){
+	componentDidUpdate(prevProps: IProps, prevState: IState){
 		if(prevProps.songs !== this.props.songs){
 			this.initializeSongs();
 		}
@@ -171,6 +174,17 @@ export default class App extends React.Component<IProps, IState> {
 		}
 		else if(!this.state.unlocked){
 			this.setState({unlocked:true});
+		}
+		if(prevState.volume !== this.state.volume){
+			this.state.transitions.forEach(audio => {
+				audio.volume(this.state.volume / 100);
+			});
+			this.state.queue.forEach(audio => {
+				audio.volume(this.state.volume / 100);
+			});
+			if(this.props.spotifySDKMode){
+				spotifyVolume(this.state.volume / 100);
+			}
 		}
 	}
 
@@ -273,6 +287,13 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
+	setVolume(value: number){
+		console.dir(value);
+		this.setState({
+			volume: value
+		});
+	}
+
 	setProgress(value: number){
 		if(this.state.index < this.state.queue.length && !this.state.seekLock){
 			if(this.props.spotifySDKMode){
@@ -340,6 +361,16 @@ export default class App extends React.Component<IProps, IState> {
 						className="songProgressBar"
 						value={this.state.progress}
 						onChange={this.setProgress}
+					/>
+					<Slider
+						min={0}
+						max={100}
+						handleStyle={{
+							display: "none"
+						}}
+						className="volumeBar mt-md-0 mt-2"
+						value={this.state.volume}
+						onChange={this.setVolume}
 					/>
 				</div>
 			</IconContext.Provider>

@@ -277,9 +277,11 @@ export default class Builder extends React.Component<IProps, IState> {
 								});
 							}
 						}}
-						className={`container mt-2 mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>
-						PLAY PLAYLIST
-					</button>
+						className={`container mt-2 mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>{
+							this.state.rendering && !this.state.user
+							? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
+							: "PLAY PLAYLIST"
+					}</button>
 				</div>
 			</div>
 			<Response response={this.state} />
