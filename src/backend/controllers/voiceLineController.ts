@@ -4,7 +4,7 @@ import { mongoose } from "../../database/connection";
 import { print } from "../util/util";
 import { SongObjFromQuery } from "../../types/song";
 import Song from "../../database/models/song";
-import { Voice, VoiceLineRender, VoiceLineRenderApiObj, VoiceLineRenderObjFromQuery } from "../../types/voiceLine";
+import { Voice, VoiceGender, VoiceLineRender, VoiceLineRenderApiObj, VoiceLineRenderObjFromQuery } from "../../types/voiceLine";
 import { renderVoiceLineFromTemplate } from "../voice/renderVoiceLineFromTemplate";
 import { recordVoiceLine } from "../voice/recordVoiceLine";
 import streamToMongo from "../../database/streamToMongo";
@@ -96,6 +96,7 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 	const prevId = String(req.query.prevId);
 	const nextId = String(req.query.nextId);
 	const voice = (req.query.voice ?? Voice.DEFAULT) as Voice;
+	const gender = (req.query.gender ?? VoiceGender.DEFAULT) as VoiceGender;
 
 	const prevRes = await Song.findOne({ _id: new mongoose.Types.ObjectId(prevId) }).catch(errorHandler);
 	const nextRes = await Song.findOne({ _id: new mongoose.Types.ObjectId(nextId) }).catch(errorHandler);
@@ -105,7 +106,7 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 		print(`Handling request for VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 
 		selectVoiceLine(prevSong, nextSong, hasSpotify).then(template => {
-			const render = renderVoiceLineFromTemplate(template, prevSong, nextSong, voice);
+			const render = renderVoiceLineFromTemplate(template, prevSong, nextSong, voice, gender);
 			uploadVoiceLine(render, req, res, errorHandler, `VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 		}).catch(errorHandler);
 	}
