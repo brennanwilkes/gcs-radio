@@ -64,7 +64,14 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 					<h2 className="text-gcs-alpine">{playlist.details?.name}</h2>
 					<h4 className="text-gcs-faded">{playlist.details?.description}</h4>
 					<div className="playlistControls mt-3">
-						<a className="btn btn-lg btn-gcs-faded px-4" href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>Play</a>
+						<a
+							className="btn btn-lg btn-gcs-faded px-4"
+							onClick={() => {
+								window.open(`../app?playlist=${encodeURIComponent(playlist.id as string)}`);
+							}}
+							href=".">
+							Play
+						</a>
 						<a className="btn btn-lg btn-gcs-bright px-4" href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}>Edit</a>
 						{
 							this.props.deleteCallback ? <button className="btn btn-lg btn-gcs-loud px-4" onClick={() => {

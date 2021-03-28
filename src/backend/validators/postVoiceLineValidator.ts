@@ -5,6 +5,7 @@ import Song from "../../database/models/song";
 import { mongoose } from "../../database/connection";
 import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import validationErrorHandler from "../errorHandlers/validationErrorHandler";
+import { Voice, VoiceGender } from "../../types/voiceLine";
 
 const songExists = (id: string): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {
@@ -18,15 +19,21 @@ const songExists = (id: string): Promise<void> => {
 	});
 };
 
+const voiceLineErrorMessage = "A first song, or both previous and next song ID is required for voicelines";
+
 export default [
 	oneOf([
 		mongoIdValidator(query("prevId")),
 		mongoIdValidator(query("firstId"))
-	]),
+	], voiceLineErrorMessage),
 	oneOf([
 		mongoIdValidator(query("nextId")),
 		mongoIdValidator(query("firstId"))
-	]),
+	], voiceLineErrorMessage),
+
+	query("gender").optional().escape().trim().default(VoiceGender.DEFAULT).isIn(Object.values(VoiceGender)).withMessage("Invalid Voice Gender"),
+	query("voice").optional().escape().trim().default(Voice.DEFAULT).isIn(Object.values(Voice)).withMessage("Invalid Voice"),
+
 	validationErrorHandler,
 	(req: Request, res: Response, next: NextFunction): void => {
 		const errorHandler = notFoundErrorHandler(req, res);

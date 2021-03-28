@@ -1,7 +1,7 @@
 @import "../scss/brand";
 @import "../scss/animations";
 
-.Player button{
+.Player button:not(button.btn){
 	border: none;
 	background-color: inherit;
 	color: $gcs-alpine;
@@ -11,8 +11,25 @@
 	color: $gcs-alpine-disabled;
 }
 
-.Player button:hover{
+.Player button:not(button.btn):hover{
 	color: $gcs-alpine-hover;
+}
+
+.Player button.btn{
+	border: none !important;
+}
+
+.Player .btn:hover,
+.Player .btn:active,
+.Player .btn:focus{
+	background-color: $gcs-alpine-hover !important;
+}
+
+.Player select{
+	width: 6vw !important;
+}
+.Player > div > button:first-child{
+	width: 6vw !important;
 }
 
 
@@ -51,14 +68,9 @@
 .Player > div:nth-of-type(2) {
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: space-evenly;
 	width: 100%;
 	align-items: center;
-}
-
-.Player > div:nth-of-type(2) > button:nth-of-type(2){
-	margin-left: 5vw;
-	margin-right: 5vw;
 }
 
 .Player .songProgressBar > .rc-slider-rail,
@@ -88,10 +100,6 @@
 .Player h2, .Player h4{
 	text-align: center;
 }
-
-.volumeBar{
-}
-
 
 @media only screen and (max-width: 1024px) {
 	.Player img{
