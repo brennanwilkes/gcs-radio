@@ -36,13 +36,13 @@ const song2 = new SongObj(
 	"date",
 )
 
-test("All variables are rendered", () => {
-	const render = renderVoiceLineFromTemplate(template, song1, song2);
+test("All variables are rendered", async () => {
+	const render = await renderVoiceLineFromTemplate(template, song1, song2);
 	expect(render.text).toBe("title2 title artist2 album2 artist album date date");
 	expect(render.gender).toBe(VoiceGender.DEFAULT);
 	expect(render.voice).toBe(Voice.DEFAULT);
 
-	const render2 = renderVoiceLineFromTemplate(template, song1, song2, Voice.enAuB, VoiceGender.FEMALE);
+	const render2 = await renderVoiceLineFromTemplate(template, song1, song2, Voice.enAuB, VoiceGender.FEMALE);
 	expect(render2.gender).toBe(VoiceGender.FEMALE);
 	expect(render2.voice).toBe(Voice.enAuB);
 });

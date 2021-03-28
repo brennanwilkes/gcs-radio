@@ -18,7 +18,8 @@ export enum ConditionAppliesTo{
 export enum VoiceLineType{
 	normal = "NORMAL",
 	parallel = "PARALLEL",
-	intro = "INTRO"
+	intro = "INTRO",
+	api= "API"
 }
 
 export enum Voice{

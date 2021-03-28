@@ -11,7 +11,7 @@
 	color: $gcs-alpine-disabled;
 }
 
-.Player button:not(button.btn):hover{
+.Player button:not(button.btn):not(:disabled):hover{
 	color: $gcs-alpine-hover;
 }
 
