@@ -1,4 +1,5 @@
 @import "../scss/brand";
+@import "../scss/animations";
 
 .Player button{
 	border: none;
@@ -69,7 +70,14 @@
 .Player .songProgressBar > .rc-slider-track,
 .Player .volumeBar > .rc-slider-track{
 	height: 1vmin;
+}
+
+.Player .songProgressBar > .rc-slider-track{
 	animation: rainbowInset 5s infinite;
+}
+
+.Player .volumeBar > .rc-slider-track{
+	animation: secondaryRainbowInset 5s infinite;
 }
 
 .Player .songProgressBar > .rc-slider-track:hover, .Player .songProgressBar > .rc-slider-rail:hover,

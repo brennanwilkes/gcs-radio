@@ -10,7 +10,7 @@ import {Howl} from "howler";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback} from "../spotifyWebSDK/spotify";
+import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback, isReady as spotifyIsReady} from "../spotifyWebSDK/spotify";
 import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
 
 interface IProps {
@@ -346,11 +346,11 @@ export default class App extends React.Component<IProps, IState> {
 						<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					</div>
 					<div>
-						<button disabled={!this.state.ready || !this.state.unlocked} onClick={this.rewind}><FaStepBackward /></button>
-						<button disabled={!this.state.ready|| !this.state.unlocked} onClick={this.togglePause}>{
+						<button disabled={!this.state.ready || !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.rewind}><FaStepBackward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
-						<button disabled={!this.state.ready|| !this.state.unlocked} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 					</div>
 					<Slider
 						min={0}
