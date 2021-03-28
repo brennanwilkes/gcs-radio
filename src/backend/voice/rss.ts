@@ -28,7 +28,7 @@ export const getFeed = (feed: Feed): Promise<RSSResponse[]> => {
 			const channel: any = parser.parse(res.data)?.rss?.channel?.item;
 
 			if (channel && "length" in channel && channel.length > 0 && "title" in channel[0] && "description" in channel[0]) {
-				resolve(channel.item.map((item: any) => {
+				resolve(channel.map((item: any) => {
 					return {
 						name: feed.name,
 						headline: item?.title ?? "UNKNOWN",

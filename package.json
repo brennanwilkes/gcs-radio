@@ -25,7 +25,9 @@
         "deploy": "npm run lint && bash ./src/dev/deploy.sh gcs-radio",
         "deploy:beta": "npm run lint && bash ./src/dev/deploy.sh gcs-radio-beta",
         "generateDefaultAudio": "npm run build:backend && ./src/dev/generateDefaultAudio.sh",
-        "generateDefaultAudio:noBuild": "./src/dev/generateDefaultAudio.sh"
+        "generateDefaultAudio:noBuild": "./src/dev/generateDefaultAudio.sh",
+        "generateVoiceTemplates": "npm run build:backend && ./src/dev/generateVoiceTemplates.sh",
+        "generateVoiceTemplates:noBuild": "./src/dev/generateVoiceTemplates.sh"
     },
     "repository": {
         "type": "git",

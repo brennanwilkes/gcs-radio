@@ -19,7 +19,8 @@ export enum VoiceLineType{
 	normal = "NORMAL",
 	parallel = "PARALLEL",
 	intro = "INTRO",
-	api= "API"
+	api = "API",
+	rss = api
 }
 
 export enum Voice{
