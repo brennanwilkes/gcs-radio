@@ -7,7 +7,7 @@ import jscookie from "js-cookie";
 import { VoiceLineRender } from "../../types/voiceLine";
 import { getAccessToken } from "../spotifyWebSDK/spotifyWebSDK";
 import "./app.scss";
-import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
+import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
 
 interface IProps {
 	playlist: string
@@ -68,7 +68,7 @@ export default class App extends React.Component<IProps, IState> {
 		})
 	}
 
-	updateVoice(voice: string){
+	updateVoice(voice: string, label: string){
 		const transitions:Promise<AxiosResponse>[] = this.state.songs.map((song, i) => {
 			if(i === 0){
 				return axios.post(`/api/voiceLines?firstId=${song.id}&voice=${voice}`);
@@ -83,6 +83,7 @@ export default class App extends React.Component<IProps, IState> {
 			this.setState({
 				transitions: converted
 			});
+			successResponseHandler(this)(`Updated Voice to ${label}`);
 		}).catch(axiosErrorResponseHandler(this));
 
 

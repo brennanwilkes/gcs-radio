@@ -82,7 +82,8 @@ const postFirstVoiceLine = async (req: Request, res: Response): Promise<void> =>
 		print(`Handling request for first VoiceLine ${song.title} with ${voice}`);
 
 		selectFirstVoiceLine().then(template => {
-			const render = renderVoiceLineFromTemplate(template, song, song, voice);
+			return renderVoiceLineFromTemplate(template, song, song, voice);
+		}).then(render => {
 			uploadVoiceLine(render, req, res, errorHandler, `first VoiceLine ${song.title} with ${voice}`);
 		}).catch(errorHandler);
 	}
@@ -106,7 +107,8 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 		print(`Handling request for VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 
 		selectVoiceLine(prevSong, nextSong, hasSpotify).then(template => {
-			const render = renderVoiceLineFromTemplate(template, prevSong, nextSong, voice, gender);
+			return renderVoiceLineFromTemplate(template, prevSong, nextSong, voice, gender);
+		}).then(render => {
 			uploadVoiceLine(render, req, res, errorHandler, `VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 		}).catch(errorHandler);
 	}

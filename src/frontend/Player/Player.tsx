@@ -19,7 +19,7 @@ interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
 	spotifySDKMode: boolean,
-	updateVoice: (voice: string) => void
+	updateVoice: (voice: string, label: string) => void
 }
 interface IState extends HasResponse{
 	paused: boolean,
@@ -351,9 +351,7 @@ export default class App extends React.Component<IProps, IState> {
 		});
 
 		jscookie.set("voice", voice);
-		this.props.updateVoice(voice);
-
-		successResponseHandler(this)(`Updated Voice to ${$('.Player select option:selected').text()}`);
+		this.props.updateVoice(voice, $('.Player select option:selected').text());
 	}
 
 	render(){
