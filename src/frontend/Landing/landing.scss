@@ -1,0 +1,86 @@
+@import "../scss/brand";
+@import "../scss/animations";
+
+.Landing > div{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.Landing > div > a{
+	font-size: 1.5rem;
+}
+
+.Landing > div > a:first-of-type{
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.Landing > div > a:last-of-type{
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.Landing > div > div > a, .Landing > h1{
+	white-space: nowrap;
+}
+
+.Landing > div > div > a{
+	color: $gcs-alpine;
+}
+
+.Landing > div > div > a:hover{
+	color: $gcs-alpine-hover;
+}
+
+.Landing h1{
+	@include gcs-radio-header;
+}
+
+.Landing h1, .Landing a, .Landing h6{
+	@include fadeIn;
+}
+.Landing > div > a:first-of-type{
+	animation-delay: 0.5s;
+}
+.Landing > div > a:last-of-type{
+	animation-delay: 0.75s;
+}
+.Landing > div > div > a:first-of-type{
+	animation-delay: 1s;
+}
+.Landing > div > div > h6{
+	animation-delay: 1.25s;
+}
+.Landing > div > div > a:last-of-type{
+	animation-delay: 1.5s;
+}
+.Landing h1{
+	animation-delay: 1.75s;
+	animation-duration: 2.5s;
+}
+
+@media only screen and (max-width: 1200px) {
+	.Landing h1{
+		width: 100vw;
+		text-align: center;
+		margin: 1rem 0;
+		font-size: 5rem;
+	}
+}
+@media only screen and (min-width: 1200px) {
+	.Landing h1{
+		position: absolute;
+		bottom: 5%;
+		right: 5%;
+		font-size: 18rem;
+	}
+
+	.Landing > div{
+		max-width: 400px;
+		position: absolute;
+		left: 5%;
+		top: 10%;
+	}
+}

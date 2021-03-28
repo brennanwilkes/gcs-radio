@@ -100,11 +100,8 @@
 
 
 	.PlaylistView {
-		animation: fadeInAnimation ease 1s;
-		animation-iteration-count: 1;
-		animation-fill-mode: forwards;
+		@include fadeIn;
 		animation-delay: 2s;
-		opacity: 0;
 	}
 
 	.PlaylistView:first-child{

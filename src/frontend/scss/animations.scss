@@ -102,3 +102,10 @@ $colour-four: darken($gcs-faded, 2.5%);
 		opacity: 1;
 	}
 }
+
+@mixin fadeIn{
+	animation: fadeInAnimation ease 1s;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+	opacity: 0;
+}
