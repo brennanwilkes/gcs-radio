@@ -186,9 +186,13 @@ export default class App extends React.Component<IProps, IState> {
 				spotifyVolume(this.state.volume / 100);
 			}
 		}
+		if(prevState.ready !== this.state.ready && this.state.ready){
+			$("body").css("cursor","inherit");
+		}
 	}
 
 	componentDidMount(){
+		$("body").css("cursor","wait");
 
 		this.initializeSongs();
 		this.initializeTransitions();
