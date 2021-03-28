@@ -1,6 +1,9 @@
 import { Song } from "./song";
-import axios from "axios";
 import { Link } from "./link";
+
+import rateLimit from "axios-rate-limit";
+import axiosPure from "axios";
+const axios = rateLimit(axiosPure.create(), { maxRequests: 10, perMilliseconds: 500 });
 
 export interface PlaylistDetails{
 	user: string,

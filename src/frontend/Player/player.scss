@@ -18,6 +18,7 @@
 .Player{
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	width: 100%;
 	height: 100%;
 	padding: 2.5vmin;
@@ -59,22 +60,28 @@
 	margin-right: 5vw;
 }
 
-.Player .songProgressBar > .rc-slider-rail{
+.Player .songProgressBar > .rc-slider-rail,
+.Player .volumeBar > .rc-slider-rail{
 	height: 1vmin;
 	background-color: #000;
 }
 
-.Player .songProgressBar > .rc-slider-track{
+.Player .songProgressBar > .rc-slider-track,
+.Player .volumeBar > .rc-slider-track{
 	height: 1vmin;
 	animation: rainbowInset 5s infinite;
 }
 
-.Player .songProgressBar > .rc-slider-track:hover, .Player .songProgressBar > .rc-slider-rail:hover{
+.Player .songProgressBar > .rc-slider-track:hover, .Player .songProgressBar > .rc-slider-rail:hover,
+.Player .volumeBar > .rc-slider-track:hover, .Player .volumeBar > .rc-slider-rail:hover{
 	cursor: pointer;
 }
 
 .Player h2, .Player h4{
 	text-align: center;
+}
+
+.volumeBar{
 }
 
 
@@ -90,7 +97,8 @@
 		font-size: 1.25rem;
 	}
 
-	.Player .songProgressBar > .rc-slider-rail, .Player .songProgressBar > .rc-slider-track {
+	.Player .songProgressBar > .rc-slider-rail, .Player .songProgressBar > .rc-slider-track,
+	.Player .volumeBar > .rc-slider-rail, .Player .volumeBar > .rc-slider-track {
 		height: 2.5vmin;
 	}
 }

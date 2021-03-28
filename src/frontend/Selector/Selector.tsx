@@ -162,6 +162,7 @@ export default class Selector extends React.Component<IProps, IState> {
 						key={getSongKey(song, `main-${i}`)}
 						className="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-0"
 						song={song}
+						cutoff={32}
 						isHoverable={true}
 						isDeletable={true}
 						onClick={(toDelete: Song) => {

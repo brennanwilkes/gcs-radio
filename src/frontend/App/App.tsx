@@ -65,7 +65,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	render(){
 		return <>
-			<div className="App bg-gcs-elevated">
+			<div className="App bg-gcs-base">
 				<h1>GCS Radio</h1>
 				<Player spotifySDKMode={this.state.spotifySDKMode} songs={this.state.songs} transitions={this.state.transitions} />
 			</div>
