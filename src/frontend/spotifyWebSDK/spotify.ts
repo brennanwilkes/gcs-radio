@@ -46,7 +46,7 @@ export const setTransitionCallback = (callback: () => void) => {
 	transitionCallback = callback;
 }
 
-var isReady = false;
+export var isReady = false;
 var hasMadeProgress = false;
 window.onSpotifyWebPlaybackSDKReady = (): void => {
 	getAccessToken().then(() => {
@@ -77,6 +77,7 @@ window.onSpotifyWebPlaybackSDKReady = (): void => {
 			deviceId = device_id;
 		});
 		spotifyPlayer.addListener('not_ready', ({ device_id }) => {
+			isReady = false;
 			console.log('Device ID has gone offline', device_id);
 		});
 

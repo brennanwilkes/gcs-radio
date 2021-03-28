@@ -7,7 +7,7 @@ import arrayShuffle from "array-shuffle";
 
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 
-import "./playlistView.css";
+import "./playlistView.scss";
 
 interface IProps {
 	playlist: Playlist,
