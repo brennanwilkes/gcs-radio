@@ -3,7 +3,6 @@
 // Imports
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import axios from "axios";
 
 import Builder from "../Builder/Builder";
 import "../scss/index.scss";
@@ -16,13 +15,6 @@ const playlist = getQueryStringValue("playlist");
 // Main render
 ReactDOM.render(<Builder
 	redirectCallback={(playlist: string) => {
-		if(playlist && playlist.length > 0){
-			window.open(`../app?playlist=${encodeURIComponent(playlist)}`);
-		}
-		axios.get("../auth").then(() => {
-			window.location.href = `../dashboard`;
-		}).catch(() => {
-			window.location.href = `../`;
-		});
+		window.location.href = `../app?playlist=${encodeURIComponent(playlist)}`;
 	}}
 	playlist={playlist} />, document.getElementsByTagName("MAIN")[0]);

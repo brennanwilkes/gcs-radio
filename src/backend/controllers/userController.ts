@@ -16,7 +16,8 @@ export async function login (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
 	User.findOne({
 		email,
-		type: "PASSWORD"
+		type: "PASSWORD",
+		verifiedEmail: true
 	}).then(user => {
 		if (user && user.password) {
 			bcrypt.compare(password, user.password).then(match => {
@@ -40,6 +41,8 @@ export async function login (req: Request, res: Response): Promise<void> {
 
 export async function signUp (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
+
+	let id: string | undefined;
 	User.findOne({
 		email,
 		type: "PASSWORD"
@@ -53,16 +56,18 @@ export async function signUp (req: Request, res: Response): Promise<void> {
 				return new User({
 					email,
 					password: encryptedPassword,
-					type: UserType.PASSWORD
+					type: UserType.PASSWORD,
+					verifiedEmail: false
 				}).save();
 			}).then(doc => {
+				id = String(doc._id);
 				return generateToken(doc._id);
-			}).then(token => {
+			}).then(_token => {
 				logger.logSignup(email, UserType.PASSWORD);
-				fireAndForgetMail(welcomeEmail(email));
+				fireAndForgetMail(welcomeEmail(email, id ?? "ERROR"));
 
-				res.cookie("jwt", token);
-				res.status(200).json({ token });
+				// res.cookie("jwt", token);
+				res.status(200).json({});
 			}).catch(internalErrorHandler(req, res));
 		}
 	}).catch(internalErrorHandler(req, res));
@@ -84,4 +89,18 @@ export function getUser (req: Request, res: Response): void {
 			}
 		}).catch(() => notFoundErrorHandler(req, res)("user", user.id));
 	}).catch(internalErrorHandler(req, res));
+}
+
+export function verifyEmail (req: Request, res: Response): void {
+	const id = String(req.params.id);
+	User.findById(id).then(userDoc => {
+		if (userDoc) {
+			userDoc.verifiedEmail = true;
+			userDoc.save().then(() => {
+				res.redirect("../login?verified=1");
+			}).catch(internalErrorHandler(req, res));
+		} else {
+			notFoundErrorHandler(req, res)("user", id);
+		}
+	}).catch(() => notFoundErrorHandler(req, res)("user", id));
 }

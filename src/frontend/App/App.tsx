@@ -1,5 +1,8 @@
 import * as React from "react";
-import axios, { AxiosResponse } from "axios";
+import axiosPure, { AxiosResponse } from "axios";
+import rateLimit from "axios-rate-limit";
+const axios = rateLimit(axiosPure.create(), { maxRequests: 5, perMilliseconds: 1000 });
+
 import {Song} from '../../types/song';
 import Player from "../Player/Player";
 import arrayShuffle from "array-shuffle";

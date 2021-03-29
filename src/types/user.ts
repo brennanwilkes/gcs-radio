@@ -16,7 +16,8 @@ export interface User{
 	type: UserType,
 	refreshToken?: string,
 	id?: string,
-	password?: string
+	password?: string,
+	verifiedEmail?: boolean
 }
 
 export interface UserWithId extends User{
@@ -32,7 +33,8 @@ export interface UserOptions{
 	type: UserType,
 	createdAt?: Date,
 	refreshToken?: string,
-	id?: string
+	id?: string,
+	verifiedEmail?: boolean
 }
 
 export class UserObj implements User {
@@ -41,12 +43,16 @@ export class UserObj implements User {
 	type: UserType;
 	id?: string;
 	refreshToken?: string;
+	verifiedEmail?: boolean
 	constructor (opts: UserOptions) {
 		if (opts.id) {
 			this.id = opts.id;
 		}
 		if (opts.refreshToken) {
 			this.refreshToken = opts.refreshToken;
+		}
+		if (opts.verifiedEmail) {
+			this.verifiedEmail = opts.verifiedEmail;
 		}
 		this.email = opts.email;
 		this.type = opts.type;
@@ -62,7 +68,8 @@ export class UserFromDoc extends UserObj implements UserWithId {
 			email: doc.email,
 			type: doc.type as UserType,
 			createdAt: doc.createdAt,
-			refreshToken: doc.refreshToken
+			refreshToken: doc.refreshToken,
+			verifiedEmail: doc.verifiedEmail
 		});
 		this.id = doc.id;
 	}
@@ -72,7 +79,8 @@ export class UserFromGoogleCredentials extends UserObj {
 	constructor (credentials: GoogleCredential) {
 		super({
 			email: credentials.email,
-			type: UserType.GOOGLE
+			type: UserType.GOOGLE,
+			verifiedEmail: true
 		});
 	}
 }
@@ -82,7 +90,8 @@ export class UserFromSpotifyCredentials extends UserObj {
 		super({
 			email: credentials.email,
 			type: UserType.SPOTIFY,
-			refreshToken
+			refreshToken,
+			verifiedEmail: true
 		});
 	}
 }
