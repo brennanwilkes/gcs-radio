@@ -21,10 +21,13 @@ export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: 
 				text = text.replace(/\$RSS_TITLE/g, rss.name);
 				text = text.replace(/\$RSS_HEADLINE/g, rss.headline);
 				text = text.replace(/\$RSS_DETAILS/g, rss.details);
+
+				text = text.toLowerCase();
 			}).catch(console.error).finally(() => {
 				resolve(new VoiceLineRenderObj(voice, gender, text, template.type));
 			});
 		} else {
+			text = text.toLowerCase();
 			resolve(new VoiceLineRenderObj(voice, gender, text, template.type));
 		}
 	});

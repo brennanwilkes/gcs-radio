@@ -93,7 +93,6 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		}
 		if(i + 1 < queue.length){
-			console.log(`Loading song ${i + 1}/${queue.length - 1}`);
 			queue[i + 1].load();
 		}
 	}
@@ -142,7 +141,6 @@ export default class App extends React.Component<IProps, IState> {
 
 	loadedTransitionCallback(i: number, transitions: Howl[]){
 		if(i + 1 < transitions.length){
-			console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
 			transitions[i + 1].load();
 		}
 	}
@@ -183,13 +181,13 @@ export default class App extends React.Component<IProps, IState> {
 		}
 		if(prevState.volume !== this.state.volume){
 			this.state.transitions.forEach(audio => {
-				audio.volume(this.state.volume / 100);
+				audio.volume(Math.min(1,(this.state.volume / 100) + 0.1));
 			});
 			this.state.queue.forEach(audio => {
-				audio.volume(this.state.volume / 100);
+				audio.volume(Math.max(0,(this.state.volume / 100) - 0.25));
 			});
 			if(this.props.spotifySDKMode){
-				spotifyVolume(this.state.volume / 100);
+				spotifyVolume(Math.max(0,(this.state.volume / 100) - 0.25));
 			}
 		}
 		if(prevState.ready !== this.state.ready && this.state.ready){
@@ -298,7 +296,6 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	setVolume(value: number){
-		console.dir(value);
 		this.setState({
 			volume: value
 		});

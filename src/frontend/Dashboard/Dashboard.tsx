@@ -72,7 +72,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 
 				<button
 					disabled={connected}
-					className={`col-12 col-md-5 mr-md-4 mb-2 mb-md-4 btn btn-lg btn-${connected ? "gcs-elevated" : "gcs-faded" }`}
+					className={`col-12 col-md-5 mr-md-4 mb-2 btn btn-lg btn-${connected ? "gcs-elevated" : "gcs-faded" }`}
 					onClick={() => {
 						window.location.href = "../auth/spotify";
 					}}
@@ -81,7 +81,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				}</button>
 
 				<button
-					className="col-12 col-md-5 ml-md-4 mb-2 mb-md-4 btn btn-lg btn-gcs-bright"
+					className="col-12 col-md-5 ml-md-4 mb-2 btn btn-lg btn-gcs-bright"
 					onClick={() => {
 						window.location.href = "../builder";
 					}}
@@ -89,14 +89,32 @@ export default class Dashboard extends React.Component<IProps, IState> {
 					Create New Playlist
 				</button>
 
-				<div className="col-12 mb-2 mb-lg-4 h6"><a
-					href="../login"
-					onClick={() => {
-					jscookie.remove("jwt");
-					jscookie.remove("sat");
-					jscookie.remove("srt");
-					window.location.href = "../login";
-				}}>Signout</a></div>
+				<div className="col-12 col-md-6 ml-md-3 mb-2 mb-lg-4 h6"><div className="w-100">
+					<a
+						className={`${connected ? "" : "anchorDisabled"}`}
+						onClick={() => {
+							axios.delete("../auth/spotify").then(() => {
+								successResponseHandler(this)(`Spotify Disconnected from ${this.state.user?.email}`);
+								jscookie.remove("sat");
+								jscookie.remove("srt");
+								axios.get("/auth").then(resp => {
+									this.setState({
+										user: resp.data.users[0]
+									});
+								});
+							}).catch(axiosErrorResponseHandler(this));
+					}}>Disconnect</a>
+					<h6 className="text-gcs-alpine mx-2 my-0">|</h6>
+					<a
+						href="../login"
+						onClick={() => {
+							jscookie.remove("jwt");
+							jscookie.remove("sat");
+							jscookie.remove("srt");
+							window.location.href = "../login";
+					}}>Signout</a>
+				</div></div>
+
 
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
