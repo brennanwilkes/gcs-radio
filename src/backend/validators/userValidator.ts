@@ -1,15 +1,21 @@
-import { body, header } from "express-validator";
+import { body, header, param } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../auth/getUser";
 import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 import authorizationErrorHandler from "../errorHandlers/authorizationErrorHandler";
+import { mongoIdValidator } from "./validatorUtil";
 
 const loginValidator = [
 	body("email").isEmail().withMessage("Please enter a valid email"),
 	body("password").isLength({
 		min: 6
 	}).withMessage("Password must be atleast six characters long"),
+	validationErrorHandler
+];
+
+const verifyEmailValidator = [
+	mongoIdValidator(param("id")),
 	validationErrorHandler
 ];
 
@@ -51,4 +57,4 @@ const tokenValidator = [
 	}
 ];
 
-export { signUpValidator, loginValidator, tokenValidator, cookieToHeader };
+export { signUpValidator, loginValidator, tokenValidator, cookieToHeader, verifyEmailValidator };

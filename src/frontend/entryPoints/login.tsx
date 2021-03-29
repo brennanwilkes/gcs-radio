@@ -13,4 +13,4 @@ const getQueryStringValue = (key: string): string  => decodeURIComponent(window.
 window.history.pushState({}, `${window.location.origin}${window.location.pathname}`);
 
 // Main render
-ReactDOM.render(<Login signup={getQueryStringValue("signup") ? true : false} />, document.getElementsByTagName("MAIN")[0]);
+ReactDOM.render(<Login signup={getQueryStringValue("signup") ? true : false} verified={getQueryStringValue("verified") ? true : false} />, document.getElementsByTagName("MAIN")[0]);

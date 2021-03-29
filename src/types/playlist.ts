@@ -3,7 +3,7 @@ import { Link } from "./link";
 
 import rateLimit from "axios-rate-limit";
 import axiosPure from "axios";
-const axios = rateLimit(axiosPure.create(), { maxRequests: 10, perMilliseconds: 500 });
+const axios = rateLimit(axiosPure.create(), { maxRequests: 5, perMilliseconds: 1000 });
 
 export interface PlaylistDetails{
 	user: string,

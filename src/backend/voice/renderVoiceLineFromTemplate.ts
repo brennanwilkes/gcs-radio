@@ -23,11 +23,13 @@ export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: 
 				text = text.replace(/\$RSS_DETAILS/g, rss.details);
 
 				text = text.toLowerCase();
+				text = text.replace(/ live/, " lIve");
 			}).catch(console.error).finally(() => {
 				resolve(new VoiceLineRenderObj(voice, gender, text, template.type));
 			});
 		} else {
 			text = text.toLowerCase();
+			text = text.replace(/ live/, " lIve");
 			resolve(new VoiceLineRenderObj(voice, gender, text, template.type));
 		}
 	});

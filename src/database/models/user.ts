@@ -26,6 +26,9 @@ const UserSchema = new Schema({
 	createdAt: {
 		type: Date,
 		default: Date.now()
+	},
+	verifiedEmail: {
+		type: Boolean
 	}
 });
 
@@ -35,7 +38,8 @@ export interface UserDoc extends mongoose.Document {
 	type: string,
 	password?: string,
 	createdAt: Date,
-	refreshToken?: string
+	refreshToken?: string,
+	verifiedEmail?: boolean
 }
 
 const User = mongoose.model<UserDoc>("user", UserSchema);
@@ -46,7 +50,8 @@ export function userDocFromUser (user: UserType, password?: string): UserDoc {
 		email: user.email,
 		type: user.type,
 		refreshToken: user.refreshToken,
-		password: password
+		password: password,
+		verifiedEmail: user.verifiedEmail
 	});
 }
 
