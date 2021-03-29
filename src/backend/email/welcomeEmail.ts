@@ -9,12 +9,14 @@ A project built entirely by me, <a href="https://bw.codexwilkes.com/portfolio/">
 ${
 	id
 		? `<br /><br />
-	To verify your email, please go to: <a href="https://${baseDomain}/auth/${id}">"https://${baseDomain}/auth/${id}</a>
+	To verify your email, please go to:<br /><a href="https://${baseDomain}/auth/${id}">https://${baseDomain}/auth/${id}</a>
 	`
 		: ""
 }
 <br /><br />
-Then to get started, go to the <a href="https://${baseDomain}/">dashboard</a>.
+${
+	id ? "Then t" : "T"
+}o get started, go to the <a href="https://${baseDomain}/">dashboard</a>.
 <br /><br />
 GCS Radio is entirely open-source, so if you want to deploy it yourself, contribute ideas, report bugs, or just check out the code, feel free to check out the <a href="https://gitlab.com/brennanwilkes/gcs-radio">GIT repo</a>.
 <br /><br />
