@@ -157,7 +157,7 @@ export default class Landing extends React.Component<IProps, IState> {
 							: `${this.props.signup ? "Sign Up" : "Login"}`
 						}</button>
 
-						<a href={this.props.signup ? "../login" : "../login?signup=1"} className="text-gcs-alpine">
+						<a href={this.props.signup ? "../login" : "../login?signup=1"} className="mb-5 text-gcs-alpine">
 							{!this.props.signup ? "No account? Sign up" : "Have an account? Login"}
 						</a>
 
