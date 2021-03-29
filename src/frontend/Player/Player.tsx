@@ -181,13 +181,13 @@ export default class App extends React.Component<IProps, IState> {
 		}
 		if(prevState.volume !== this.state.volume){
 			this.state.transitions.forEach(audio => {
-				audio.volume(this.state.volume / 100);
+				audio.volume(Math.min(1,(this.state.volume / 100) + 0.1));
 			});
 			this.state.queue.forEach(audio => {
-				audio.volume(this.state.volume / 100);
+				audio.volume(Math.max(0,(this.state.volume / 100) - 0.25));
 			});
 			if(this.props.spotifySDKMode){
-				spotifyVolume(this.state.volume / 100);
+				spotifyVolume(Math.max(0,(this.state.volume / 100) - 0.25));
 			}
 		}
 		if(prevState.ready !== this.state.ready && this.state.ready){
