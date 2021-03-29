@@ -93,7 +93,6 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		}
 		if(i + 1 < queue.length){
-			console.log(`Loading song ${i + 1}/${queue.length - 1}`);
 			queue[i + 1].load();
 		}
 	}
@@ -142,7 +141,6 @@ export default class App extends React.Component<IProps, IState> {
 
 	loadedTransitionCallback(i: number, transitions: Howl[]){
 		if(i + 1 < transitions.length){
-			console.log(`Loading transition ${i + 1}/${transitions.length - 1}`);
 			transitions[i + 1].load();
 		}
 	}
@@ -298,7 +296,6 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	setVolume(value: number){
-		console.dir(value);
 		this.setState({
 			volume: value
 		});

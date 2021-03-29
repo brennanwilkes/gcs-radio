@@ -82,4 +82,25 @@ const redirectFromSpotify = (req: Request, res:Response): void => {
 	}).catch(internalErrorHandler(req, res));
 };
 
-export { redirectToSpotify, redirectFromSpotify };
+const disconnectSpotify = (req: Request, res:Response): void => {
+	if (req.headers.token && typeof req.headers.token === "string") {
+		getUserIdFromToken(req.headers.token).then(existingUserId => {
+			UserModel.findOne({
+				_id: existingUserId
+			}).then(existingUser => {
+				if (existingUser) {
+					existingUser.refreshToken = undefined;
+					existingUser.save().then(() => {
+						res.status(200).end();
+					}).catch(internalErrorHandler(req, res));
+				} else {
+					internalErrorHandler(req, res)("Invaid user ID");
+				}
+			}).catch(internalErrorHandler(req, res));
+		}).catch(internalErrorHandler(req, res));
+	} else {
+		internalErrorHandler(req, res)("Invaid token");
+	}
+};
+
+export { redirectToSpotify, redirectFromSpotify, disconnectSpotify };
