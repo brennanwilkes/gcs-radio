@@ -4,7 +4,6 @@ import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../auth/getUser";
 import validationErrorHandler from "../errorHandlers/validationErrorHandler";
 import authorizationErrorHandler from "../errorHandlers/authorizationErrorHandler";
-import { mongoIdValidator } from "./validatorUtil";
 
 const loginValidator = [
 	body("email").isEmail().withMessage("Please enter a valid email"),
@@ -15,7 +14,12 @@ const loginValidator = [
 ];
 
 const verifyEmailValidator = [
-	mongoIdValidator(param("id")),
+	param("id")
+		.exists()
+		.trim()
+		.not().isEmpty()
+		.isString()
+		.withMessage("Invalid Verification token"),
 	validationErrorHandler
 ];
 

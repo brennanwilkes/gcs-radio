@@ -42,7 +42,6 @@ export async function login (req: Request, res: Response): Promise<void> {
 export async function signUp (req: Request, res: Response): Promise<void> {
 	const { email, password } = req.body;
 
-	let id: string | undefined;
 	User.findOne({
 		email,
 		type: "PASSWORD"
@@ -60,13 +59,10 @@ export async function signUp (req: Request, res: Response): Promise<void> {
 					verifiedEmail: false
 				}).save();
 			}).then(doc => {
-				id = String(doc._id);
-				return generateToken(doc._id);
-			}).then(_token => {
+				return generateToken(doc._id, 86400);
+			}).then(token => {
 				logger.logSignup(email, UserType.PASSWORD);
-				fireAndForgetMail(welcomeEmail(email, id ?? "ERROR"));
-
-				// res.cookie("jwt", token);
+				fireAndForgetMail(welcomeEmail(email, token));
 				res.status(200).json({});
 			}).catch(internalErrorHandler(req, res));
 		}
@@ -93,14 +89,16 @@ export function getUser (req: Request, res: Response): void {
 
 export function verifyEmail (req: Request, res: Response): void {
 	const id = String(req.params.id);
-	User.findById(id).then(userDoc => {
-		if (userDoc) {
-			userDoc.verifiedEmail = true;
-			userDoc.save().then(() => {
-				res.redirect("../login?verified=1");
-			}).catch(internalErrorHandler(req, res));
-		} else {
-			notFoundErrorHandler(req, res)("user", id);
-		}
-	}).catch(() => notFoundErrorHandler(req, res)("user", id));
+	getUserFromToken(id as string).then((user) => {
+		User.findById(user.id).then(userDoc => {
+			if (userDoc) {
+				userDoc.verifiedEmail = true;
+				userDoc.save().then(() => {
+					res.redirect("../login?verified=1");
+				}).catch(internalErrorHandler(req, res));
+			} else {
+				notFoundErrorHandler(req, res)("user", user.id);
+			}
+		}).catch(() => notFoundErrorHandler(req, res)("user", user.id));
+	}).catch(internalErrorHandler(req, res));
 }
