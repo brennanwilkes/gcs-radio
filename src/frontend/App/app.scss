@@ -23,6 +23,10 @@ body{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	pointer-events: all !important;
+}
+.App > h1:hover {
+	cursor: pointer;
 }
 
 @media only screen and (max-width: 1024px) {

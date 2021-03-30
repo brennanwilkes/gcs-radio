@@ -1,6 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 import "./browser.css";
+import arrayshuffle from "array-shuffle";
 
 import Navbar from "../Navbar/Navbar";
 import { Playlist } from "../../types/playlist";
@@ -24,7 +25,7 @@ export default class Browser extends React.Component<IProps, IState> {
 	componentDidMount(){
 		axios.get("/api/v1/playlists?isNamed=1&noRender=1").then(resp => {
 			this.setState({
-				playlists: resp.data.playlists.filter((p:Playlist) => !!p.details)
+				playlists: arrayshuffle(resp.data.playlists.filter((p:Playlist) => !!p.details))
 			});
 		}).catch(console.error);
 	}

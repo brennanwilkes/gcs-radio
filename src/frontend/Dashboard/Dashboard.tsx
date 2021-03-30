@@ -3,17 +3,19 @@ import axios from "axios";
 import {Playlist} from "../../types/playlist";
 import {User} from "../../types/user";
 import jscookie from "js-cookie";
+import arrayshuffle from "array-shuffle";
 import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
 import NavBar from "../Navbar/Navbar";
 import HrWrapper from "../HrWrapper/HrWrapper";
-import PlaylistView from "../PlaylistView/PlaylistView";
+import PlaylistView, {FakePlaylist} from "../PlaylistView/PlaylistView";
 
 import "./dashboard.scss";
 
 interface IProps {}
 interface IState extends HasResponse{
 	playlists: Playlist[],
-	user?: User
+	user?: User,
+	fromSpotify: Playlist[]
 }
 
 export default class Dashboard extends React.Component<IProps, IState> {
@@ -23,14 +25,15 @@ export default class Dashboard extends React.Component<IProps, IState> {
 		this.deletePlaylist = this.deletePlaylist.bind(this);
 
 		this.state = {
-			playlists: []
+			playlists: [],
+			fromSpotify: []
 		}
 	}
 
 	deletePlaylist(playlist: Playlist, i: number){
 		axios.delete(`../api/v1/playlists/${playlist.id}`).then(() => {
 			this.setState({
-				playlists: this.state.playlists.filter((_p:Playlist, ii: number) => i !== ii)
+				playlists: arrayshuffle(this.state.playlists.filter((_p:Playlist, ii: number) => i !== ii))
 			});
 			successResponseHandler(this)(`Deleted ${playlist.details?.name ?? playlist.id}`);
 		}).catch(axiosErrorResponseHandler);
@@ -48,12 +51,19 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				this.setState({
 					playlists: resp2.data.playlists.filter((playlist: Playlist) => playlist.details?.user === resp.data.users[0].id )
 				});
-
-			}).catch(axiosErrorResponseHandler).finally(() => {
+			}).catch(axiosErrorResponseHandler(this)).finally(() => {
 				if(this.state.playlists.length < 1){
 					$("body").css("cursor", "inherit");
 				}
 			});
+
+			axios.get("/api/v1/playlists/spotify").then(response => {
+				this.setState({
+					fromSpotify: response.data.playlists
+				});
+				console.dir(response.data);
+			}).catch(console.error);
+
 		}).catch(() => {
 			jscookie.remove("jwt");
 			jscookie.remove("sat");
@@ -132,6 +142,33 @@ export default class Dashboard extends React.Component<IProps, IState> {
 						deleteCallback={this.deletePlaylist}
 					/>)
 				}
+				{
+					this.state.user?.refreshToken && this.state.fromSpotify.length > 0 ? <>
+						<HrWrapper style={{
+							borderBottomColor: "var(--gcs-faded)"
+						}} children={
+							<h2 className="text-gcs-faded" >From Spotify</h2>
+						} />
+						{
+							this.state.fromSpotify.map((playlist, i) => <PlaylistView
+								first={i===0}
+								last={i===this.state.fromSpotify.length - 1}
+								key={`SPOTIFY-${i}`}
+								fakePlaylist={{
+									name: playlist.details?.name ?? "UNKNOWN",
+									description: playlist.details?.description ?? "UNKNOWN",
+									features: playlist.songs.slice(0,3),
+									playCallback: () => {
+										console.dir("CLICK");
+										console.dir(playlist.details?.name);
+									}
+								} as FakePlaylist}
+								keyExtension={-1 * i}
+							/>)
+						}
+					</> : <></>
+				}
+
 				</div>
 			</div>
 			<Response response={this.state} />

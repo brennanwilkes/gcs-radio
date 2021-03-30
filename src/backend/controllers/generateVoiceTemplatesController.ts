@@ -50,6 +50,8 @@ const voiceLines = [
 	new VoiceLineTemplateAutofill([], "You've heard this song before, probably on the radio. $NEXT_TITLE coming your way!", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "Here at GCS Radio we get exclusive access to the best music on this planet, and so many more! Here's the hottest hits of the next planet over, $NEXT_TITLE", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "The song itself is called $NEXT_TITLE. But wait. Wait, wait, wait. Did you know that this particular song, has been playing on my podcast and in my podcast automation workflow for the past month or so, and I have no idea who the artist is? GCS Radio. $NEXT_TITLE.", VoiceLineType.normal),
+	new VoiceLineTemplateAutofill([], "You're listening to $PLAYLIST_TITLE, $PLAYLIST_DESCRIPTION on GCS Radio!", VoiceLineType.normal),
+	new VoiceLineTemplateAutofill([], "$PLAYLIST_TITLE. Hit Music. $PLAYLIST_DESCRIPTION. GCS Radio!", VoiceLineType.normal),
 
 	// PARALLEL
 	new VoiceLineTemplateAutofill([], "Next up on GCS Radio, $NEXT_TITLE by $NEXT_ARTIST", VoiceLineType.parallel),
@@ -91,6 +93,12 @@ const voiceLines = [
 	new VoiceLineTemplateAutofill([], "That was $PREV_TITLE. Here's $NEXT_TITLE.", VoiceLineType.parallel),
 	new VoiceLineTemplateAutofill([], "From $PREV_ARTIST we move to the sweet tunes of $NEXT_ARTIST.", VoiceLineType.parallel),
 	new VoiceLineTemplateAutofill([], "These tunes brought to you by GCS Radio. Coming up next, $NEXT_TITLE", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "You're listening to $PLAYLIST_TITLE on GCS Radio", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "Hit $PLAYLIST_TITLE tunes on GCS Radio", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "$PLAYLIST_TITLE all day on GCS Radio", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "$PLAYLIST_TITLE. All. Day. Long.", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "All the best $PLAYLIST_TITLE on GCS Radio", VoiceLineType.parallel),
+	new VoiceLineTemplateAutofill([], "More hits from $PLAYLIST_TITLE coming up next", VoiceLineType.parallel),
 
 	// RSS
 	new VoiceLineTemplateAutofill([], "Some news from $RSS_TITLE. $RSS_HEADLINE. Now back to music.", VoiceLineType.rss),
