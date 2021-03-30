@@ -42,7 +42,7 @@ test("All variables are rendered", async () => {
 	expect(render.gender).toBe(VoiceGender.DEFAULT);
 	expect(render.voice).toBe(Voice.DEFAULT);
 
-	const render2 = await renderVoiceLineFromTemplate(template, song1, song2, Voice.enAuB, VoiceGender.FEMALE);
+	const render2 = await renderVoiceLineFromTemplate(template, song1, song2, undefined, Voice.enAuB, VoiceGender.FEMALE);
 	expect(render2.gender).toBe(VoiceGender.FEMALE);
 	expect(render2.voice).toBe(Voice.enAuB);
 });

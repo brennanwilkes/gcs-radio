@@ -182,6 +182,10 @@ const getSpotifyPlaylists = (req: Request, res: Response): void => {
 	getUserFromToken(req.header("token") as string).then(user => {
 		axios.post(`${entry}/auth/spotify`, {
 			refresh_token: user.refreshToken
+		}, {
+			headers: {
+				token: req.header("token")
+			}
 		}).then(async resp => {
 			if (resp.data?.access_token) {
 				const accessToken = resp.data.access_token;
