@@ -1,8 +1,9 @@
+import { Playlist } from "../../types/playlist";
 import { Song } from "../../types/song";
 import { Voice, VoiceGender, VoiceLineRender, VoiceLineRenderObj, VoiceLineTemplate } from "../../types/voiceLine";
 import { getRandomRSS } from "./rss";
 
-export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: Song, next: Song, voice: Voice = Voice.DEFAULT, gender: VoiceGender = VoiceGender.DEFAULT): Promise<VoiceLineRender> {
+export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: Song, next: Song, playlist?: Playlist, voice: Voice = Voice.DEFAULT, gender: VoiceGender = VoiceGender.DEFAULT): Promise<VoiceLineRender> {
 	return new Promise<VoiceLineRender>((resolve, reject) => {
 		let text = template.text;
 
@@ -15,6 +16,9 @@ export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: 
 		text = text.replace(/\$NEXT_ARTIST/g, next.artist);
 		text = text.replace(/\$NEXT_ALBUM/g, next.album);
 		text = text.replace(/\$NEXT_RELEASE_DATE/g, next.releaseDate);
+
+		text = text.replace(/\$PLAYLIST_TITLE/g, playlist?.details?.name ?? "UNKNOWN");
+		text = text.replace(/\$PLAYLIST_DESCRIPTION/g, playlist?.details?.description ?? "UNKNOWN");
 
 		if (text.includes("$RSS")) {
 			getRandomRSS().then(rss => {

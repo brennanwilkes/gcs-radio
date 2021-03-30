@@ -45,13 +45,16 @@ export default class App extends React.Component<IProps, IState> {
 
 			const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
 				if(i === 0){
-					return axios.post(`/api/voiceLines?firstId=${song.id}${voice ? `&voice=${voice}` : "" }`).catch(err => {
+					return axios.post(`/api/voiceLines?firstId=${song.id}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
+						successResponseHandler(this)(`Requested ${i}/${songs.length} of transitions`);
+						return resp;
+					}).catch(err => {
 						axiosErrorResponseHandler(this)(err);
 						return err;
 					});
 				}
 				else{
-					return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}${voice ? `&voice=${voice}` : "" }`).then(resp => {
+					return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
 						if(i % Math.floor(songs.length/5) === 0){
 							successResponseHandler(this)(`Requested ${i}/${songs.length} of transitions`);
 						}
@@ -86,13 +89,16 @@ export default class App extends React.Component<IProps, IState> {
 	updateVoice(voice: string, label: string){
 		const transitions:Promise<AxiosResponse>[] = this.state.songs.map((song, i) => {
 			if(i === 0){
-				return axios.post(`/api/voiceLines?firstId=${song.id}&voice=${voice}`).catch(err => {
+				return axios.post(`/api/voiceLines?firstId=${song.id}&voice=${voice}&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
+					successResponseHandler(this)(`Requested ${i}/${transitions.length} of transitions`);
+					return resp;
+				}).catch(err => {
 					axiosErrorResponseHandler(this)(err);
 					return err;
 				});
 			}
 			else{
-				return axios.post(`/api/voiceLines?prevId=${this.state.songs[i-1].id}&nextId=${song.id}&voice=${voice}`).then(resp => {
+				return axios.post(`/api/voiceLines?prevId=${this.state.songs[i-1].id}&nextId=${song.id}&voice=${voice}&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
 					if(i % Math.floor(transitions.length/5) === 0){
 						successResponseHandler(this)(`Requested ${i}/${transitions.length} of transitions`);
 					}
@@ -118,7 +124,7 @@ export default class App extends React.Component<IProps, IState> {
 	render(){
 		return <>
 			<div className="App bg-gcs-base">
-				<h1>GCS Radio</h1>
+				<h1 onClick={() => window.location.href = ".."}>GCS Radio</h1>
 				<Player
 					updateVoice={this.updateVoice}
 					spotifySDKMode={this.state.spotifySDKMode}

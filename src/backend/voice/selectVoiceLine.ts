@@ -1,10 +1,11 @@
 import { Song } from "../../types/song";
+import { Playlist } from "../../types/playlist";
 import { validateVoiceLine } from "../voice/validateVoiceLine";
 import { VoiceLineTemplate, VoiceLineTemplateObjFromQuery } from "../../types/voiceLine";
 import VoiceLineTemplateModel, { VoiceLineTemplateDoc } from "../../database/models/voiceLineTemplate";
 import { CONFIG, print } from "../util/util";
 
-export default async function (prev: Song, next: Song, spotifyOverride = false): Promise<VoiceLineTemplate> {
+export default async function (prev: Song, next: Song, playlist?: Playlist, spotifyOverride = false): Promise<VoiceLineTemplate> {
 	let template: VoiceLineTemplate | undefined;
 	let templateQuery: VoiceLineTemplateDoc[] | void;
 
@@ -20,7 +21,7 @@ export default async function (prev: Song, next: Song, spotifyOverride = false):
 			template = new VoiceLineTemplateObjFromQuery(templateQuery[0]);
 		}
 	}
-	while (!template || !validateVoiceLine(template, prev, next));
+	while (!template || !validateVoiceLine(template, prev, next, playlist));
 
 	print("Found valid template");
 	return template;

@@ -8,7 +8,9 @@ import { mongoose } from "../../database/connection";
 import { PlayAudioLink, SelfLink, PatchLink } from "../../types/link";
 import { PlaylistApiObj } from "../../types/playlist";
 import accessDeniedErrorHandler from "../errorHandlers/accessDeniedErrorHandler";
-import { getUserIdFromToken } from "../auth/getUser";
+import { getUserFromToken, getUserIdFromToken } from "../auth/getUser";
+import axios from "axios";
+import getGeneratedPlaylists from "../spotify/getGeneratedPlaylists";
 
 const sendPlaylistResponse = (playlistResults: PlaylistDoc[], req: Request, res:Response, userId?: string) => {
 	const noRender = !!req.query.noRender;
@@ -174,4 +176,25 @@ const deletePlaylist = (req: Request, res: Response): void => {
 	});
 };
 
-export { getPlaylists, getPlaylist, postPlaylist, patchPlaylist, deletePlaylist };
+const getSpotifyPlaylists = (req: Request, res: Response): void => {
+	const entry = req.protocol + "://" + req.get("host");
+
+	getUserFromToken(req.header("token") as string).then(user => {
+		axios.post(`${entry}/auth/spotify`, {
+			refresh_token: user.refreshToken
+		}).then(async resp => {
+			if (resp.data?.access_token) {
+				const accessToken = resp.data.access_token;
+				getGeneratedPlaylists(accessToken).then(spotifyResults => {
+					res.send({
+						playlists: []
+					});
+				});
+			} else {
+				internalErrorHandler(req, res)("Failed to retrieve access token");
+			}
+		}).catch(internalErrorHandler(req, res));
+	}).catch(internalErrorHandler(req, res));
+};
+
+export { getPlaylists, getPlaylist, postPlaylist, patchPlaylist, deletePlaylist, getSpotifyPlaylists };

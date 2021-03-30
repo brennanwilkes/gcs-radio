@@ -12,6 +12,22 @@ import VoiceLineRenderModel, { VoiceLineRenderModelFromVoiceLineRender } from ".
 import selectVoiceLine, { selectFirstVoiceLine } from "../voice/selectVoiceLine";
 import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import { PlayAudioLink, SelfLink } from "../../types/link";
+import { Playlist as PlaylistType } from "../../types/playlist";
+import Playlist, { PlaylistObjFromQuery } from "../../database/models/playlist";
+
+const getPlaylistFromId = async (id: string | undefined, errorHandler: (err: string) => void) => {
+	let playlist: PlaylistType | undefined;
+	if (id) {
+		const res = await Playlist.findOne({ _id: new mongoose.Types.ObjectId(id) }).catch(errorHandler);
+		if (res) {
+			const obj = await PlaylistObjFromQuery(res).catch(errorHandler);
+			if (obj) {
+				playlist = obj;
+			}
+		}
+	}
+	return playlist;
+};
 
 const uploadVoiceLine = (render: VoiceLineRender, req: Request, res: Response, errorHandler:((err: string) => void), message: string) => {
 	print(`Rendered voice line "${render.text}"`);
@@ -82,7 +98,7 @@ const postFirstVoiceLine = async (req: Request, res: Response): Promise<void> =>
 		print(`Handling request for first VoiceLine ${song.title} with ${voice}`);
 
 		selectFirstVoiceLine().then(template => {
-			return renderVoiceLineFromTemplate(template, song, song, voice);
+			return renderVoiceLineFromTemplate(template, song, song, undefined, voice);
 		}).then(render => {
 			uploadVoiceLine(render, req, res, errorHandler, `first VoiceLine ${song.title} with ${voice}`);
 		}).catch(errorHandler);
@@ -99,6 +115,9 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 	const voice = (req.query.voice ?? Voice.DEFAULT) as Voice;
 	const gender = (req.query.gender ?? VoiceGender.DEFAULT) as VoiceGender;
 
+	const playlistId = req.query.playlist ? String(req.query.playlist) : undefined;
+	const playlist = await getPlaylistFromId(playlistId, errorHandler);
+
 	const prevRes = await Song.findOne({ _id: new mongoose.Types.ObjectId(prevId) }).catch(errorHandler);
 	const nextRes = await Song.findOne({ _id: new mongoose.Types.ObjectId(nextId) }).catch(errorHandler);
 	if (nextRes && prevRes) {
@@ -106,8 +125,8 @@ const postRegularVoiceLine = async (req: Request, res: Response): Promise<void> 
 		const nextSong = new SongObjFromQuery(nextRes);
 		print(`Handling request for VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 
-		selectVoiceLine(prevSong, nextSong, hasSpotify).then(template => {
-			return renderVoiceLineFromTemplate(template, prevSong, nextSong, voice, gender);
+		selectVoiceLine(prevSong, nextSong, playlist, hasSpotify).then(template => {
+			return renderVoiceLineFromTemplate(template, prevSong, nextSong, playlist, voice, gender);
 		}).then(render => {
 			uploadVoiceLine(render, req, res, errorHandler, `VoiceLine ${prevSong.title} -> ${nextSong.title} with ${voice}`);
 		}).catch(errorHandler);

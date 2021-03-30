@@ -12,7 +12,7 @@ export enum ConditionType{
 
 export enum ConditionAppliesTo{
 	PREVIOUS = 0,
-	NEXT = 1
+	NEXT = 1,
 }
 
 export enum VoiceLineType{
@@ -46,7 +46,8 @@ export enum VoiceVariable{
 	title = "title",
 	artist = "artist",
 	albumn = "album",
-	releaseDate = "releaseDate"
+	releaseDate = "releaseDate",
+	playlist = "playlist"
 }
 
 /* eslint-enable no-unused-vars */
@@ -55,7 +56,7 @@ export interface VoiceCondition{
 	appliesTo: ConditionAppliesTo,
 	variable: VoiceVariable,
 	condition: ConditionType,
-	operand?: VoiceVariable | string
+	operand?: Exclude<VoiceVariable, VoiceVariable.playlist> | string
 }
 
 export class VoiceConditionObj implements VoiceCondition {
@@ -110,6 +111,9 @@ export class VoiceLineTemplateAutofill extends VoiceLineTemplateObj {
 			if (text.includes(`$${prefix}_ALBUM`)) auto.push(new VoiceConditionObj(i, VoiceVariable.albumn, ConditionType.EXISTS));
 			if (text.includes(`$${prefix}_RELEASE_DATE`)) auto.push(new VoiceConditionObj(i, VoiceVariable.releaseDate, ConditionType.EXISTS));
 		});
+
+		if (text.includes(`$PLAYLIST_TITLE`) || text.includes(`$PLAYLIST_DESCRIPTION`)) auto.push(new VoiceConditionObj(0, VoiceVariable.playlist, ConditionType.EXISTS));
+
 		super(auto, text, type);
 	}
 }
