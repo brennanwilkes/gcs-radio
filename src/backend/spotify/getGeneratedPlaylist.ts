@@ -15,7 +15,7 @@ export default async (userAccessToken: string, time_range: "long_term" | "medium
 				time_range
 			}).then(artistData => {
 				return spotifyApi.getRecommendations({
-					seed_artists: artistData.body.items.map(a => a.id).slice(0, 3),
+					seed_artists: artistData.body.items.map(a => a.id).slice(0, 5),
 					limit: 30
 				});
 			}).then(async recommendationData => {

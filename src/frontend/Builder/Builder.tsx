@@ -64,10 +64,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				if(res?.data?.playlists && res.data.playlists.length > 0 && res.data.playlists[0].songs && res.data.playlists[0].songs.length > 0){
 					this.setPlayList(res.data.playlists[0]);
 				}
-			}).catch(err => {
-				console.dir(err);
-				axiosErrorResponseHandler(this)(err);
-			});
+			}).catch(axiosErrorResponseHandler(this));
 		}
 	}
 
