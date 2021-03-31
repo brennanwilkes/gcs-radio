@@ -42,6 +42,7 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 
 	componentDidUpdate(_prevProps: IProps, prevState: IState){
 		if(prevState !== this.state){
+			console.dir(this.state.private);
 			this.props.detailCallback(this.state);
 		}
 	}

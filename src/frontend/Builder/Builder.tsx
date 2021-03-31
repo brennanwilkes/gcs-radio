@@ -171,6 +171,7 @@ export default class Builder extends React.Component<IProps, IState> {
 				{ withCredentials: true }
 			).then(resp => {
 				if(resp.data.playlists && resp.data.playlists.length > 0){
+					console.dir(resp.data.playlists);
 					this.setPlayList(resp.data.playlists[0], printMessage);
 				}
 				this.setState({
