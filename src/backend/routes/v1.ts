@@ -13,7 +13,7 @@ import searchValidator from "../validators/searchValidator";
 import getSpotifyPlaylistValidator from "../validators/getSpotifyPlaylistValidator";
 
 import { postVoiceLine, getVoiceLine } from "../controllers/voiceLineController";
-import { getPlaylist, getPlaylists, postPlaylist, patchPlaylist, deletePlaylist, getSpotifyPlaylists } from "../controllers/playlistController";
+import { getPlaylist, getPlaylists, postPlaylist, patchPlaylist, deletePlaylist, getForMePlaylists } from "../controllers/playlistController";
 import getPlaylistValidator from "../validators/getPlaylistValidator";
 import patchPlaylistValidator from "../validators/patchPlaylistValidator";
 import postPlaylistValidator from "../validators/postPlaylistValidator";
@@ -30,7 +30,7 @@ apiV1Router.get("/songs/:id", getSongValidator, getSong);
 apiV1Router.post("/songs", postSongValidator, postSong);
 
 apiV1Router.get("/playlists", getPlaylists);
-apiV1Router.get("/playlists/spotify", [...tokenValidator, ...getSpotifyPlaylistValidator], getSpotifyPlaylists);
+apiV1Router.get("/playlists/made-for-me", [...tokenValidator, ...getSpotifyPlaylistValidator], getForMePlaylists);
 apiV1Router.get("/playlists/:id", getPlaylistValidator, getPlaylist);
 apiV1Router.patch("/playlists/:id", [...tokenValidator, ...patchPlaylistValidator], patchPlaylist);
 apiV1Router.delete("/playlists/:id", [...tokenValidator, ...getPlaylistValidator], deletePlaylist);
