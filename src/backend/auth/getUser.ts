@@ -2,9 +2,11 @@ import { User, UserFromDoc, UserWithId, UserWithPassword } from "../../types/use
 import UserModel from "../../database/models/user";
 import { resolveSignedPayload } from "./signPayload";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 function isUser (unknown: any): unknown is {user:User} {
 	return typeof unknown !== "string" && "user" in unknown && "id" in unknown.user;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export function getUserIdFromToken (token: string): Promise<string> {
 	return new Promise<string>((resolve, reject) => {

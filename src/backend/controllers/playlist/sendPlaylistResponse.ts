@@ -5,7 +5,7 @@ import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { PlayAudioLink, SelfLink, PatchLink } from "../../../types/link";
 import { PlaylistApiObj } from "../../../types/playlist";
 
-export default (playlistResults: PlaylistDoc[], req: Request, res:Response, userId?: string) => {
+export default (playlistResults: PlaylistDoc[], req: Request, res:Response, userId?: string): void => {
 	const noRender = !!req.query.noRender;
 
 	const playlists = playlistResults.map(async result => {

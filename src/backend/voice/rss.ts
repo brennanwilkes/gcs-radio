@@ -22,6 +22,7 @@ export const feeds: Feed[] = [
 	{ name: "Vancouver Traffic", url: "https://www.drivebc.ca/api/events/region/mainland?format=rss" }
 ];
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const getFeed = (feed: Feed): Promise<RSSResponse[]> => {
 	return new Promise<RSSResponse[]>((resolve, reject) => {
 		axios.get(feed.url).then(res => {
@@ -41,6 +42,7 @@ export const getFeed = (feed: Feed): Promise<RSSResponse[]> => {
 		}).catch(reject);
 	});
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export const getRandomRSS = (): Promise<RSSResponse> => {
 	return new Promise((resolve, reject) => {

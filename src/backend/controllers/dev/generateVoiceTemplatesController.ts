@@ -115,7 +115,7 @@ const voiceLines = [
 	], "$NEXT_SONG by $NEXT_ARTIST is so good we have to play it again!", VoiceLineType.parallel)
 ];
 
-export default (server: RadioServer) => (req: Request, res: Response) => {
+export default (server: RadioServer) => (req: Request, res: Response): void => {
 	const processing = voiceLines.map(line => VoiceLineTemplateModelFromVoiceLineTemplate(line).save());
 	Promise.all(processing).then(data => {
 		res.status(200).send({

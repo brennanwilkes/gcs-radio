@@ -4,7 +4,7 @@ import { Voice, VoiceGender, VoiceLineRender, VoiceLineRenderObj, VoiceLineTempl
 import { getRandomRSS } from "./rss";
 
 export function renderVoiceLineFromTemplate (template: VoiceLineTemplate, prev: Song, next: Song, playlist?: Playlist, voice: Voice = Voice.DEFAULT, gender: VoiceGender = VoiceGender.DEFAULT): Promise<VoiceLineRender> {
-	return new Promise<VoiceLineRender>((resolve, reject) => {
+	return new Promise<VoiceLineRender>((resolve) => {
 		let text = template.text;
 
 		text = text.replace(/\$PREV_TITLE/g, prev.title);

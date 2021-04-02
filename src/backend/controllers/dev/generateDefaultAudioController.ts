@@ -6,7 +6,7 @@ import streamToMongo from "../../../database/streamToMongo";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import RadioServer from "../../server";
 
-export default (server: RadioServer) => (req: Request, res: Response) => {
+export default (server: RadioServer) => (req: Request, res: Response): void => {
 	const message = "Please authenticate with spotify to hear this song";
 	const render = new VoiceLineRenderObj(Voice.DEFAULT, VoiceGender.DEFAULT, message, VoiceLineType.normal);
 	recordVoiceLine(render).then(output => {

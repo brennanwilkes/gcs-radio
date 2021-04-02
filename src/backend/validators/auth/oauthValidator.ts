@@ -14,7 +14,7 @@ export const existingTokenRedirect = [
 ];
 
 export const isValidToken: CustomValidator = (token: string | undefined): Promise<boolean> => {
-	return new Promise<boolean>((resolve, reject) => {
+	return new Promise<boolean>((resolve) => {
 		if (token) {
 			resolveSignedPayload(token).then(() => {
 				resolve(true);
@@ -27,9 +27,10 @@ export const isValidToken: CustomValidator = (token: string | undefined): Promis
 	});
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) =>
 	(token: string | undefined, meta: Meta): Promise<boolean> => {
-		return new Promise<boolean>((resolve, reject) => {
+		return new Promise<boolean>((resolve) => {
 			const id = meta.req.body[bodyParam];
 			if (token) {
 				resolveSignedPayload(token).then(payload => {
@@ -52,6 +53,7 @@ export const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: s
 			}
 		});
 	};
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export const oauthValidator = [
 	query("error").not().exists(),

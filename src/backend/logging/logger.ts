@@ -9,6 +9,8 @@ export enum EventType{
 }
 /* eslint-enable no-unused-vars */
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class Logger {
 	tracker: ua.Visitor;
 	trackingId: string;
@@ -17,7 +19,7 @@ export class Logger {
 		this.tracker = ua(trackingId);
 	}
 
-	errorHandler (error: any, response: any, body: any) {
+	errorHandler (error: any, response: any, body: any): void {
 		if (error) {
 			console.error(error);
 			console.dir(response);
@@ -42,5 +44,7 @@ export class Logger {
 		this.tracker.pageview(path).send(this.errorHandler);
 	}
 }
+/* eslint-enable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default new Logger(CONFIG.googleTrackingId);

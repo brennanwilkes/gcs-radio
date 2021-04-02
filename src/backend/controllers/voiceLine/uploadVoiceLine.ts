@@ -6,7 +6,7 @@ import streamToMongo from "../../../database/streamToMongo";
 import VoiceLineRenderModel, { VoiceLineRenderModelFromVoiceLineRender } from "../../../database/models/voiceLineRender";
 import { PlayAudioLink, SelfLink } from "../../../types/link";
 
-export default (render: VoiceLineRender, req: Request, res: Response, errorHandler:((err: string) => void), message: string) => {
+export default (render: VoiceLineRender, req: Request, res: Response, errorHandler:((err: string) => void), message: string): void => {
 	print(`Rendered voice line "${render.text}"`);
 
 	VoiceLineRenderModel.findOne({
