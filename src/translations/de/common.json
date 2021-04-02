@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify verbunden",
+		"create": "Mache eine neue Abspielliste",
+		"disconnect": "Trennen",
+		"disconnected": "Verbinden Sie Spotify",
+		"generate": "Generieren Sie Wiedergabelisten",
+		"made": "Für dich gemacht",
+		"playlists": "Ihre Wiedergabelisten",
+		"signout": "Ausloggen"
+	},
+	"detailAdder": {
+		"description": "Beschreibung",
+		"details": "Einzelheiten",
+		"featured": "Empfohlen",
+		"name": "Name",
+		"private": "Privatgelände",
+		"public": "Öffentlichkeit",
+		"usage1": "Fügen Sie Ihrer Wiedergabeliste einen optionalen Titel hinzu, um ihn in Ihrem Profil zu speichern!",
+		"usage2": "Zusätzlich können Sie eine optionale Beschreibung, Datenschutzeinstellungen und bis zu drei vorgestellte Songs hinzufügen!"
+	},
+	"landing": {
+		"browse": "Durchsuchen Sie Wiedergabelisten",
+		"build": "Playlist erstellen",
+		"login": "Anmeldung",
+		"signup": "Anmelden"
+	},
+	"login": {
+		"confirm": "Passwort bestätigen",
+		"email": "Email",
+		"emailLogin": "Mit E-Mail einloggen",
+		"emailSignup": "Registrieren Sie sich mit Ihrer E-Mail Adresse",
+		"google": "GOOGLE",
+		"login": "Anmeldung",
+		"loginMessage": "Ein Konto haben? Anmeldung",
+		"password": "Passwort",
+		"signup": "Anmelden",
+		"signupMessage": "Kein Account? Anmelden",
+		"socialLogin": "Login mit Socials",
+		"spotify": "Spotify",
+		"thankyou": "Danke, dass Du mitmachst",
+		"verify": "Bitte überprüfen Sie Ihre E-Mail"
+	},
+	"nav": {
+		"browse": "Durchsuche",
+		"build": "Bauen",
+		"home": "Zuhause",
+		"login": "Anmeldung",
+		"profile": "Instrumententafel"
+	},
+	"playlist": {
+		"delete": "Löschen",
+		"edit": "Bearbeiten",
+		"play": "abspielen"
+	},
+	"selector": {
+		"details": "Details hinzufügen",
+		"edit": "Details bearbeiten",
+		"loading": "Wird geladen",
+		"play": "Playlist abspielen",
+		"save": "Playlist speichern",
+		"search": "Suchtext",
+		"searchHeader": "Suche",
+		"selected": "Ausgewählte Songs",
+		"spotify": "Laden Sie die Spotify-URL",
+		"youtube": "Youtube URL laden (in Kürze verfügbar)"
+	}
+}

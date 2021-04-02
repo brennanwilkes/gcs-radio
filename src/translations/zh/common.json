@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify已连接",
+		"create": "建立新的播放清单",
+		"disconnect": "断开",
+		"disconnected": "连接Spotify",
+		"generate": "产生播放清单",
+		"made": "为你而造",
+		"playlists": "您的播放清单",
+		"signout": "登出"
+	},
+	"detailAdder": {
+		"description": "描述",
+		"details": "细节",
+		"featured": "精选",
+		"name": "名称",
+		"private": "私人的",
+		"public": "上市",
+		"usage1": "在您的播放列表中添加一个可选标题，以将其保存到您的个人资料中！",
+		"usage2": "此外，您可以添加可选的说明，隐私设置以及最多三首精选歌曲！"
+	},
+	"landing": {
+		"browse": "浏览播放列表",
+		"build": "建立播放清单",
+		"login": "登录",
+		"signup": "注册"
+	},
+	"login": {
+		"confirm": "确认密码",
+		"email": "电子邮件",
+		"emailLogin": "用电子邮件登录",
+		"emailSignup": "用电子邮件注册",
+		"google": "谷歌",
+		"login": "登录",
+		"loginMessage": "有一个账户？登录",
+		"password": "密码",
+		"signup": "注册",
+		"signupMessage": "没有账户？注册",
+		"socialLogin": "用社交登录",
+		"spotify": "Spotify",
+		"thankyou": "谢谢你的加入",
+		"verify": "请验证您的电子邮件"
+	},
+	"nav": {
+		"browse": "浏览",
+		"build": "建立",
+		"home": "家",
+		"login": "登录",
+		"profile": "仪表板"
+	},
+	"playlist": {
+		"delete": "删除",
+		"edit": "编辑",
+		"play": "玩"
+	},
+	"selector": {
+		"details": "添加详细信息",
+		"edit": "编辑详细资料",
+		"loading": "装载",
+		"play": "播放播放列表",
+		"save": "保存播放列表",
+		"search": "搜索文字",
+		"searchHeader": "搜索",
+		"selected": "选曲",
+		"spotify": "加载Spotify URL",
+		"youtube": "加载YouTube URL（即将推出）"
+	}
+}

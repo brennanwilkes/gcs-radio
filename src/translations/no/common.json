@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify Connected",
+		"create": "Opprett ny spilleliste",
+		"disconnect": "Koble fra",
+		"disconnected": "Koble Spotify",
+		"generate": "Generer spillelister",
+		"made": "Lagd for deg",
+		"playlists": "Dine spillelister",
+		"signout": "Logg ut"
+	},
+	"detailAdder": {
+		"description": "Beskrivelse",
+		"details": "detaljer",
+		"featured": "Utvalgt",
+		"name": "Navn",
+		"private": "Privat",
+		"public": "Offentlig",
+		"usage1": "Legg til en valgfri tittel i spillelisten din for å lagre den i profilen din!",
+		"usage2": "I tillegg kan du legge til en valgfri beskrivelse, personverninnstilling og opptil tre utvalgte sanger!"
+	},
+	"landing": {
+		"browse": "Bla gjennom spillelister",
+		"build": "Bygg spilleliste",
+		"login": "Logg inn",
+		"signup": "Melde deg på"
+	},
+	"login": {
+		"confirm": "Bekreft passord",
+		"email": "E-post",
+		"emailLogin": "Logg inn med e-post",
+		"emailSignup": "Registrering med e-post",
+		"google": "GOOGLE",
+		"login": "Logg inn",
+		"loginMessage": "Har en konto? Logg Inn",
+		"password": "Passord",
+		"signup": "Melde deg på",
+		"signupMessage": "Ingen konto? Melde deg på",
+		"socialLogin": "Logg inn med sosiale medier",
+		"spotify": "Spotify",
+		"thankyou": "Takk for at du ble med",
+		"verify": "Bekreft e-postadressen din"
+	},
+	"nav": {
+		"browse": "Blå",
+		"build": "bygge",
+		"home": "Hjem",
+		"login": "Logg inn",
+		"profile": "dashbord"
+	},
+	"playlist": {
+		"delete": "Slett",
+		"edit": "Redigere",
+		"play": "spille"
+	},
+	"selector": {
+		"details": "Legg til detaljer",
+		"edit": "Rediger detaljer",
+		"loading": "Laster",
+		"play": "Spill av spilleliste",
+		"save": "Lagre spilleliste",
+		"search": "Søketekst",
+		"searchHeader": "Søke",
+		"selected": "Valgte sanger",
+		"spotify": "Last inn Spotify URL",
+		"youtube": "Last inn Youtube URL (Kommer snart)"
+	}
+}

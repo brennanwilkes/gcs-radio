@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify connecté",
+		"create": "Créer une nouvelle liste de lecture",
+		"disconnect": "déconnecter",
+		"disconnected": "Connectez Spotify",
+		"generate": "Générer des listes de lecture",
+		"made": "Fait pour toi",
+		"playlists": "Vos listes de lecture",
+		"signout": "Déconnexion"
+	},
+	"detailAdder": {
+		"description": "La description",
+		"details": "Détails",
+		"featured": "En vedette",
+		"name": "Prénom",
+		"private": "privé",
+		"public": "Publique",
+		"usage1": "Ajoutez un titre facultatif à votre liste de lecture pour l'enregistrer dans votre profil!",
+		"usage2": "De plus, vous pouvez ajouter une description facultative, un paramètre de confidentialité et jusqu'à trois chansons en vedette!"
+	},
+	"landing": {
+		"browse": "Parcourir les playlists",
+		"build": "Créer une playlist",
+		"login": "S'identifier",
+		"signup": "S'inscrire"
+	},
+	"login": {
+		"confirm": "Confirmez le mot de passe",
+		"email": "Email",
+		"emailLogin": "Connexion avec Email",
+		"emailSignup": "S'enregistrer avec l'adresse e-mail",
+		"google": "Google",
+		"login": "S'identifier",
+		"loginMessage": "Avoir un compte? Connexion",
+		"password": "Mot de passe",
+		"signup": "S'inscrire",
+		"signupMessage": "Pas de compte? S'inscrire",
+		"socialLogin": "Connectez-vous avec les réseaux sociaux",
+		"spotify": "Spotify",
+		"thankyou": "Merci de nous rejoindre",
+		"verify": "Veuillez vérifier votre email"
+	},
+	"nav": {
+		"browse": "Feuilleter",
+		"build": "Construire",
+		"home": "Accueil",
+		"login": "S'identifier",
+		"profile": "Tableau de bord"
+	},
+	"playlist": {
+		"delete": "Effacer",
+		"edit": "modifier",
+		"play": "JOUER"
+	},
+	"selector": {
+		"details": "Ajouter des détails",
+		"edit": "Modifier les détails",
+		"loading": "Chargement",
+		"play": "Écouter la liste de lecture",
+		"save": "Enregistrer la liste de lecture",
+		"search": "Texte de recherche",
+		"searchHeader": "Chercher",
+		"selected": "Chansons sélectionnées",
+		"spotify": "Charger l'URL Spotify",
+		"youtube": "Charger l'URL Youtube (à venir)"
+	}
+}

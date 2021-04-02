@@ -1,6 +1,6 @@
 import * as React from "react";
 import axios from "axios";
-import {Song} from '../../types/song';
+import {Song} from "../../types/song";
 
 import "./selector.css";
 
@@ -8,9 +8,13 @@ import FloatingLabel from "react-bootstrap-floating-label";
 import SongRow, {getSongKey} from "../SongRow/SongRow";
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
 import HrWrapper from "../HrWrapper/HrWrapper";
-import Response, {HasResponse, axiosErrorResponseHandler} from "../Response/Response";
+import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler} from "../Response/Response";
 import {FaAngleDoubleDown} from "react-icons/fa";
+import {useTranslation} from "react-i18next";
+import {i18nInitialized, i18next} from "../Translator";
 
+const Search = () => <>{useTranslation("common").t("selector.search")}</>
+const Selected = () => <>{useTranslation("common").t("selector.selected")}</>
 
 interface IProps {
 	songChangeCallback: ((songs: Song[]) => void),
@@ -21,6 +25,9 @@ interface IState extends HasResponse{
 	queriedSongs: Song[],
 	songs: Song[],
 	cogs: boolean[],
+	searchTranslation: string,
+	spotifyTranslation: string,
+	youtubeTranslation: string
 }
 
 export default class Selector extends React.Component<IProps, IState> {
@@ -32,8 +39,23 @@ export default class Selector extends React.Component<IProps, IState> {
 		this.state = {
 			queriedSongs: [],
 			songs: this.props.initialSongs ?? [],
-			cogs: [false, false, false]
+			cogs: [false, false, false],
+			searchTranslation: "",
+			spotifyTranslation: "",
+			youtubeTranslation: ""
 		}
+
+		i18nInitialized.then((t) => {
+			i18next.loadNamespaces(["translations","common","en","common_en"], () => {
+				this.setState({
+					searchTranslation: t("common:selector.searchHeader"),
+					spotifyTranslation: t("common:selector.spotify"),
+					youtubeTranslation: t("common:selector.youtube"),
+				});
+
+			});
+		}).catch(errorResponseHandler(this));
+
 	}
 
 	componentDidUpdate(prevProps: IProps, prevState: IState){
@@ -90,7 +112,7 @@ export default class Selector extends React.Component<IProps, IState> {
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<h2 className="text-gcs-faded" >Search</h2>
+					<h2 className="text-gcs-faded" ><Search /></h2>
 				} />
 				<FloatingLabel
 					inputClassName="bg-gcs-elevated text-gcs-alpine"
@@ -110,7 +132,7 @@ export default class Selector extends React.Component<IProps, IState> {
 							axiosErrorResponseHandler(this)(err);
 						});
 					}}
-					label="Search Text"
+					label={this.state.searchTranslation}
 					onChangeDelay={500}
 					loadingCog={this.state.cogs[0]}
 					loadingCogSpinning={this.state.cogs[0]} />
@@ -121,7 +143,7 @@ export default class Selector extends React.Component<IProps, IState> {
 					inputStyle={{
 						border: "none"
 					}}
-					label="Load Spotify URL"
+					label={this.state.spotifyTranslation}
 					onChange={(event) => {
 						this.setCog(1,true);
 						this.handleSearch(event, "spotifyId").then(songs => {
@@ -143,7 +165,7 @@ export default class Selector extends React.Component<IProps, IState> {
 					inputStyle={{
 						border: "none"
 					}}
-					label="Load YouTube URL (Coming soon)"
+					label={this.state.youtubeTranslation}
 					loadingCog={this.state.cogs[2]}
 					loadingCogSpinning={this.state.cogs[2]} />
 
@@ -153,7 +175,7 @@ export default class Selector extends React.Component<IProps, IState> {
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<span style={{display:"inline-flex"}}><h2 className="text-gcs-faded">Selected Songs</h2><button className="ml-2 btn btn-outline-gcs-loud" onClick={() => {
+					<span style={{display:"inline-flex"}}><h2 className="text-gcs-faded"><Selected /></h2><button className="ml-2 btn btn-outline-gcs-loud" onClick={() => {
 						$("html, body").animate({ scrollTop: $(document).height() }, "slow");
 					}}><FaAngleDoubleDown /></button></span>
 				} />

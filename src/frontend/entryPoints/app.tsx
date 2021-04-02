@@ -7,6 +7,7 @@ import * as ReactDOM from "react-dom";
 import ResponsiveContainer from "../ResponsiveContainer/ResponsiveContainer";
 import App from "../App/App";
 import "../scss/index.scss";
+import Translator from "../Translator";
 
 //https://stackoverflow.com/questions/9870512/how-to-obtain-the-query-string-from-the-current-url-with-javascript
 const getQueryStringValue = (key: string): string  => decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -14,4 +15,6 @@ const getQueryStringValue = (key: string): string  => decodeURIComponent(window.
 const playlist = getQueryStringValue("playlist") ?? "UNKNOWN";
 
 // Main render
-ReactDOM.render(<ResponsiveContainer children={<App playlist={playlist} />} />, document.getElementsByTagName("MAIN")[0]);
+ReactDOM.render(<Translator children={<ResponsiveContainer
+    children={<App playlist={playlist} />} />
+} />, document.getElementsByTagName("MAIN")[0]);

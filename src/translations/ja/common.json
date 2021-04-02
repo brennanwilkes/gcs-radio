@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify Connected",
+		"create": "新しいプレイリストを作成する",
+		"disconnect": "切断する",
+		"disconnected": "Spotifyを接続する",
+		"generate": "プレイリストを生成する",
+		"made": "あなたのためにつくった",
+		"playlists": "あなたのプレイリスト",
+		"signout": "サインアウト"
+	},
+	"detailAdder": {
+		"description": "説明",
+		"details": "詳細",
+		"featured": "注目の",
+		"name": "名",
+		"private": "非公開",
+		"public": "パブリック",
+		"usage1": "オプションのタイトルをプレイリストに追加して、プロフィールに保存してください。",
+		"usage2": "さらに、オプションの説明、プライバシー設定、および最大3つの注目曲を追加できます。"
+	},
+	"landing": {
+		"browse": "プレイリストを閲覧する",
+		"build": "プレイリストを作成する",
+		"login": "ログイン",
+		"signup": "サインアップ"
+	},
+	"login": {
+		"confirm": "パスワードを認証する",
+		"email": "Eメール",
+		"emailLogin": "メールでログイン",
+		"emailSignup": "メールでサインアップ",
+		"google": "グーグル",
+		"login": "ログイン",
+		"loginMessage": "アカウントを持っています？ログイン",
+		"password": "パスワード",
+		"signup": "サインアップ",
+		"signupMessage": "アカウントがありませんか？サインアップ",
+		"socialLogin": "Socialsでログイン",
+		"spotify": "Spotify",
+		"thankyou": "参加していただきありがとうございます",
+		"verify": "メールアドレスを確認してください"
+	},
+	"nav": {
+		"browse": "ブラウズ",
+		"build": "ビルド",
+		"home": "ホーム",
+		"login": "ログイン",
+		"profile": "ダッシュボード"
+	},
+	"playlist": {
+		"delete": "削除",
+		"edit": "編集",
+		"play": "遊びます"
+	},
+	"selector": {
+		"details": "詳細を追加",
+		"edit": "詳細を編集する",
+		"loading": "読み込み中",
+		"play": "プレイリストを再生する",
+		"save": "プレイリストを保存",
+		"search": "テキストを検索",
+		"searchHeader": "サーチ",
+		"selected": "厳選された曲",
+		"spotify": "SpotifyのURLを読み込む",
+		"youtube": "YoutubeのURLをロードする（近日公開）"
+	}
+}

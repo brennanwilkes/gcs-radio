@@ -12,6 +12,13 @@ import NavBar from "../Navbar/Navbar";
 import {UserWithId} from "../../types/user";
 import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler, successResponseHandler} from "../Response/Response";
 
+import {useTranslation} from "react-i18next";
+
+const Play = () => <>{useTranslation("common").t("selector.play")}</>
+const Details = () => <>{useTranslation("common").t("selector.details")}</>
+const Edit = () => <>{useTranslation("common").t("selector.edit")}</>
+const Save = () => <>{useTranslation("common").t("selector.save")}</>
+const Loading = () => <>{useTranslation("common").t("selector.loading")}</>
 
 interface IProps {
 	redirectCallback: ((playlist: string) => void),
@@ -254,8 +261,8 @@ export default class Builder extends React.Component<IProps, IState> {
 							}}
 							className={`container mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "bright"}`}>{
 							this.state.rendering
-							? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
-							: (this.state.addDetails ? "SAVE PLAYLIST" : `${this.state.patchMode ? "EDIT" : "ADD"} DETAILS`)
+							? <><Loading />{`${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`}</>
+							: (this.state.addDetails ? <Save /> : (this.state.patchMode ? <Edit /> : <Details />))
 						}</button>
 						</> : <></>
 					}
@@ -279,8 +286,8 @@ export default class Builder extends React.Component<IProps, IState> {
 						}}
 						className={`container mt-2 mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>{
 							this.state.rendering && !this.state.user
-							? `Loading ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`
-							: "PLAY PLAYLIST"
+							? <><Loading />{` ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`}</>
+							: <Play />
 					}</button>
 				</div>
 			</div>
