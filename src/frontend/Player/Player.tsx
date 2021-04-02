@@ -19,7 +19,8 @@ interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
 	spotifySDKMode: boolean,
-	updateVoice: (voice: string, label: string) => void
+	updateVoice: (voice: string, label: string) => void,
+	requestMoreSongs: (limit: number) => void,
 }
 interface IState extends HasResponse{
 	paused: boolean,
@@ -110,11 +111,11 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		});
 		if(queue.length){
-			queue[0].load();
+			queue[this.state.index || 0].load();
 		}
 
 		this.setState({
-			queue : queue,
+			queue : [...this.state.queue, ...queue.slice(this.state.queue.length)],
 		});
 	}
 
@@ -158,11 +159,12 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		});
 		if(transitions.length){
-			transitions[0].load();
+			transitions[this.state.index || 0].load();
 		}
 
+
 		this.setState({
-			transitions : transitions,
+			transitions : [...this.state.transitions, ...transitions.slice(this.state.transitions.length)],
 		});
 	}
 
@@ -214,6 +216,10 @@ export default class App extends React.Component<IProps, IState> {
 		}
 		else{
 			this.state.queue[index].play();
+		}
+
+		if(index + 3 > this.props.songs.length){
+			this.props.requestMoreSongs(5);
 		}
 	}
 
