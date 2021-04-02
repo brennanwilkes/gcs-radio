@@ -4,12 +4,14 @@ import { Model, Document } from "mongoose";
 import axios from "axios";
 import { CONFIG } from "../util/util";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const mongoVerifyExistance = (id: string, Collection: Model<Document<any>>): Promise<boolean> => {
 	return Collection.exists({ _id: new mongoose.Types.ObjectId(id) });
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export const mongoVerifyBucketExistance = async (id: string, bucketName = "audio"): Promise<boolean> => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
 			bucketName: bucketName
 		});
@@ -20,7 +22,7 @@ export const mongoVerifyBucketExistance = async (id: string, bucketName = "audio
 };
 
 export const verifyUrlExistance = async (url: string): Promise<boolean> => {
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		axios.get(url).then(res => {
 			resolve(res.status === 200);
 		}).catch(() => resolve(false));

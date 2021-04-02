@@ -4,7 +4,7 @@
 import { Router } from "express";
 import apiV1Router from "./v1";
 import authRouter from "./auth";
-import { cookieToHeader } from "../validators/userValidator";
+import { cookieToHeader } from "../validators/auth/userValidator";
 import apiTracker from "../logging/apiTracker";
 
 const mainRouter = Router();

@@ -11,6 +11,17 @@ import PlaylistView from "../PlaylistView/PlaylistView";
 
 import "./dashboard.scss";
 
+import {useTranslation} from "react-i18next";
+
+const Connected = () => <>{useTranslation("common").t("dashboard.connected")}</>
+const Disconnected = () => <>{useTranslation("common").t("dashboard.disconnected")}</>
+const Disconnect = () => <>{useTranslation("common").t("dashboard.disconnect")}</>
+const Signout = () => <>{useTranslation("common").t("dashboard.signout")}</>
+const Create = () => <>{useTranslation("common").t("dashboard.create")}</>
+const Playlists = () => <>{useTranslation("common").t("dashboard.playlists")}</>
+const Made = () => <>{useTranslation("common").t("dashboard.made")}</>
+const Generate = () => <>{useTranslation("common").t("dashboard.generate")}</>
+
 interface IProps {}
 interface IState extends HasResponse{
 	playlists: Playlist[],
@@ -79,7 +90,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 						window.location.href = "../auth/spotify";
 					}}
 				>{
-					connected ? "Spotify Connected" : "Connect To Spotify"
+					connected ? <Connected /> : <Disconnected />
 				}</button>
 
 				<button
@@ -88,7 +99,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 						window.location.href = "../builder";
 					}}
 				>
-					Create New Playlist
+					<Create />
 				</button>
 
 				<div className="col-12 col-md-6 ml-md-3 mb-2 mb-lg-4 h6"><div className="w-100">
@@ -105,7 +116,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 									});
 								});
 							}).catch(axiosErrorResponseHandler(this));
-					}}>Disconnect</a>
+					}}><Disconnect /></a>
 					<h6 className="text-gcs-alpine mx-2 my-0">|</h6>
 					<a
 						href="../login"
@@ -114,14 +125,14 @@ export default class Dashboard extends React.Component<IProps, IState> {
 							jscookie.remove("sat");
 							jscookie.remove("srt");
 							window.location.href = "../login";
-					}}>Signout</a>
+					}}><Signout /></a>
 				</div></div>
 
 
 				<HrWrapper style={{
 					borderBottomColor: "var(--gcs-faded)"
 				}} children={
-					<h2 className="text-gcs-faded" >Your Playlists</h2>
+					<h2 className="text-gcs-faded" ><Playlists /></h2>
 				} />
 				<div>
 				{
@@ -139,7 +150,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 					<HrWrapper style={{
 						borderBottomColor: "var(--gcs-faded)"
 					}} children={
-						<h2 className="text-gcs-faded" >Made for you</h2>
+						<h2 className="text-gcs-faded" ><Made /></h2>
 					} />
 					{
 
@@ -153,7 +164,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 							}).catch(axiosErrorResponseHandler(this)).finally(() => {
 								$("body").css("cursor","inherit");
 							});
-						}}>Generate Playlists</button>
+						}}><Generate /></button>
 					</> : <>
 					{
 						this.state.fromSpotify.map((playlist, i) => <PlaylistView

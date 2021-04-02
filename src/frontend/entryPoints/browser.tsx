@@ -3,10 +3,11 @@
 // Imports
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-
 import "../scss/index.scss";
-
 import Browser from "../Browser/Browser";
 
+import Translator from "../Translator";
+
+
 // Main render
-ReactDOM.render(<Browser />,document.getElementsByTagName("MAIN")[0]);
+ReactDOM.render(<Translator children={<Browser />} />,document.getElementsByTagName("MAIN")[0]);

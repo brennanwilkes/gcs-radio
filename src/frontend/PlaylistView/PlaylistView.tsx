@@ -4,10 +4,16 @@ import axios from "axios";
 import {Playlist} from '../../types/playlist';
 import {Song} from '../../types/song';
 import arrayShuffle from "array-shuffle";
-
 import {WrappedSongPolaroid} from "../SongPolaroid/SongPolaroid";
-
 import "./playlistView.scss";
+
+import {useTranslation} from "react-i18next";
+
+
+
+const Play = () => <>{useTranslation("common").t("playlist.play")}</>
+const Edit = () => <>{useTranslation("common").t("playlist.edit")}</>
+const Delete = () => <>{useTranslation("common").t("playlist.delete")}</>
 
 interface IProps {
 	playlist: Playlist,
@@ -67,15 +73,15 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 						<a
 							className="btn btn-lg btn-gcs-faded px-4"
 							href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>
-							Play
+							<Play />
 						</a>
-						<a className="btn btn-lg btn-gcs-bright px-4" href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}>Edit</a>
+						<a className="btn btn-lg btn-gcs-bright px-4" href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}><Edit /></a>
 						{
 							this.props.deleteCallback ? <button className="btn btn-lg btn-gcs-loud px-4" onClick={() => {
 								if(this.props.deleteCallback){
 									this.props.deleteCallback(playlist, this.props.keyExtension);
 								}
-							}}>Delete</button> : <></>
+							}}><Delete /></button> : <></>
 						}
 
 					</div>

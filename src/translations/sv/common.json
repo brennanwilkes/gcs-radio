@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify Connected",
+		"create": "Skapa ny spellista",
+		"disconnect": "Koppla från",
+		"disconnected": "Anslut Spotify",
+		"generate": "Skapa spellistor",
+		"made": "Gjord för dig",
+		"playlists": "Dina spellistor",
+		"signout": "Logga ut"
+	},
+	"detailAdder": {
+		"description": "Beskrivning",
+		"details": "Detaljer",
+		"featured": "Dagens",
+		"name": "Namn",
+		"private": "Privat",
+		"public": "offentlig",
+		"usage1": "Lägg till en valfri titel i din spellista för att spara den i din profil!",
+		"usage2": "Dessutom kan du lägga till en valfri beskrivning, sekretessinställning och upp till tre utvalda låtar!"
+	},
+	"landing": {
+		"browse": "Bläddra i spellistor",
+		"build": "Bygg spellista",
+		"login": "Logga in",
+		"signup": "Bli Medlem"
+	},
+	"login": {
+		"confirm": "Bekräfta lösenord",
+		"email": "E-post",
+		"emailLogin": "Logga in med e-post",
+		"emailSignup": "Registrering med e-post",
+		"google": "GOOGLE",
+		"login": "Logga in",
+		"loginMessage": "Har ett konto? Logga in",
+		"password": "Lösenord",
+		"signup": "Bli Medlem",
+		"signupMessage": "Inget konto? Bli Medlem",
+		"socialLogin": "Logga in med sociala medier",
+		"spotify": "Spotify",
+		"thankyou": "Tack för att du gick med",
+		"verify": "Bekräfta din e-postadress"
+	},
+	"nav": {
+		"browse": "Bläddra",
+		"build": "bygga",
+		"home": "Hem",
+		"login": "Logga in",
+		"profile": "instrumentbräda"
+	},
+	"playlist": {
+		"delete": "Radera",
+		"edit": "Redigera",
+		"play": "Spela"
+	},
+	"selector": {
+		"details": "Lägg till information",
+		"edit": "Redigera detaljer",
+		"loading": "Läser in",
+		"play": "Spela spellista",
+		"save": "Spara spellista",
+		"search": "Söktext",
+		"searchHeader": "Sök",
+		"selected": "Valda låtar",
+		"spotify": "Ladda Spotify URL",
+		"youtube": "Ladda Youtube URL (Kommer snart)"
+	}
+}

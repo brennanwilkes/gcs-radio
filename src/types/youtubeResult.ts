@@ -12,6 +12,7 @@ export interface YoutubeResult{
 	formats: ytdl.videoFormat[]
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class YoutubeResultFromApi implements YoutubeResult {
 	title: string;
 	artist: string;
@@ -34,6 +35,7 @@ export class YoutubeResultFromApi implements YoutubeResult {
 		this.formats = results.formats ?? [];
 	}
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export class DummyYoutubeResult implements YoutubeResult {
 	title: string;

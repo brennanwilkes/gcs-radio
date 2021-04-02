@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify connesso",
+		"create": "Crea nuova playlist",
+		"disconnect": "Disconnect",
+		"disconnected": "Collega Spotify",
+		"generate": "Genera playlist",
+		"made": "Fatto per te",
+		"playlists": "Le tue playlist",
+		"signout": "disconnessione"
+	},
+	"detailAdder": {
+		"description": "Descrizione",
+		"details": "Dettagli",
+		"featured": "In primo piano",
+		"name": "Nome",
+		"private": "privato",
+		"public": "Pubblico",
+		"usage1": "Aggiungi un titolo opzionale alla tua playlist per salvarlo sul tuo profilo!",
+		"usage2": "Inoltre, puoi aggiungere una descrizione facoltativa, un'impostazione della privacy e fino a tre brani in primo piano!"
+	},
+	"landing": {
+		"browse": "Sfoglia le playlist",
+		"build": "Crea playlist",
+		"login": "Accesso",
+		"signup": "Iscriviti"
+	},
+	"login": {
+		"confirm": "Conferma password",
+		"email": "E-mail",
+		"emailLogin": "Accedi con e-mail",
+		"emailSignup": "Iscriviti con e-mail",
+		"google": "GOOGLE",
+		"login": "Accesso",
+		"loginMessage": "Avere un conto? Login",
+		"password": "Parola d'ordine",
+		"signup": "Iscriviti",
+		"signupMessage": "Nessun account? Iscriviti",
+		"socialLogin": "Accedi con i social",
+		"spotify": "Spotify",
+		"thankyou": "Grazie per esserti unito",
+		"verify": "Si prega di verificare la tua e-mail"
+	},
+	"nav": {
+		"browse": "Navigare",
+		"build": "Costruire",
+		"home": "Casa",
+		"login": "Accesso",
+		"profile": "Cruscotto"
+	},
+	"playlist": {
+		"delete": "Elimina",
+		"edit": "Modificare",
+		"play": "Giocare"
+	},
+	"selector": {
+		"details": "Aggiungi dettagli",
+		"edit": "Modifica i dettagli",
+		"loading": "Caricamento in corso",
+		"play": "Riproduci playlist",
+		"save": "Salva playlist",
+		"search": "Cerca testo",
+		"searchHeader": "ricerca",
+		"selected": "Brani selezionati",
+		"spotify": "Carica l'URL di Spotify",
+		"youtube": "Carica l'URL di Youtube (disponibile a breve)"
+	}
+}

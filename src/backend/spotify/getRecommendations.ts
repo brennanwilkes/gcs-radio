@@ -2,8 +2,11 @@ import { SpotifyResult } from "../../types/spotifyResult";
 import { generateRefreshedCredential } from "./connection";
 
 /* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import SpotifyApi from "spotify-web-api-node";
 /* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
 import { getSpotifyTrack } from "./searchSpotify";
 
 /* eslint-disable camelcase */

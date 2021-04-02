@@ -2,25 +2,34 @@
 
 // Imports
 import { Router } from "express";
-import { getSong, getSongs, postSong, getNextSong } from "../controllers/songController";
-import { getAudio } from "../controllers/audioController";
-import { search } from "../controllers/queryController";
-import audioValidator from "../validators/audioValidator";
-import postSongValidator from "../validators/postSongValidator";
-import postVoiceLineValidator from "../validators/postVoiceLineValidator";
-import getSongValidator from "../validators/getSongValidator";
-import searchValidator from "../validators/searchValidator";
-import getSpotifyPlaylistValidator from "../validators/getSpotifyPlaylistValidator";
 
-import { postVoiceLine, getVoiceLine } from "../controllers/voiceLineController";
-import { getPlaylist, getPlaylists, postPlaylist, patchPlaylist, deletePlaylist, getForMePlaylists } from "../controllers/playlistController";
-import getPlaylistValidator from "../validators/getPlaylistValidator";
-import patchPlaylistValidator from "../validators/patchPlaylistValidator";
-import postPlaylistValidator from "../validators/postPlaylistValidator";
-import { tokenValidator } from "../validators/userValidator";
 import { limitValidator } from "../validators/validatorUtil";
 import validationErrorHandler from "../errorHandlers/validationErrorHandler";
-import getNextSongValidator from "../validators/getNextSongValidator";
+import getSongs from "../controllers/song/getSongs";
+import getNextSongValidator from "../validators/song/getNextSongValidator";
+import getSongValidator from "../validators/song/getSongValidator";
+import getNextSongs from "../controllers/song/getNextSongs";
+import getSong from "../controllers/song/getSong";
+import postSongValidator from "../validators/song/postSongValidator";
+import postSong from "../controllers/song/postSong";
+import getPlaylists from "../controllers/playlist/getPlaylists";
+import { tokenValidator } from "../validators/auth/userValidator";
+import getSpotifyPlaylistValidator from "../validators/playlist/getSpotifyPlaylistValidator";
+import getForMePlaylists from "../controllers/playlist/getForMePlaylists";
+import getPlaylist from "../controllers/playlist/getPlaylist";
+import getPlaylistValidator from "../validators/playlist/getPlaylistValidator";
+import patchPlaylistValidator from "../validators/playlist/patchPlaylistValidator";
+import patchPlaylist from "../controllers/playlist/patchPlaylist";
+import deletePlaylist from "../controllers/playlist/deletePlaylist";
+import postPlaylist from "../controllers/playlist/postPlaylist";
+import postPlaylistValidator from "../validators/playlist/postPlaylistValidator";
+import postVoiceLineValidator from "../validators/voiceLine/postVoiceLineValidator";
+import getVoiceLine from "../controllers/voiceLine/getVoiceLine";
+import { getAudio } from "../controllers/audio/audioController";
+import audioValidator from "../validators/audio/audioValidator";
+import postVoiceLine from "../controllers/voiceLine/postVoiceLine";
+import { search } from "../controllers/song/queryController";
+import searchValidator from "../validators/song/searchValidator";
 
 const apiV1Router = Router();
 
@@ -29,7 +38,7 @@ apiV1Router.get("/", (_req, res) => res.send({
 }));
 
 apiV1Router.get("/songs", [limitValidator(30), validationErrorHandler], getSongs);
-apiV1Router.post("/songs/next", getNextSongValidator, getNextSong);
+apiV1Router.post("/songs/next", getNextSongValidator, getNextSongs);
 apiV1Router.get("/songs/:id", getSongValidator, getSong);
 apiV1Router.post("/songs", postSongValidator, postSong);
 

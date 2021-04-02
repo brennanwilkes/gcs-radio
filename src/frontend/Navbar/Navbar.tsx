@@ -5,6 +5,14 @@ import jscookie from "js-cookie";
 import "./navbar.scss";
 import {UserWithId} from "../../types/user";
 
+import {useTranslation} from "react-i18next";
+
+const Home = () => <>{useTranslation("common").t("nav.home")}</>
+const Build = () => <>{useTranslation("common").t("nav.build")}</>
+const Browse = () => <>{useTranslation("common").t("nav.browse")}</>
+const Login = () => <>{useTranslation("common").t("nav.login")}</>
+const Profile = () => <>{useTranslation("common").t("nav.profile")}</>
+
 
 interface IProps {}
 interface IState {
@@ -13,7 +21,7 @@ interface IState {
 }
 
 interface NavItemData{
-	text: string,
+	text: JSX.Element,
 	href: string,
 	className?: string
 }
@@ -21,7 +29,7 @@ interface NavItemData{
 class NavItem extends React.Component<{item:NavItemData}, IState>{
 	render(){
 		return <>
-			<a className="text-gcs-faded col-3 col-md-2 h3 my-0 p-2" href={this.props.item.href}>
+			<a className="text-gcs-faded mx-2 h3 my-0 p-2" href={this.props.item.href}>
 				<h3 className={`${this.props.item.className ?? ""} rh3 m-0`}>{this.props.item.text}</h3>
 			</a>
 		</>;
@@ -53,10 +61,10 @@ export default class Navbar extends React.Component<IProps, IState> {
 	render(){
 
 		const navigation: NavItemData[] = [
-			{text: "Home", href: ".."},
-			{text: "Build", href: "../builder"},
-			{text: "Browse", href: "../browser"},
-			{text: (this.state.user ? "Profile" : "Login"), href: `../${this.state.loggedIn ? "dashboard" : "login"}`},
+			{text: <Home />, href: ".."},
+			{text: <Build />, href: "../builder"},
+			{text: <Browse />, href: "../browser"},
+			{text: (this.state.user ? <Profile /> : <Login />), href: `../${this.state.loggedIn ? "dashboard" : "login"}`},
 		]
 
 		return <>

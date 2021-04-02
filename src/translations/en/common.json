@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify Connected",
+		"create": "Create New Playlist",
+		"disconnect": "Disconnect",
+		"disconnected": "Connect Spotify",
+		"generate": "Generate Playlists",
+		"made": "Made For You",
+		"playlists": "Your Playlists",
+		"signout": "Signout"
+	},
+	"detailAdder": {
+		"description": "Description",
+		"details": "Details",
+		"featured": "Featured",
+		"name": "Name",
+		"private": "Private",
+		"public": "Public",
+		"usage1": "Add an optional title to your playlist to save it to your profile!",
+		"usage2": "Additionally, you may add an optional description, privacy setting, and up to three featured songs!"
+	},
+	"landing": {
+		"browse": "Browse Playlists",
+		"build": "Build Playlist",
+		"login": "Login",
+		"signup": "Sign Up"
+	},
+	"login": {
+		"confirm": "Confirm Password",
+		"email": "Email",
+		"emailLogin": "Login With Email",
+		"emailSignup": "Signup With Email",
+		"google": "Google",
+		"login": "Login",
+		"loginMessage": "Have an account? Login",
+		"password": "Password",
+		"signup": "Sign Up",
+		"signupMessage": "No account? Sign up",
+		"socialLogin": "Login With Socials",
+		"spotify": "Spotify",
+		"thankyou": "Thank you for joining",
+		"verify": "Please verify your email"
+	},
+	"nav": {
+		"browse": "browse",
+		"build": "build",
+		"home": "home",
+		"login": "login",
+		"profile": "dashboard"
+	},
+	"playlist": {
+		"delete": "Delete",
+		"edit": "Edit",
+		"play": "Play"
+	},
+	"selector": {
+		"details": "Add Details",
+		"edit": "Edit Details",
+		"loading": "Loading",
+		"play": "Play Playlist",
+		"save": "Save Playlist",
+		"search": "Search Text",
+		"searchHeader": "Search",
+		"selected": "Selected Songs",
+		"spotify": "Load Spotify URL",
+		"youtube": "Load Youtube URL (Coming soon)"
+	}
+}

@@ -1,0 +1,68 @@
+{
+	"dashboard": {
+		"connected": "Spotify conectado",
+		"create": "Criar nova lista de reprodução",
+		"disconnect": "Desconectar",
+		"disconnected": "Conecte o Spotify",
+		"generate": "Gerar listas de reprodução",
+		"made": "Feito para você",
+		"playlists": "Suas listas de reprodução",
+		"signout": "Sair"
+	},
+	"detailAdder": {
+		"description": "Descrição",
+		"details": "Detalhes",
+		"featured": "DESTAQUE",
+		"name": "Nome",
+		"private": "privado",
+		"public": "público",
+		"usage1": "Adicione um título opcional à sua lista de reprodução para salvá-la em seu perfil!",
+		"usage2": "Além disso, você pode adicionar uma descrição opcional, configuração de privacidade e até três músicas em destaque!"
+	},
+	"landing": {
+		"browse": "Navegar nas listas de reprodução",
+		"build": "Construir lista de reprodução",
+		"login": "Entrar",
+		"signup": "Inscrever-se"
+	},
+	"login": {
+		"confirm": "Confirme a Senha",
+		"email": "O email",
+		"emailLogin": "Entrar com email",
+		"emailSignup": "Inscreva-se com e-mail",
+		"google": "Google",
+		"login": "Entrar",
+		"loginMessage": "Ter uma conta? Conecte-se",
+		"password": "Senha",
+		"signup": "Inscrever-se",
+		"signupMessage": "Sem conta? Inscrever-se",
+		"socialLogin": "Faça login com redes sociais",
+		"spotify": "Spotify",
+		"thankyou": "Obrigado por se juntar",
+		"verify": "Por favor, verifique seu e-mail"
+	},
+	"nav": {
+		"browse": "Squeaky toy",
+		"build": "Construir",
+		"home": "Casa",
+		"login": "Entrar",
+		"profile": "painel de controle"
+	},
+	"playlist": {
+		"delete": "Excluir",
+		"edit": "Editar",
+		"play": "Toque"
+	},
+	"selector": {
+		"details": "Adicionar detalhes",
+		"edit": "Editar Detalhes",
+		"loading": "Carregando",
+		"play": "Play Playlist",
+		"save": "Salvar lista de reprodução",
+		"search": "Texto de Pesquisa",
+		"searchHeader": "Procurar",
+		"selected": "Músicas Selecionadas",
+		"spotify": "Carregar URL Spotify",
+		"youtube": "Carregar URL do Youtube (em breve)"
+	}
+}

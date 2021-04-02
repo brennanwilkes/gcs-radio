@@ -1,11 +1,17 @@
 import { Router } from "express";
-import { redirectFromGoogle, redirectToGoogle } from "../controllers/oauthGoogleController";
-import { redirectToSpotify, redirectFromSpotify, disconnectSpotify } from "../controllers/oauthSpotifyController";
-import { getUser, login, signUp, verifyEmail } from "../controllers/userController";
-import { existingTokenRedirect, oauthValidator } from "../validators/oauthValidator";
-import { loginValidator, signUpValidator, tokenValidator, verifyEmailValidator } from "../validators/userValidator";
-import refreshTokenValidator from "../validators/refreshTokenValidator";
-import refreshTokenController from "../controllers/refreshTokenController";
+import disconnectSpotify from "../controllers/oauth/disconnectSpotify";
+import redirectFromGoogle from "../controllers/oauth/redirectFromGoogle";
+import redirectFromSpotify from "../controllers/oauth/redirectFromSpotify";
+import redirectToGoogle from "../controllers/oauth/redirectToGoogle";
+import redirectToSpotify from "../controllers/oauth/redirectToSpotify";
+import getUser from "../controllers/user/getUser";
+import login from "../controllers/user/login";
+import refreshTokenController from "../controllers/user/refreshTokenController";
+import signUp from "../controllers/user/signUp";
+import verifyEmail from "../controllers/user/verifyEmail";
+import { existingTokenRedirect, oauthValidator } from "../validators/auth/oauthValidator";
+import refreshTokenValidator from "../validators/auth/refreshTokenValidator";
+import { loginValidator, signUpValidator, tokenValidator, verifyEmailValidator } from "../validators/auth/userValidator";
 
 const authRouter = Router();
 
