@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Song, { SongModelFromSong } from "../../database/models/song";
 import { SongApiObj, SongFromSearch, SongObjFromQuery } from "../../types/song";
-import { print } from "../util/util";
+import { CONFIG, print } from "../util/util";
 import internalErrorHandler from "../errorHandlers/internalErrorHandler";
 import notFoundErrorHandler from "../errorHandlers/notFoundErrorHandler";
 import { mongoose } from "../../database/connection";
@@ -11,9 +11,11 @@ import { PlayAudioLink, SelfLink } from "../../types/link";
 import { cacheSongFromResults, ensureSongValidity } from "../util/cacheSong";
 
 const getSongs = (req: Request, res: Response): void => {
+	const limit = (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
+
 	print(`Handling request for song resources`);
 
-	Song.find({}).then(result => {
+	Song.find({}).limit(limit).then(result => {
 		if (result) {
 			const songProcessing = result.map(async result => {
 				const validResult = await ensureSongValidity(result);
