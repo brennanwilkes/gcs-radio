@@ -3,8 +3,8 @@
 import RadioServer from "./server";
 import { mongoose } from "../database/connection";
 import mainRouter from "./routes/index";
-import generateDefaultAudio from "./controllers/generateDefaultAudioController";
-import generateVoiceTemplates from "./controllers/generateVoiceTemplatesController";
+import generateDefaultAudio from "./controllers/dev/generateDefaultAudioController";
+import generateVoiceTemplates from "./controllers/dev/generateVoiceTemplatesController";
 
 const server = new RadioServer();
 
