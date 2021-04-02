@@ -5,23 +5,20 @@ import { generateRefreshedCredential } from "./connection";
 import SpotifyApi from "spotify-web-api-node";
 /* eslint-enable no-unused-vars */
 
-import { getSpotifyTrack } from "./searchSpotify";
+import getRecommendations from "./getRecommendations";
 
 export default async (userAccessToken: string, time_range: "long_term" | "medium_term" | "short_term" = "long_term", limit = 30): Promise<SpotifyResult[]> => {
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
-		generateRefreshedCredential().then(async spotifyApi => {
+		generateRefreshedCredential().then(spotifyApi => {
 			spotifyApi.setAccessToken(userAccessToken);
-			spotifyApi.getMyTopArtists({
+			return spotifyApi.getMyTopArtists({
 				time_range
-			}).then(artistData => {
-				return spotifyApi.getRecommendations({
-					seed_artists: artistData.body.items.map(a => a.id).slice(0, 5),
-					limit
-				});
-			}).then(async recommendationData => {
-				const converted = await Promise.all(recommendationData.body.tracks.map(s => getSpotifyTrack(s.id)));
-				resolve(converted);
-			}).catch(reject);
-		}).catch(err => reject(new Error(err)));
+			});
+		}).then(artistData => {
+			return getRecommendations({
+				limit,
+				seed_artists: artistData.body.items.map(a => a.id).slice(0, 5)
+			}, userAccessToken);
+		}).then(resolve).catch(reject);
 	});
 };

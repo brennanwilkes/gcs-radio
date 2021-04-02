@@ -146,7 +146,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 					this.state.fromSpotify.length === 0 ? <>
 						<button className="btn btn-lg mt-3 mb-5 btn-gcs-faded" onClick={() => {
 							$("body").css("cursor","wait");
-							axios.get("/api/v1/playlists/made-for-me?limit=30").then(response => {
+							axios.post("/api/v1/playlists/made-for-me?limit=30").then(response => {
 								this.setState({
 									fromSpotify: response.data.playlists
 								});
