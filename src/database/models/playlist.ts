@@ -46,6 +46,7 @@ export function PlaylistModelFromPlaylist (playlist: Playlist): InstanceType<typ
 export function PlaylistObjFromQuery (docs: PlaylistDoc, renderSongs = true): Promise<Playlist> {
 	return new Promise<Playlist>((resolve, reject) => {
 		const songs = renderSongs ? docs.songs.map(id => SongModel.findOne({ _id: id })) : [];
+
 		Promise.all(songs).then(results => {
 			if (!renderSongs || (results && results.length > 0)) {
 				const filtered: SongDoc[] = results.filter((song): song is SongDoc => song !== null);

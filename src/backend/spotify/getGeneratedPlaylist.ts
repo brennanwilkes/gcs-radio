@@ -5,6 +5,8 @@ import { generateRefreshedCredential } from "./connection";
 import SpotifyApi from "spotify-web-api-node";
 /* eslint-enable no-unused-vars */
 
+import arrayshuffle from "array-shuffle";
+
 import getRecommendations from "./getRecommendations";
 
 export default async (userAccessToken: string, time_range: "long_term" | "medium_term" | "short_term" = "long_term", limit = 30): Promise<SpotifyResult[]> => {
@@ -17,7 +19,7 @@ export default async (userAccessToken: string, time_range: "long_term" | "medium
 		}).then(artistData => {
 			return getRecommendations({
 				limit,
-				seed_artists: artistData.body.items.map(a => a.id).slice(0, 5)
+				seed_artists: arrayshuffle(artistData.body.items.map(a => a.id).slice(0, 15))
 			}, userAccessToken);
 		}).then(resolve).catch(reject);
 	});
