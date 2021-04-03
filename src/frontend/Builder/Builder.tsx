@@ -261,7 +261,7 @@ export default class Builder extends React.Component<IProps, IState> {
 							}}
 							className={`container mb-0 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "bright"}`}>{
 							this.state.rendering
-							? <><Loading />{`${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`}</>
+							? <><Loading />{` ${Math.min(this.state.loadedProgress + 1, this.state.songs.length)}/${this.state.songs.length}`}</>
 							: (this.state.addDetails ? <Save /> : (this.state.patchMode ? <Edit /> : <Details />))
 						}</button>
 						</> : <></>
