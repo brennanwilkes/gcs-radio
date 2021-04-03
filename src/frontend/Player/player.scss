@@ -26,12 +26,15 @@
 }
 
 .Player select{
-	width: 6vw !important;
+	width: 9vw !important;
 }
 .Player > div > button:first-child{
-	width: 6vw !important;
+	width: 9vw !important;
 }
 
+.Player > div > button:first-child, .Player select{
+	
+}
 
 .Player{
 	display: flex;

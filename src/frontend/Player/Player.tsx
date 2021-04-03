@@ -370,7 +370,7 @@ export default class App extends React.Component<IProps, IState> {
 						<h4>{this.props.songs[this.state.index]?.artist}</h4>
 					</div>
 					<div>
-						<button className="btn btn-gcs-alpine" onClick={() => {
+						<button className="btn btn-lg btn-gcs-alpine" onClick={() => {
 							window.location.href = `../builder?${window.location.href.split("?")[1]}`;
 						}}>Edit</button>
 						<button disabled={!this.state.ready || !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.rewind}><FaStepBackward /></button>
@@ -379,7 +379,7 @@ export default class App extends React.Component<IProps, IState> {
 						}</button>
 						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 						<select
-							className="form-select form-control btn btn-gcs-alpine"
+							className="form-select form-control btn btn-lg btn-gcs-alpine"
 							value={this.state.voice}
 							onChange={this.changeVoice}>
 							<option value="en-US-Wavenet-B">🇨🇦 Hank Stewart</option>
