@@ -29,11 +29,13 @@ interface IState {
 	description?: string,
 	private?: boolean,
 	selected: string[],
+	privateTranslation: string,
+	publicTranslation: string,
 	nameTranslation: string,
 	descTranslation: string
 }
 
-type NewType = Omit<IState, "selected" | "nameTranslation" | "descTranslation">;
+type NewType = Omit<IState, "selected" | "nameTranslation" | "descTranslation" | "privateTranslation" | "publicTranslation">;
 
 type noSelect = NewType
 interface Details extends noSelect{
@@ -50,6 +52,8 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 				this.setState({
 					nameTranslation: t("common:detailAdder.name"),
 					descTranslation: t("common:detailAdder.description"),
+					privateTranslation: t("common:detailAdder.private"),
+					publicTranslation: t("common:detailAdder.public"),
 				});
 
 			});
@@ -58,6 +62,8 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 		this.state = {
 			private: true,
 			selected: [],
+			publicTranslation: "",
+			privateTranslation: "",
 			nameTranslation: "",
 			descTranslation: ""
 		}
@@ -110,7 +116,7 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 						onChangeDelay={150} />
 					<ReactBootstrapCheckbox
 						default={!(this.props.initialPrivate ?? true)}
-						label={this.state.private ? useTranslation("common").t("detailAdder.private") : useTranslation("common").t("detailAdder.public") }
+						label={this.state.private ? this.state.privateTranslation : this.state.publicTranslation }
 						colour={this.state.private ? "danger" : "success"}
 						onChange={(checked) => this.setState({private: !checked})} />
 				</div>
