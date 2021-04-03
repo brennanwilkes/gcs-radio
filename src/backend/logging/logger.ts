@@ -24,6 +24,10 @@ export class Logger {
 			console.error(error);
 			console.dir(response);
 			console.dir(body);
+		} else {
+			console.dir("success!");
+			console.dir(response);
+			console.dir(body);
 		}
 	}
 
@@ -33,11 +37,7 @@ export class Logger {
 	}
 
 	logSignup (email: string, type: UserType) {
-		this.tracker.event({
-			ec: EventType.SIGNUP,
-			ea: type,
-			ev: email
-		}).send(this.errorHandler);
+		this.tracker.event(EventType.SIGNUP, type, email, 42).send();
 	}
 
 	logApiCall (path: string) {
