@@ -23,7 +23,11 @@
 		"browse": "Sfoglia le playlist",
 		"build": "Crea playlist",
 		"login": "Accesso",
-		"signup": "Iscriviti"
+		"signup": "Iscriviti",
+		"welcome1": "Ti piace GCS Radio? Dagli una stella",
+		"welcome2": "Tutto il codice di frontend e backend è open source sotto",
+		"welcome3": "Sentiti libero di eseguire il fork / clonare / distribuire la tua copia o contattare",
+		"welcome4": "per contribuire o collaborare. Il feedback è benvenuto!"
 	},
 	"login": {
 		"confirm": "Conferma password",

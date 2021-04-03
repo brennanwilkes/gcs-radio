@@ -23,7 +23,11 @@
 		"browse": "Durchsuchen Sie Wiedergabelisten",
 		"build": "Playlist erstellen",
 		"login": "Anmeldung",
-		"signup": "Anmelden"
+		"signup": "Anmelden",
+		"welcome1": "GCS Radio genießen? Gib ihm einen Stern an",
+		"welcome2": "Der gesamte Frontend- und Backend-Code ist Open Source unter",
+		"welcome3": "Fühlen Sie sich frei, Ihre eigene Kopie zu teilen / zu klonen / bereitzustellen oder sich an sie zu wenden",
+		"welcome4": "beitragen oder zusammenarbeiten. Feedback ist willkommen!"
 	},
 	"login": {
 		"confirm": "Passwort bestätigen",

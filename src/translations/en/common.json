@@ -23,7 +23,11 @@
 		"browse": "Browse Playlists",
 		"build": "Build Playlist",
 		"login": "Login",
-		"signup": "Sign Up"
+		"signup": "Sign Up",
+		"welcome1": "Enjoying GCS Radio? Give it a star on",
+		"welcome2": "All frontend and backend code is open source under",
+		"welcome3": "Feel free to fork/clone/deploy your own copy, or reach out to",
+		"welcome4": "to contribute or collaborate. Feedback is welcome!"
 	},
 	"login": {
 		"confirm": "Confirm Password",

@@ -23,7 +23,11 @@
 		"browse": "Navegar nas listas de reprodução",
 		"build": "Construir lista de reprodução",
 		"login": "Entrar",
-		"signup": "Inscrever-se"
+		"signup": "Inscrever-se",
+		"welcome1": "Está gostando do GCS Radio? Dê uma estrela",
+		"welcome2": "Todo o código de front-end e back-end é de código aberto em",
+		"welcome3": "Sinta-se à vontade para bifurcar / clonar / implantar sua própria cópia ou entre em contato com",
+		"welcome4": "para contribuir ou colaborar. O feedback é bem-vindo!"
 	},
 	"login": {
 		"confirm": "Confirme a Senha",

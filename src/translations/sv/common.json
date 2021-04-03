@@ -23,7 +23,11 @@
 		"browse": "Bläddra i spellistor",
 		"build": "Bygg spellista",
 		"login": "Logga in",
-		"signup": "Bli Medlem"
+		"signup": "Bli Medlem",
+		"welcome1": "Gillar du GCS Radio? Ge den en stjärna på",
+		"welcome2": "All frontend och backend-kod är öppen källkod under",
+		"welcome3": "Gaffla / klona / distribuera din egen kopia, eller nå ut till",
+		"welcome4": "att bidra eller samarbeta. Feedback är välkommen!"
 	},
 	"login": {
 		"confirm": "Bekräfta lösenord",
