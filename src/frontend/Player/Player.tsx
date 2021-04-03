@@ -71,7 +71,7 @@ export default class App extends React.Component<IProps, IState> {
 			lastTransition: 0,
 			playedIntro: false,
 			volume: 100,
-			voice: jscookie.get("voice") ?? "en-US-Wavenet-D"
+			voice: jscookie.get("voice") ?? "en-AU-Wavenet-B"
 		};
 
 		setInterval(this.updateProgress, 1000);
@@ -382,14 +382,22 @@ export default class App extends React.Component<IProps, IState> {
 							className="form-select form-control btn btn-gcs-alpine"
 							value={this.state.voice}
 							onChange={this.changeVoice}>
-							<option value="en-US-Wavenet-B">Hank Stewart</option>
-							<option value="en-US-Wavenet-D">Carswell Cooper</option>
-							<option value="en-IN-Wavenet-C">Sukhdeep Kaur</option>
-							<option value="en-AU-Wavenet-B">Oscar Hicks</option>
-							<option value="en-AU-Wavenet-C">Shelley Steele</option>
-							<option value="en-GB-Wavenet-F">Courtney Howe</option>
-							<option value="en-GB-Wavenet-B">Ned Burns</option>
-							<option value="en-GB-Wavenet-D">Barry Reynolds</option>
+							<option value="en-US-Wavenet-B">🇨🇦 Hank Stewart</option>
+							<option value="en-US-Wavenet-D">🇨🇦 Carswell Cooper</option>
+							<option value="en-IN-Wavenet-C">🇮🇳 Sukhdeep Kaur</option>
+							<option value="en-AU-Wavenet-B">🇦🇺 Oscar Hicks</option>
+							<option value="en-AU-Wavenet-C">🇦🇺 Shelley Steele</option>
+							<option value="en-GB-Wavenet-F">🇬🇧 Courtney Howe</option>
+							<option value="en-GB-Wavenet-B">🇬🇧 Ned Burns</option>
+							<option value="en-GB-Wavenet-D">🇬🇧 Barry Reynolds</option>
+							<option value="de-DE-Wavenet-B">🇩🇪 Nikolaus Fuller</option>
+							<option value="fr-FR-Wavenet-A">🇫🇷 Mariele Martin</option>
+							<option value="it-IT-Wavenet-D">🇮🇹 Vittorio Gallo</option>
+							<option value="ja-JP-Wavenet-D">🇯🇵 Yūto Ryota</option>
+							<option value="nb-NO-Wavenet-C">🇳🇴 Nora Hansen</option>
+							<option value="pt-PT-Wavenet-B">🇧🇷 João Santos</option>
+							<option value="sv-SE-Wavenet-A">🇸🇪 Freja Andersson</option>
+							<option value="cmn-CN-Wavenet-A">🇨🇳 Hua Li</option>
 						</select>
 
 					</div>
