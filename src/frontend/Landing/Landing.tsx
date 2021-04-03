@@ -35,7 +35,7 @@ export default class Landing extends React.Component<IProps, IState> {
 						<a href="./login?signup=1"><h6 className="col-4"><SignUp /></h6></a>
 					</div>
 					<p className="mt-md-5 mb-2 text-gcs-alpine">
-						<Welcome1 /><a className="text-gcs-bright mx-1" target="_blank" href="https://github.com/brennanwilkes/gcs-radio">GitHub</a>
+						<Welcome1 /><a className="text-gcs-bright mx-1" target="_blank" href="https://gitlab.com/brennanwilkes/gcs-radio">GitLab</a>
 					</p>
 					<p className="mt-md-2 mb-2 text-gcs-alpine">
 						<Welcome2 /><a className="text-gcs-bright mx-1" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
