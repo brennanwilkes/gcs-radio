@@ -15,6 +15,8 @@ import 'rc-slider/assets/index.css';
 import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback, isReady as spotifyIsReady} from "../spotifyWebSDK/spotify";
 import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
 
+const bufferSize = 10;
+
 interface IProps {
 	songs: Song[],
 	transitions: VoiceLineRender[],
@@ -57,6 +59,7 @@ export default class App extends React.Component<IProps, IState> {
 		this.getProgress = this.getProgress.bind(this);
 		this.setVolume = this.setVolume.bind(this);
 		this.changeVoice = this.changeVoice.bind(this);
+		this.updateVolume = this.updateVolume.bind(this);
 
 		this.state = {
 			queue: [],
@@ -104,10 +107,11 @@ export default class App extends React.Component<IProps, IState> {
 		queue.forEach((audio,i) => {
 			audio.on("end", () => this.transitionSong(1));
 			audio.on("load", () => {
-				this.loadedSongCallback(i, queue)
-				if(i === queue.length - 1){
+				this.loadedSongCallback(i, queue);
+				if(!this.props.spotifySDKMode && i === queue.length - 1){
 					successResponseHandler(this)(`Loaded ${queue.length} songs`);
 				}
+				this.updateVolume();
 			});
 		});
 		if(queue.length){
@@ -154,8 +158,9 @@ export default class App extends React.Component<IProps, IState> {
 			trans.on("load", () => {
 				this.loadedTransitionCallback(i, transitions);
 				if(i === transitions.length - 1){
-					successResponseHandler(this)(`Loaded ${transitions.length} audio transitions`);
+					successResponseHandler(this)(`Loaded ${transitions.length} voice lines`);
 				}
+				this.updateVolume();
 			});
 		});
 		if(transitions.length){
@@ -164,12 +169,26 @@ export default class App extends React.Component<IProps, IState> {
 
 
 		this.setState({
-			transitions : [...this.state.transitions, ...transitions.slice(this.state.transitions.length)],
+			transitions : [...this.state.transitions.slice(0, this.state.index || 0), ...transitions.slice(this.state.index || 0)],
 		});
+	}
+
+	updateVolume(){
+		this.state.transitions.forEach(audio => {
+			audio.volume(this.state.volume > 0.05 ? Math.min(0.99,(this.state.volume / 100) + 0.1) : 0.01);
+		});
+		this.state.queue.forEach(audio => {
+			audio.volume(this.state.volume > 0.05 ? Math.max(0.01,(this.state.volume / 100) - 0.25) : 0.01);
+		});
+		if(this.props.spotifySDKMode){
+			spotifyVolume(this.state.volume > 0.05 ? Math.max(0.01,(this.state.volume / 100) - 0.25) : 0.01);
+		}
 	}
 
 	componentDidUpdate(prevProps: IProps, prevState: IState){
 		if(prevProps.songs !== this.props.songs){
+			console.dir(this.props.songs.length);
+			console.dir(this.props.songs);
 			this.initializeSongs();
 		}
 		if(prevProps.transitions !== this.props.transitions){
@@ -182,15 +201,7 @@ export default class App extends React.Component<IProps, IState> {
 			this.setState({unlocked:true});
 		}
 		if(prevState.volume !== this.state.volume){
-			this.state.transitions.forEach(audio => {
-				audio.volume(Math.min(1,(this.state.volume / 100) + 0.1));
-			});
-			this.state.queue.forEach(audio => {
-				audio.volume(Math.max(0,(this.state.volume / 100) - 0.25));
-			});
-			if(this.props.spotifySDKMode){
-				spotifyVolume(Math.max(0,(this.state.volume / 100) - 0.25));
-			}
+			this.updateVolume();
 		}
 		if(prevState.ready !== this.state.ready && this.state.ready){
 			$("body").css("cursor","inherit");
@@ -218,8 +229,8 @@ export default class App extends React.Component<IProps, IState> {
 			this.state.queue[index].play();
 		}
 
-		if(index + 3 > this.props.songs.length){
-			this.props.requestMoreSongs(5);
+		if(index + (bufferSize - 1) > this.props.songs.length){
+			this.props.requestMoreSongs(bufferSize);
 		}
 	}
 
@@ -288,7 +299,8 @@ export default class App extends React.Component<IProps, IState> {
 			});
 		}
 		else{
-			errorResponseHandler(this)(`Playlist has ended`);
+			this.props.requestMoreSongs(bufferSize);
+			errorResponseHandler(this)(`Loading more songs...`);
 		}
 	}
 

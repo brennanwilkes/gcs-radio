@@ -24,10 +24,6 @@ export class Logger {
 			console.error(error);
 			console.dir(response);
 			console.dir(body);
-		} else {
-			console.dir("success!");
-			console.dir(response);
-			console.dir(body);
 		}
 	}
 

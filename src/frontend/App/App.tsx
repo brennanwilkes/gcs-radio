@@ -17,8 +17,10 @@ interface IProps {
 }
 interface IState extends HasResponse{
 	songs: Song[],
+	limitedSongs: Song[],
 	transitions: VoiceLineRender[],
-	spotifySDKMode: boolean
+	spotifySDKMode: boolean,
+	processing: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
@@ -27,51 +29,46 @@ export default class App extends React.Component<IProps, IState> {
 		super(props);
 		this.updateVoice = this.updateVoice.bind(this);
 		this.requestMoreSongs = this.requestMoreSongs.bind(this);
+		this.getVoiceLines = this.getVoiceLines.bind(this);
 
 		this.state = {
 			songs: [],
+			limitedSongs: [],
 			transitions: [],
-			spotifySDKMode: false
+			spotifySDKMode: false,
+			processing: false
 		};
+	}
+
+	getVoiceLines(songs: Song[], lastSong?: Song, voice: string | undefined = jscookie.get("voice")): Promise<VoiceLineRender[]>{
+		return new Promise<VoiceLineRender[]>((resolve, reject) => {
+
+			successResponseHandler(this)(`Requesting ${songs.length} voice lines`);
+			Promise.all(songs.map((song, i) => {
+				return axios.post(`/api/voiceLines?${
+					(!lastSong) && i === 0 ? `firstId=${song.id}` : `prevId=${(i === 0 && lastSong) ? lastSong.id : songs[i-1].id}&nextId=${song.id}`
+				}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).catch(err => {
+					axiosErrorResponseHandler(this)(err);
+					return err;
+				})
+			})).then(resps => {
+				const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
+				resolve(converted);
+			}).catch(reject);
+		});
 	}
 
 
 	componentDidMount(){
 
-		const voice = jscookie.get("voice");
-
 		axios.get(`../api/v1/playlists/${encodeURIComponent(this.props.playlist)}`).then(resp => {
-
 			const songs: Song[] = arrayShuffle(resp.data.playlists[0].songs);
 
-			const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
-				if(i === 0){
-					return axios.post(`/api/voiceLines?firstId=${song.id}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
-						successResponseHandler(this)(`Requested ${i+1}/${songs.length} of transitions`);
-						return resp;
-					}).catch(err => {
-						axiosErrorResponseHandler(this)(err);
-						return err;
-					});
-				}
-				else{
-					return axios.post(`/api/voiceLines?prevId=${songs[i-1].id}&nextId=${song.id}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
-						if(i % 25 === 0){
-							successResponseHandler(this)(`Requested ${i+1}/${songs.length} of transitions`);
-						}
-						return resp;
-					}).catch(err => {
-						axiosErrorResponseHandler(this)(err);
-						return err;
-					});
-				}
-			});
-
-			Promise.all(transitions).then(resps => {
-				const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
+			this.getVoiceLines(songs.slice(0,10)).then(converted => {
 
 				const setStateSDK = (spotifySDKMode: boolean) => this.setState({
 					songs: songs,
+					limitedSongs: songs.slice(0,10),
 					transitions: converted,
 					spotifySDKMode
 				});
@@ -87,69 +84,48 @@ export default class App extends React.Component<IProps, IState> {
 		})
 	}
 
-	updateVoice(voice: string, label: string){
-		const transitions:Promise<AxiosResponse>[] = this.state.songs.map((song, i) => {
-			if(i === 0){
-				return axios.post(`/api/voiceLines?firstId=${song.id}&voice=${voice}&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
-					successResponseHandler(this)(`Requested ${i+1}/${transitions.length} of transitions`);
-					return resp;
-				}).catch(err => {
-					axiosErrorResponseHandler(this)(err);
-					return err;
-				});
-			}
-			else{
-				return axios.post(`/api/voiceLines?prevId=${this.state.songs[i-1].id}&nextId=${song.id}&voice=${voice}&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
-					if(i % 25 === 0){
-						successResponseHandler(this)(`Requested ${i+1}/${transitions.length} of transitions`);
-					}
-					return resp;
-				}).catch(err => {
-					axiosErrorResponseHandler(this)(err);
-					return err;
-				});
-			}
-		});
-
-		Promise.all(transitions).then(resps => {
-			const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
+	updateVoice(voice: string, label: string, index: number = 0){
+		this.getVoiceLines(this.state.limitedSongs.slice(index), undefined, voice).then(converted => {
 			this.setState({
-				transitions: converted
+				transitions: [...this.state.transitions.slice(0, index), ...converted]
 			});
 			successResponseHandler(this)(`Updated Voice to ${label}`);
 		}).catch(axiosErrorResponseHandler(this));
 	}
 
 	requestMoreSongs(limit: number){
-		const voice = jscookie.get("voice");
+		if(this.state.processing){
+			return;
+		}
+		this.setState({
+			processing: true
+		});
 
-		axios.post(`../api/v1/songs/next?playlist=${encodeURIComponent(this.props.playlist)}&limit=${limit}`).then(resp => {
-			const songs: Song[] = arrayShuffle(resp.data.songs);
+		let nextSongs = this.state.songs.slice(this.state.limitedSongs.length,this.state.limitedSongs.length + limit);
+		if(nextSongs.length < limit){
+			axios.post(`../api/v1/songs/next?playlist=${encodeURIComponent(this.props.playlist)}&limit=${limit - nextSongs.length}`).then(resp => {
+				const recoSongs: Song[] = arrayShuffle(resp.data.songs);
+				nextSongs = [...nextSongs, ...recoSongs];
 
-			const transitions:Promise<AxiosResponse>[] = songs.map((song, i) => {
-
-				const prevSong = (i===0) ? this.state.songs[this.state.songs.length - 1] : songs[i-1];
-
-				return axios.post(`/api/voiceLines?prevId=${prevSong.id}&nextId=${song.id}${voice ? `&voice=${voice}` : "" }&playlist=${encodeURIComponent(this.props.playlist)}`).then(resp => {
-					if(i % 25 === 0){
-						successResponseHandler(this)(`Requested ${i+1}/${songs.length} of transitions`);
-					}
-					return resp;
-				}).catch(err => {
-					axiosErrorResponseHandler(this)(err);
-					return err;
-				});
-			});
-
-			Promise.all(transitions).then(resps => {
-				const converted: VoiceLineRender[] = resps.map(resp => resp.data.voiceLines[0]);
+				this.getVoiceLines(nextSongs, this.state.limitedSongs.slice(-1)[0]).then(converted => {
+					this.setState({
+						songs: [...this.state.songs, ...recoSongs],
+						limitedSongs : [...this.state.limitedSongs, ...nextSongs],
+						transitions : [...this.state.transitions, ...converted],
+						processing: false
+					});
+				}).catch(axiosErrorResponseHandler(this));
+			}).catch(axiosErrorResponseHandler(this));
+		}
+		else{
+			this.getVoiceLines(nextSongs, this.state.limitedSongs.slice(-1)[0]).then(converted => {
 				this.setState({
-					songs : [...this.state.songs, ...songs],
-					transitions : [...this.state.transitions, ...converted]
+					limitedSongs : [...this.state.limitedSongs, ...nextSongs],
+					transitions : [...this.state.transitions, ...converted],
+					processing: false
 				});
 			}).catch(axiosErrorResponseHandler(this));
-
-		}).catch(axiosErrorResponseHandler(this));
+		}
 	}
 
 	render(){
@@ -160,7 +136,7 @@ export default class App extends React.Component<IProps, IState> {
 					requestMoreSongs={this.requestMoreSongs}
 					updateVoice={this.updateVoice}
 					spotifySDKMode={this.state.spotifySDKMode}
-					songs={this.state.songs}
+					songs={this.state.limitedSongs}
 					transitions={this.state.transitions} />
 			</div>
 			<Response response={this.state} />
