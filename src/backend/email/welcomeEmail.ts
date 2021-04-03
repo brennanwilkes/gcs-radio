@@ -1,6 +1,6 @@
 import { Mail } from "./email";
 
-const baseDomain = "gcs-radio.494913.xyz";
+const baseDomain = "gcsradio.codexwilkes.com";
 
 const welcomeEmail = (id?: string) => `
 Welcome to <strong>GCS Radio</strong>
