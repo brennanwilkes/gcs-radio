@@ -1,12 +1,11 @@
 import ytdl from "ytdl-core";
-import streamToMongo from "../../database/streamToMongo";
+// import streamToMongo from "../../database/streamToMongo";
 import { Song, SongObjFromQuery } from "../../types/song";
 import { SongDoc } from "../../database/models/song";
 import { SpotifyResult } from "../../types/spotifyResult";
 import { YoutubeResult } from "../../types/youtubeResult";
 import { CONFIG, print } from "../util/util";
 import { mongoVerifyBucketExistance } from "../validators/validatorUtil";
-import downloadURLToStream from "../youtube/downloadURLToStream";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { mongoose } from "../../database/connection";
 
@@ -51,24 +50,14 @@ export const cacheSongFromResults = (youtubeResults: YoutubeResult, spotifyResul
 	return cacheSong(youtubeResults.youtubeId, youtubeResults.formats, spotifyResults.title, spotifyResults.artist, spotifyResults.album);
 };
 
-const cacheSong = (youtubeId: string, formats: ytdl.videoFormat[], title: string, artist: string, album: string): Promise<string> => {
+const cacheSong = (_youtubeId: string, _formats: ytdl.videoFormat[], _title: string, _artist: string, _album: string): Promise<string> => {
 	if (!CONFIG.matchWithYoutube) {
 		if (CONFIG.defaultAudioId) {
 			return Promise.resolve(CONFIG.defaultAudioId);
 		}
 		return Promise.reject(new Error("Default audio ID is not set"));
 	}
-
-	const url = `https://www.youtube.com/watch?v=${youtubeId}`;
-	return new Promise<string>((resolve, reject) => {
-		downloadURLToStream(url, formats).then(dummy => {
-			print("Created audio conversion stream");
-			streamToMongo(`${title} - ${artist} - ${album}`, dummy).then(audioId => {
-				print(`Created audio resource ${audioId}`);
-				resolve(audioId);
-			}).catch(reject);
-		}).catch(reject);
-	});
+	return Promise.reject(new Error("Match with youtube must be set to false in current repo state"));
 };
 
 export default cacheSong;
