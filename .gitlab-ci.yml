@@ -57,7 +57,7 @@ deploy:
         - gcloud auth activate-service-account --key-file $GOOGLE_CLOUD_CREDENTIALS
     stage: deploy
     script:
-        - gcloud run deploy gcs-radio --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio --platform managed --region us-west1 --allow-unauthenticated --concurrency 8 --cpu 2 --memory 256M --max-instances 250 --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=false" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" --set-env-vars="GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT" --set-env-vars="SENDGRID_API_KEY=$SENDGRID_API_KEY" --set-env-vars="MATCH_WITH_YOUTUBE=$MATCH_WITH_YOUTUBE" --set-env-vars="DEFAULT_AUDIO_ID=$DEFAULT_AUDIO_ID"
+        - gcloud run deploy gcs-radio --image gcr.io/$GOOGLE_CLOUD_PROJECT/gcs-radio --platform managed --region us-west1 --allow-unauthenticated --concurrency 8 --cpu 2 --memory 256M --set-env-vars="DB_CONNECTION=$DB_CONNECTION" --set-env-vars="SPOTIFY_ID=$SPOTIFY_ID" --set-env-vars="SPOTIFY_SECRET=$SPOTIFY_SECRET" --set-env-vars="VERBOSE=false" --set-env-vars="YTDL_COOKIE=$YTDL_COOKIE" --set-env-vars="TOKEN_SECRET=$TOKEN_SECRET" --set-env-vars="GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID" --set-env-vars="GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET" --set-env-vars="GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT" --set-env-vars="SENDGRID_API_KEY=$SENDGRID_API_KEY" --set-env-vars="MATCH_WITH_YOUTUBE=$MATCH_WITH_YOUTUBE" --set-env-vars="DEFAULT_AUDIO_ID=$DEFAULT_AUDIO_ID"
     only:
     - master
 

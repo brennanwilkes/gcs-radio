@@ -32,7 +32,15 @@ export enum Voice{
 	enGbF = "en-GB-Wavenet-F",
 	enGbB = "en-GB-Wavenet-B",
 	enGbD = "en-GB-Wavenet-D",
-	DEFAULT = enUsD
+	deDeB = "de-DE-Wavenet-B",
+	frFrA = "fr-FR-Wavenet-A",
+	itItD = "it-IT-Wavenet-D",
+	jaJpD = "ja-JP-Wavenet-D",
+	nbNoC = "nb-NO-Wavenet-C",
+	ptPtB = "pt-PT-Wavenet-B",
+	svSeA = "sv-SE-Wavenet-A",
+	cmnCnA = "cmn-CN-Wavenet-A",
+	DEFAULT = enAuB
 }
 
 export enum VoiceGender{
