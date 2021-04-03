@@ -25,7 +25,6 @@ const i18nInitialized = i18next
         detection: {
             lookupQuerystring: "lang"
         },
-        debug: true,
         fallbackLng: "en",
         interpolation: { escapeValue: false },
         resources: {
