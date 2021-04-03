@@ -12,7 +12,7 @@ import "./playlistDetailAdder.css";
 import {useTranslation} from "react-i18next";
 import {i18nInitialized, i18next} from "../Translator";
 
-const Usage1 = () => <>{useTranslation("common").t("detailAdder.usage2")}</>
+const Usage1 = () => <>{useTranslation("common").t("detailAdder.usage1")}</>
 const Usage2 = () => <>{useTranslation("common").t("detailAdder.usage2")}</>
 const DetailsHeader = () => <>{useTranslation("common").t("detailAdder.details")}</>
 const Featured = () => <>{useTranslation("common").t("detailAdder.featured")}</>
