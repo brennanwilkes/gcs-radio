@@ -39,7 +39,7 @@
 	@include gcs-radio-header;
 }
 
-.Landing h1, .Landing a, .Landing h6{
+.Landing h1, .Landing a, .Landing h6, .Landing p{
 	@include fadeIn;
 }
 .Landing > div > a:first-of-type{
@@ -60,6 +60,19 @@
 .Landing h1{
 	animation-delay: 1.75s;
 	animation-duration: 2.5s;
+}
+.Landing p{
+	text-align: center;
+	animation-duration: 2.5s;
+}
+.Landing p:first-of-type{
+	animation-delay: 2.5s;
+}
+.Landing p:nth-of-type(2){
+	animation-delay: 2.825s;
+}
+.Landing p:last-of-type{
+	animation-delay: 3.25s;
 }
 
 @media only screen and (max-width: 1200px) {
