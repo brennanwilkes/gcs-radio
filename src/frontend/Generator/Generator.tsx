@@ -136,7 +136,7 @@ export default class Generator extends React.Component<IProps, IState> {
 		return new Promise<void>((resolve, reject) => {
 			const args = {
 				private: false,
-				songs: this.state.completeSongs?.map(song => song.id)
+				songs: this.state.completeSongs?.map(song => song.id).slice(0,5)
 			};
 
 			keys.forEach(key => {
@@ -205,7 +205,7 @@ export default class Generator extends React.Component<IProps, IState> {
 			return <>
 				<div className="row my-3">
 					<h4
-						className={`h3 text-gcs-${(this.state as any)[`has${capKey}`] ? "faded": "elevated" } col-12 col-md-3 my-0`}
+						className={`h3 text-gcs-${(this.state as any)[`has${capKey}`] ? "bright": "elevated" } col-12 col-md-3 my-0`}
 						onClick={() => {
 							const state: any = {};
 							state[`has${capKey}`] = !((this.state as any)[`has${capKey}`]);
@@ -255,9 +255,9 @@ export default class Generator extends React.Component<IProps, IState> {
 							}).catch(axiosErrorResponseHandler(this));
 						}}
 						className={`container mt-2 my-4 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>{
-							this.state.rendering
+							this.state.rendering || (this.state.rendered && this.state.processing)
 							? <Loading />
-							: <Play />
+							: <>Generate and Play</>
 					}</button>
 				</div>
 			</div>

@@ -44,6 +44,23 @@
 	flex-grow: 1;
 }
 
+.Generator{
+	& .rc-slider, & .rc-slider *{
+		&:hover{
+			cursor: pointer;
+		}
+	}
+}
+
+.Generator{
+	& .rc-slider-rail, & .rc-slider-track{
+		transform: scale(1, 2);
+	}
+	& .rc-slider-handle{
+		transform: scale(1.5) translateX(-50%) !important;
+	}
+}
+
 .Generator .rc-slider-rail{
 	background-color: $gcs-elevated;
 }
