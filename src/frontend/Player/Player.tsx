@@ -383,7 +383,7 @@ export default class App extends React.Component<IProps, IState> {
 					</div>
 					<div>
 						<button className="btn btn-lg btn-gcs-alpine" onClick={() => {
-							window.location.href = `../builder?${window.location.href.split("?")[1]}`;
+							window.location.href = `../build?${window.location.href.split("?")[1]}`;
 						}}>Edit</button>
 						<button disabled={!this.state.ready || !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.rewind}><FaStepBackward /></button>
 						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.togglePause}>{

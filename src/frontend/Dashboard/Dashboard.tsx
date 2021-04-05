@@ -96,7 +96,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 				<button
 					className="col-12 col-md-5 ml-md-4 mb-2 btn btn-lg btn-gcs-bright"
 					onClick={() => {
-						window.location.href = "../builder";
+						window.location.href = "../build";
 					}}
 				>
 					<Create />

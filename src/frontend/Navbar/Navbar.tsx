@@ -62,8 +62,8 @@ export default class Navbar extends React.Component<IProps, IState> {
 
 		const navigation: NavItemData[] = [
 			{text: <Home />, href: ".."},
-			{text: <Build />, href: "../builder"},
-			{text: <Browse />, href: "../browser"},
+			{text: <Build />, href: "../build"},
+			{text: <Browse />, href: "../browse"},
 			{text: (this.state.user ? <Profile /> : <Login />), href: `../${this.state.loggedIn ? "dashboard" : "login"}`},
 		]
 
