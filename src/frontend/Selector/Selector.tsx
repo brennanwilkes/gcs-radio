@@ -13,13 +13,14 @@ import {FaAngleDoubleDown} from "react-icons/fa";
 import {useTranslation} from "react-i18next";
 import {i18nInitialized, i18next} from "../Translator";
 
-const Search = () => <>{useTranslation("common").t("selector.search")}</>
+const Search = () => <>{useTranslation("common").t("selector.searchHeader")}</>
 const Selected = () => <>{useTranslation("common").t("selector.selected")}</>
 
 interface IProps {
 	songChangeCallback: ((songs: Song[]) => void),
 	setProcessing: ((state: boolean) => void),
 	initialSongs?: Song[],
+	generateMode?: boolean
 }
 interface IState extends HasResponse{
 	queriedSongs: Song[],
@@ -48,7 +49,7 @@ export default class Selector extends React.Component<IProps, IState> {
 		i18nInitialized.then((t) => {
 			i18next.loadNamespaces(["translations","common","en","common_en"], () => {
 				this.setState({
-					searchTranslation: t("common:selector.searchHeader"),
+					searchTranslation: t("common:selector.search"),
 					spotifyTranslation: t("common:selector.spotify"),
 					youtubeTranslation: t("common:selector.youtube"),
 				});

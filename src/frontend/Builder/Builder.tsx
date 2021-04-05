@@ -167,15 +167,12 @@ export default class Builder extends React.Component<IProps, IState> {
 					songs: this.state.completeSongs?.map(song => song.id)
 				};
 
-			console.dir(args);
-
 			axios[this.state.patchMode ? "patch" : "post"](
 				`/api/v1/playlists${this.state.patchMode ? `/${this.props.playlist}` : ""}`,
 				args,
 				{ withCredentials: true }
 			).then(resp => {
 				if(resp.data.playlists && resp.data.playlists.length > 0){
-					console.dir(resp.data.playlists);
 					this.setPlayList(resp.data.playlists[0], printMessage);
 				}
 				this.setState({

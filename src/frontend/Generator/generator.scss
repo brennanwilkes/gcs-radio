@@ -1,0 +1,64 @@
+@import "../scss/brand";
+
+.Generator{
+	text-align: center;
+	height: 100%;
+	width: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+.GeneratorProcessing:hover, .GeneratorProcessing *:hover{
+	cursor: wait !important;
+}
+
+.Generator p{
+	text-align: center;
+	font-size: 16pt;
+}
+
+.Generator h4{
+	text-align: right;
+
+	&:hover{
+		cursor: pointer;
+	}
+}
+
+.Generator .controller{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.Generator > *{
+	margin-bottom: 1.5vh;
+}
+
+.Generator button{
+	text-transform: uppercase;
+}
+
+.Generator > :nth-last-child(2){
+	flex-grow: 1;
+}
+
+.Generator .rc-slider-rail{
+	background-color: $gcs-elevated;
+}
+.Generator div:not(.controller-disabled) > div > .rc-slider-track{
+	background-color: $gcs-loud;
+}
+.Generator div:not(.controller-disabled) > div > .rc-slider-handle{
+	border-color: $gcs-loud;
+	background-color: $gcs-fake-elevated;
+}
+
+.Generator div.controller-disabled > div > .rc-slider-track{
+	background-color: $gcs-fake-elevated;
+}
+.Generator div.controller-disabled > div > .rc-slider-handle{
+	border-color: $gcs-fake-elevated;
+	background-color: $gcs-fake-elevated;
+}

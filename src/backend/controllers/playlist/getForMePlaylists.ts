@@ -3,7 +3,7 @@ import Playlist from "../../../database/models/playlist";
 import { CONFIG } from "../../util/util";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../../auth/getUser";
-import getGeneratedPlaylist from "../../spotify/getGeneratedPlaylist";
+import { getForMePlaylist } from "../../spotify/getGeneratedPlaylist";
 import getUserAccessToken from "../../spotify/getUserAccessToken";
 import cacheSongsFromSpotify from "../../spotify/cacheSongsFromSpotify";
 
@@ -15,9 +15,9 @@ export default (req: Request, res: Response): void => {
 	getUserFromToken(req.header("token") as string).then(user => {
 		getUserAccessToken(user.refreshToken ?? "ERROR").then(async accessToken => {
 			Promise.all([
-				getGeneratedPlaylist(accessToken, "short_term", limit),
-				getGeneratedPlaylist(accessToken, "medium_term", limit),
-				getGeneratedPlaylist(accessToken, "long_term", limit)
+				getForMePlaylist(accessToken, "short_term", limit),
+				getForMePlaylist(accessToken, "medium_term", limit),
+				getForMePlaylist(accessToken, "long_term", limit)
 			]).then(spotifyResults => {
 				return Promise.all(spotifyResults.map(cacheSongsFromSpotify));
 			}).then(songsArrs => {
