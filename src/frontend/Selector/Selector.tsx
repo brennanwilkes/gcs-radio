@@ -159,7 +159,7 @@ export default class Selector extends React.Component<IProps, IState> {
 					onChangeDelay={250}
 					loadingCog={this.state.cogs[1]}
 					loadingCogSpinning={this.state.cogs[1]} />
-				<FloatingLabel
+				{/*<FloatingLabel
 					inputClassName="bg-gcs-elevated text-gcs-alpine"
 					labelClassName="text-gcs-alpine"
 					inputStyle={{
@@ -167,7 +167,7 @@ export default class Selector extends React.Component<IProps, IState> {
 					}}
 					label={this.state.youtubeTranslation}
 					loadingCog={this.state.cogs[2]}
-					loadingCogSpinning={this.state.cogs[2]} />
+					loadingCogSpinning={this.state.cogs[2]} />*/}
 
 				<div className="searchResultsWrapper container-lg p-0 m-0">
 					<ul className="searchResults p-0 mt-n2">{querySongsDisplay}</ul>
