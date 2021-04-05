@@ -80,7 +80,7 @@ export default class App extends React.Component<IProps, IState> {
 				});
 			}).catch(axiosErrorResponseHandler(this));
 		}).catch(() => {
-			window.location.href = "../builder";
+			window.location.href = "../build";
 		})
 	}
 

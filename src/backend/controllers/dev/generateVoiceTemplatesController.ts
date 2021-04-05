@@ -16,7 +16,7 @@ const voiceLines = [
 	// NORMAL
 	new VoiceLineTemplateAutofill([], "You're listening to GCS Radio. Next up we're listening to $NEXT_TITLE by $NEXT_ARTIST", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "You're listening to GCS radio. We just heard $PREV_TITLE, up next, $NEXT_TITLE off of $NEXT_ALBUM", VoiceLineType.normal),
-	new VoiceLineTemplateAutofill([], "Incase you forgot, that was $PREV_TITLE by $PREV_ARTIST off of $PREV_ALBUM. Coming up right away, we'll be listeing to $NEXT_TITLE", VoiceLineType.normal),
+	new VoiceLineTemplateAutofill([], "Incase you forgot, that was $PREV_TITLE by $PREV_ARTIST off of $PREV_ALBUM. Coming up right away, we'll be listening to $NEXT_TITLE", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "If you liked that song you can find it and much more on $PREV_ARTIST's album $PREV_ALBUM. Now on to $NEXT_TITLE", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "Did you know that $PREV_ARTIST has 16 a's in their middle name? Yeah they don't.", VoiceLineType.normal),
 	new VoiceLineTemplateAutofill([], "And we're back with more $NEXT_ARTIST just for you, right up next it's $NEXT_TITLE", VoiceLineType.normal),

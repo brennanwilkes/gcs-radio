@@ -8,7 +8,8 @@ module.exports = {
 		login: "./src/frontend/entryPoints/login.tsx",
 		browser: "./src/frontend/entryPoints/browser.tsx",
 		dashboard: "./src/frontend/entryPoints/dashboard.tsx",
-		builder: "./src/frontend/entryPoints/builder.tsx"
+		builder: "./src/frontend/entryPoints/builder.tsx",
+		generator: "./src/frontend/entryPoints/generator.tsx"
 	},
 	output: {
 		filename: '[name].js',

@@ -75,7 +75,7 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 							href={`../app?playlist=${encodeURIComponent(playlist.id as string)}`}>
 							<Play />
 						</a>
-						<a className="btn btn-lg btn-gcs-bright px-4" href={`../builder?playlist=${encodeURIComponent(playlist.id as string)}`}><Edit /></a>
+						<a className="btn btn-lg btn-gcs-bright px-4" href={`../build?playlist=${encodeURIComponent(playlist.id as string)}`}><Edit /></a>
 						{
 							this.props.deleteCallback ? <button className="btn btn-lg btn-gcs-loud px-4" onClick={() => {
 								if(this.props.deleteCallback){

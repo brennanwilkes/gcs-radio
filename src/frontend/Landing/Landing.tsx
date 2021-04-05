@@ -27,8 +27,8 @@ export default class Landing extends React.Component<IProps, IState> {
 			<div className="Landing">
 				<h1>GCS Radio</h1>
 				<div className="container-fluid">
-					<a href="./browser" className="btn btn-gcs-faded row col-12 p-1"><Browse /></a>
-					<a href="./builder" className="btn btn-gcs-bright row col-12 p-1"><Build /></a>
+					<a href="./browse" className="btn btn-gcs-faded row col-12 p-1"><Browse /></a>
+					<a href="./build" className="btn btn-gcs-bright row col-12 p-1"><Build /></a>
 					<div className="row mt-2 mb-1">
 						<a href="./login"><h6 className="col-4"><Login /></h6></a>
 						<h6 className="mx-n2 text-gcs-alpine">|</h6>
