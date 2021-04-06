@@ -19,6 +19,20 @@
 		"usage1": "Legg til en valgfri tittel i spillelisten din for å lagre den i profilen din!",
 		"usage2": "I tillegg kan du legge til en valgfri beskrivelse, personverninnstilling og opptil tre utvalgte sanger!"
 	},
+	"generator": {
+		"acousticness": "akustikk",
+		"danceability": "dansbarhet",
+		"energy": "Energi",
+		"instrumentalness": "instrumentalitet",
+		"key": "Nøkkel",
+		"loudness": "lydstyrke",
+		"mode": "modus",
+		"playMessage": "Generer og spill",
+		"tempo": "tempo",
+		"usage1": "Velg mellom 1 og 5 \"seed\" sanger å basere spillelisten din på.",
+		"usage2": "Deretter kan du eventuelt konfigurere justeringsglidebryterne.",
+		"valence": "valens"
+	},
 	"landing": {
 		"browse": "Bla gjennom spillelister",
 		"build": "Bygg spilleliste",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "Blå",
 		"build": "bygge",
+		"generate": "generere",
 		"home": "Hjem",
 		"login": "Logg inn",
 		"profile": "dashbord"

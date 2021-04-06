@@ -19,6 +19,20 @@
 		"usage1": "Add an optional title to your playlist to save it to your profile!",
 		"usage2": "Additionally, you may add an optional description, privacy setting, and up to three featured songs!"
 	},
+	"generator": {
+		"acousticness": "acousticness",
+		"danceability": "danceability",
+		"energy": "energy",
+		"instrumentalness": "instrumentalness",
+		"key": "key",
+		"loudness": "loudness",
+		"mode": "mode",
+		"playMessage": "Generate and Play",
+		"tempo": "tempo",
+		"usage1": "Select between 1 and 5 \"seed\" songs to base your playlist on.",
+		"usage2": "Then, optionally configure the adjustment sliders.",
+		"valence": "valence"
+	},
 	"landing": {
 		"browse": "Browse Playlists",
 		"build": "Build Playlist",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "browse",
 		"build": "build",
+		"generate": "generate",
 		"home": "home",
 		"login": "login",
 		"profile": "dashboard"

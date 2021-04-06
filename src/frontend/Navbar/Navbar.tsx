@@ -12,6 +12,7 @@ const Build = () => <>{useTranslation("common").t("nav.build")}</>
 const Browse = () => <>{useTranslation("common").t("nav.browse")}</>
 const Login = () => <>{useTranslation("common").t("nav.login")}</>
 const Profile = () => <>{useTranslation("common").t("nav.profile")}</>
+const Generate = () => <>{useTranslation("common").t("nav.generate")}</>
 
 
 interface IProps {}
@@ -61,7 +62,7 @@ export default class Navbar extends React.Component<IProps, IState> {
 	render(){
 
 		const navigation: NavItemData[] = [
-			{text: <>Generate</>, href: "../generate"},
+			{text: <Generate />, href: "../generate"},
 			{text: <Build />, href: "../build"},
 			{text: <Browse />, href: "../browse"},
 			{text: (this.state.user ? <Profile /> : <Login />), href: `../${this.state.loggedIn ? "dashboard" : "login"}`},

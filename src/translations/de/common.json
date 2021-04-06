@@ -19,6 +19,20 @@
 		"usage1": "Fügen Sie Ihrer Wiedergabeliste einen optionalen Titel hinzu, um ihn in Ihrem Profil zu speichern!",
 		"usage2": "Zusätzlich können Sie eine optionale Beschreibung, Datenschutzeinstellungen und bis zu drei vorgestellte Songs hinzufügen!"
 	},
+	"generator": {
+		"acousticness": "Akustik",
+		"danceability": "Tanzbarkeit",
+		"energy": "Energie",
+		"instrumentalness": "Instrumentalität",
+		"key": "Schlüssel",
+		"loudness": "Lautstärke",
+		"mode": "Modus",
+		"playMessage": "Generieren und spielen",
+		"tempo": "Tempo",
+		"usage1": "Wählen Sie zwischen 1 und 5 \"Seed\" -Titeln aus, auf denen Ihre Wiedergabeliste basiert.",
+		"usage2": "Konfigurieren Sie dann optional die Einstellregler.",
+		"valence": "Wertigkeit"
+	},
 	"landing": {
 		"browse": "Durchsuchen Sie Wiedergabelisten",
 		"build": "Playlist erstellen",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "Durchsuche",
 		"build": "Bauen",
+		"generate": "Generieren",
 		"home": "Zuhause",
 		"login": "Anmeldung",
 		"profile": "Instrumententafel"

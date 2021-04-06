@@ -8,14 +8,18 @@ import Selector from "../Selector/Selector";
 import NavBar from "../Navbar/Navbar";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import Response, {HasResponse, errorResponseHandler, axiosErrorResponseHandler} from "../Response/Response";
+import Response, {HasResponse, axiosErrorResponseHandler, errorResponseHandler} from "../Response/Response";
 import "./generator.scss";
 
 import {useTranslation} from "react-i18next";
+import {i18nInitialized, i18next} from "../Translator";
 
-const Play = () => <>{useTranslation("common").t("selector.play")}</>
 const Loading = () => <>{useTranslation("common").t("selector.loading")}</>
+const Usage1 = () => <>{useTranslation("common").t("generator.usage1")}</>
+const Usage2 = () => <>{useTranslation("common").t("generator.usage2")}</>
+const Play = () => <>{useTranslation("common").t("generator.playMessage")}</>
 
+const capitalize = (str: string) => `${str.slice(0,1).toUpperCase()}${str.slice(1)}`;
 
 const keys = [
 	"acousticness",
@@ -40,6 +44,7 @@ interface IState extends HasResponse{
 	completeSongs?: Song[],
 	shouldRedirect: boolean,
 	postedPlaylistId?: string,
+	translatedKeys: string[],
 
 	acousticness: number,
 	hasAcousticness: boolean,
@@ -78,6 +83,8 @@ export default class Generator extends React.Component<IProps, IState> {
 			rendered: false,
 			shouldRedirect: false,
 
+			translatedKeys: [],
+
 			acousticness: 50,
 			hasAcousticness: false,
 			danceability: 50,
@@ -98,6 +105,15 @@ export default class Generator extends React.Component<IProps, IState> {
 			hasValence: false,
 
 		}
+
+		i18nInitialized.then((t) => {
+			i18next.loadNamespaces(["translations","common","en","common_en"], () => {
+				this.setState({
+					translatedKeys: keys.map(key => capitalize(t(`common:generator.${key}`)))
+				});
+			});
+		}).catch(errorResponseHandler(this));
+
 	}
 
 	componentDidUpdate(_: IProps, prevState: IState){
@@ -140,7 +156,7 @@ export default class Generator extends React.Component<IProps, IState> {
 			};
 
 			keys.forEach(key => {
-				if((this.state as any)[`has${key.slice(0,1).toUpperCase()}${key.slice(1)}`]){
+				if((this.state as any)[`has${capitalize(key)}`]){
 					let val = (this.state as any)[key];
 					if(key === "mode"){
 						val = (val === 1);
@@ -200,9 +216,9 @@ export default class Generator extends React.Component<IProps, IState> {
 	render(){
 		const disabled = (this.state.rendering || this.state.processing || this.state.songs.length === 0);
 
-		const sliders = keys.map(key => {
-			const capKey = `${key.slice(0,1).toUpperCase()}${key.slice(1)}`;
-			return <>
+		const sliders = keys.map((key, i) => {
+			const capKey = capitalize(key);
+			return (
 				<div className="row my-3">
 					<h4
 						className={`h3 text-gcs-${(this.state as any)[`has${capKey}`] ? "bright": "elevated" } col-12 col-md-3 my-0`}
@@ -211,7 +227,7 @@ export default class Generator extends React.Component<IProps, IState> {
 							state[`has${capKey}`] = !((this.state as any)[`has${capKey}`]);
 							this.setState({...state});
 						}}
-					>{capKey}</h4>
+					>{this.state.translatedKeys[i]}</h4>
 					<div className={`${(this.state as any)[`has${capKey}`] ? "" : "controller-disabled"} controller col-12 col-md-8`}>
 						<Slider
 							min={0}
@@ -226,7 +242,7 @@ export default class Generator extends React.Component<IProps, IState> {
 						/>
 					</div>
 				</div>
-			</>;
+			);
 		})
 
 
@@ -234,7 +250,7 @@ export default class Generator extends React.Component<IProps, IState> {
 			<NavBar />
 			<div className={`Generator p-2 py-sm-3 pb-md-4 px-sm-1 px-md-0 ${this.state.rendering || this.state.processing ? "GeneratorProcessing" : ""}`}>
 				<div className="container-lg"><p className="my-2 my-md-4 text-gcs-alpine">
-					Select between 1 and 5 "seed" songs to base your playlist on
+					<Usage1 /><br /><Usage2 />
 				</p></div>
 				<Selector
 					songChangeCallback={this.songChangeCallback}
@@ -257,7 +273,7 @@ export default class Generator extends React.Component<IProps, IState> {
 						className={`container mt-2 my-4 btn btn-lg text-gcs-${disabled ? "alpine" : "base"} btn-gcs-${disabled ? "elevated" : "faded"}`}>{
 							this.state.rendering || (this.state.rendered && this.state.processing)
 							? <Loading />
-							: <>Generate and Play</>
+							: <Play />
 					}</button>
 				</div>
 			</div>

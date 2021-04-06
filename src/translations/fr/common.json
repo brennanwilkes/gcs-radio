@@ -19,6 +19,20 @@
 		"usage1": "Ajoutez un titre facultatif à votre liste de lecture pour l'enregistrer dans votre profil!",
 		"usage2": "De plus, vous pouvez ajouter une description facultative, un paramètre de confidentialité et jusqu'à trois chansons en vedette!"
 	},
+	"generator": {
+		"acousticness": "acoustique",
+		"danceability": "Danseur",
+		"energy": "Énergie",
+		"instrumentalness": "instrumentalité",
+		"key": "Clé",
+		"loudness": "intensité",
+		"mode": "Mode",
+		"playMessage": "Générer et jouer",
+		"tempo": "Tempo",
+		"usage1": "Sélectionnez entre 1 et 5 chansons «de départ» sur lesquelles baser votre liste de lecture.",
+		"usage2": "Ensuite, configurez éventuellement les curseurs de réglage.",
+		"valence": "valence"
+	},
 	"landing": {
 		"browse": "Parcourir les playlists",
 		"build": "Créer une playlist",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "Feuilleter",
 		"build": "Construire",
+		"generate": "produire",
 		"home": "Accueil",
 		"login": "S'identifier",
 		"profile": "Tableau de bord"
