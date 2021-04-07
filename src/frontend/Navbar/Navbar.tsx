@@ -70,7 +70,7 @@ export default class Navbar extends React.Component<IProps, IState> {
 
 		return <>
 			<header>
-				<h1 className="text-gcs-loud mb-0 mt-n4 rh1">GCS Radio</h1>
+				<h1 className="text-gcs-loud mb-0 mt-md-n4 rh1">GCS Radio</h1>
 				<nav className="container-lg row pt-md-5 py-3 mx-0">{
 					navigation.map(link => <NavItem key={`${link.text}-${link.href}`} item={link} />)
 				}</nav>
