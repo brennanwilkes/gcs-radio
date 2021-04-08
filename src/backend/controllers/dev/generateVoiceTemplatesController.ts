@@ -10,7 +10,7 @@ const voiceLines = [
 	// INTROS
 	new VoiceLineTemplateAutofill([], "Welcome to GCS Radio! First up, $NEXT_TITLE by $NEXT_ARTIST", VoiceLineType.intro),
 	new VoiceLineTemplateAutofill([], "3. 2. 1. We're live! This is GCS Radio, you're listening to $NEXT_TITLE off of $NEXT_ALBUM", VoiceLineType.intro),
-	new VoiceLineTemplateAutofill([], "Welclome back to GCS Radio, starting off is $NEXT_TITLE by $NEXT_ARTIST", VoiceLineType.intro),
+	new VoiceLineTemplateAutofill([], "Welcome back to GCS Radio, starting off is $NEXT_TITLE by $NEXT_ARTIST", VoiceLineType.intro),
 	new VoiceLineTemplateAutofill([], "This is GCS Radio, we're going to hop right in with some $NEXT_ARTIST!", VoiceLineType.intro),
 
 	// NORMAL
