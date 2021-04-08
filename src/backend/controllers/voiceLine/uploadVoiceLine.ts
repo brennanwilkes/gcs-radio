@@ -34,7 +34,7 @@ export default (render: VoiceLineRender, req: Request, res: Response, errorHandl
 						voiceLines: [new VoiceLineRenderApiObj(render, [
 							new PlayAudioLink(req, render),
 							new SelfLink(req, resp._id, "voiceLines")
-						])]
+						], String(resp._id))]
 					});
 					res.end();
 				}).catch(errorHandler);

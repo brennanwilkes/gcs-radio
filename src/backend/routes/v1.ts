@@ -32,6 +32,7 @@ import audioValidator from "../validators/audio/audioValidator";
 import postVoiceLine from "../controllers/voiceLine/postVoiceLine";
 import { search } from "../controllers/song/queryController";
 import searchValidator from "../validators/song/searchValidator";
+import getVoiceLineValidator from "../validators/voiceLine/getVoiceLineValidator";
 
 const apiV1Router = Router();
 
@@ -54,7 +55,7 @@ apiV1Router.delete("/playlists/:id", [...tokenValidator, ...getPlaylistValidator
 apiV1Router.post("/playlists", postPlaylistValidator, postPlaylist);
 
 apiV1Router.post("/voiceLines", postVoiceLineValidator, postVoiceLine);
-apiV1Router.get("/voiceLines/:id", getVoiceLine);
+apiV1Router.get("/voiceLines/:id", getVoiceLineValidator, getVoiceLine);
 
 apiV1Router.get("/audio/:id", audioValidator, getAudio);
 apiV1Router.get("/search", searchValidator, search);
