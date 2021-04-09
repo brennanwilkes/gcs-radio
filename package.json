@@ -1,6 +1,6 @@
 {
     "name": "gcs-radio",
-    "version": "1.17.11",
+    "version": "1.18.0",
     "description": "",
     "main": "src/backend/index.ts",
     "scripts": {
