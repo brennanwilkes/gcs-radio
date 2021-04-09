@@ -27,7 +27,8 @@
         "generateDefaultAudio": "npm run build:backend && ./src/dev/generateDefaultAudio.sh",
         "generateDefaultAudio:noBuild": "./src/dev/generateDefaultAudio.sh",
         "generateVoiceTemplates": "npm run build:backend && ./src/dev/generateVoiceTemplates.sh",
-        "generateVoiceTemplates:noBuild": "./src/dev/generateVoiceTemplates.sh"
+        "generateVoiceTemplates:noBuild": "./src/dev/generateVoiceTemplates.sh",
+        "dockerize": "sh ./src/dev/dockerize.sh"
     },
     "repository": {
         "type": "git",

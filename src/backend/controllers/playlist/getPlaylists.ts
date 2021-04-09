@@ -22,14 +22,18 @@ export default (req: Request, res: Response): void => {
 	}).limit(limit).then(playlistResults => {
 		total = [...playlistResults];
 		return new Promise<PlaylistDoc[]>((resolve, reject) => {
-			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
-				userId = user;
-				Playlist.find({
-					user: new mongoose.Types.ObjectId(user)
-				}).then(resolve).catch(reject);
-			}).catch(() => {
-				resolve(Promise.resolve([]));
-			});
+			if (total.length >= limit) {
+				resolve([]);
+			} else {
+				getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
+					userId = user;
+					Playlist.find({
+						user: new mongoose.Types.ObjectId(user)
+					}).limit(limit - total.length).then(resolve).catch(reject);
+				}).catch(() => {
+					resolve(Promise.resolve([]));
+				});
+			}
 		});
 	}).then(playlistResults => {
 		total = [...total, ...playlistResults];

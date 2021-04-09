@@ -19,6 +19,20 @@
 		"usage1": "Lägg till en valfri titel i din spellista för att spara den i din profil!",
 		"usage2": "Dessutom kan du lägga till en valfri beskrivning, sekretessinställning och upp till tre utvalda låtar!"
 	},
+	"generator": {
+		"acousticness": "akustik",
+		"danceability": "dansbarhet",
+		"energy": "Energi",
+		"instrumentalness": "instrumentalitet",
+		"key": "Nyckel",
+		"loudness": "högljuddhet",
+		"mode": "läge",
+		"playMessage": "Generera och spela",
+		"tempo": "tempo",
+		"usage1": "Välj mellan 1 och 5 \"seed\" -låtar att basera din spellista på.",
+		"usage2": "Konfigurera sedan justeringsreglagen eventuellt.",
+		"valence": "valens"
+	},
 	"landing": {
 		"browse": "Bläddra i spellistor",
 		"build": "Bygg spellista",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "Bläddra",
 		"build": "bygga",
+		"generate": "Generera",
 		"home": "Hem",
 		"login": "Logga in",
 		"profile": "instrumentbräda"

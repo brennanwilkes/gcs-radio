@@ -187,8 +187,6 @@ export default class App extends React.Component<IProps, IState> {
 
 	componentDidUpdate(prevProps: IProps, prevState: IState){
 		if(prevProps.songs !== this.props.songs){
-			console.dir(this.props.songs.length);
-			console.dir(this.props.songs);
 			this.initializeSongs();
 		}
 		if(prevProps.transitions !== this.props.transitions){

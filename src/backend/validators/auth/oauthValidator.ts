@@ -30,7 +30,7 @@ export const isValidToken: CustomValidator = (token: string | undefined): Promis
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: string) =>
 	(token: string | undefined, meta: Meta): Promise<boolean> => {
-		return new Promise<boolean>((resolve) => {
+		return new Promise<boolean>((resolve, reject) => {
 			const id = meta.req.body[bodyParam];
 			if (token) {
 				resolveSignedPayload(token).then(payload => {
@@ -43,13 +43,11 @@ export const isValidId: ((bodyParam: string) => CustomValidator) = (bodyParam: s
 					) {
 						resolve(true);
 					} else {
-						resolve(false);
+						reject(new Error("Payload does not match ID"));
 					}
-				}).catch(() => {
-					resolve(false);
-				});
+				}).catch(reject);
 			} else {
-				resolve(false);
+				reject(new Error("Token does not exist"));
 			}
 		});
 	};

@@ -19,6 +19,20 @@
 		"usage1": "Adicione um título opcional à sua lista de reprodução para salvá-la em seu perfil!",
 		"usage2": "Além disso, você pode adicionar uma descrição opcional, configuração de privacidade e até três músicas em destaque!"
 	},
+	"generator": {
+		"acousticness": "acústico",
+		"danceability": "Dança",
+		"energy": "Energia",
+		"instrumentalness": "instrumentalidade",
+		"key": "Chave",
+		"loudness": "Volume",
+		"mode": "Modo",
+		"playMessage": "Gerar e Jogar",
+		"tempo": "tempo",
+		"usage1": "Selecione entre 1 e 5 canções \"semente\" para basear sua lista de reprodução.",
+		"usage2": "Em seguida, configure opcionalmente os controles deslizantes de ajuste.",
+		"valence": "valência"
+	},
 	"landing": {
 		"browse": "Navegar nas listas de reprodução",
 		"build": "Construir lista de reprodução",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "Squeaky toy",
 		"build": "Construir",
+		"generate": "Gerar",
 		"home": "Casa",
 		"login": "Entrar",
 		"profile": "painel de controle"

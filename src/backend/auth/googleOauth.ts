@@ -45,12 +45,7 @@ export function getTokenFromCode (code: string, redirectURI: string): Promise<Cr
 }
 
 export function getSignedTokenFromCode (code: string, redirectURI: string): Promise<string> {
-	return new Promise<string>((resolve, reject) => {
-		getTokenFromCode(code, redirectURI)
-			.then(signPayload)
-			.then(resolve)
-			.catch(reject);
-	});
+	return getTokenFromCode(code, redirectURI).then(signPayload);
 }
 
 export function getUserInfoFromToken (token: Credentials, redirectURI: string): Promise<GoogleCredential> {

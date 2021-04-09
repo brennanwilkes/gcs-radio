@@ -55,15 +55,19 @@ export function getUserFromToken (token: string): Promise<UserWithId> {
 
 export function getUserFromTokenWithPassword (token: string): Promise<UserWithPassword> {
 	return new Promise<UserWithPassword>((resolve, reject) => {
+		let idCache = "";
+		let userCache: UserWithId | undefined;
 		getUserIdFromToken(token).then(id => {
-			getUserFromId(id).then(user => {
-				getPasswordFromId(id).then(password => {
-					resolve({
-						...user,
-						password
-					});
-				}).catch(reject);
-			}).catch(reject);
+			idCache = id;
+			return getUserFromId(id);
+		}).then(user => {
+			userCache = user;
+			return getPasswordFromId(idCache);
+		}).then(password => {
+			resolve({
+				...(userCache as UserWithId),
+				password
+			});
 		}).catch(reject);
 	});
 }

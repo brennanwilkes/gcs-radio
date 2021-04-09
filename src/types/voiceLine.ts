@@ -178,8 +178,9 @@ export interface VoiceLineRenderApi extends VoiceLineRender{
 }
 
 export class VoiceLineRenderApiObj extends VoiceLineRenderObj implements VoiceLineRenderApi {
-	links: Link[]
-	constructor (base: VoiceLineRender, links: Link[]) {
+	links: Link[];
+	id?: string;
+	constructor (base: VoiceLineRender, links: Link[], id?: string) {
 		super(
 			base.voice,
 			base.gender,
@@ -187,6 +188,9 @@ export class VoiceLineRenderApiObj extends VoiceLineRenderObj implements VoiceLi
 			base.type,
 			base.audioId
 		);
+		if (id) {
+			this.id = id;
+		}
 		this.links = links;
 	}
 }

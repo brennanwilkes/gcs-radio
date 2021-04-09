@@ -19,6 +19,20 @@
 		"usage1": "在您的播放列表中添加一个可选标题，以将其保存到您的个人资料中！",
 		"usage2": "此外，您可以添加可选的说明，隐私设置以及最多三首精选歌曲！"
 	},
+	"generator": {
+		"acousticness": "听觉",
+		"danceability": "舞蹈性",
+		"energy": "能源",
+		"instrumentalness": "工具性",
+		"key": "键",
+		"loudness": "响度",
+		"mode": "模式",
+		"playMessage": "产生并播放",
+		"tempo": "速度",
+		"usage1": "在1至5首“种子”歌曲中进行选择，以此作为播放列表的基础。",
+		"usage2": "然后，可选地配置调整滑块。",
+		"valence": "价"
+	},
 	"landing": {
 		"browse": "浏览播放列表",
 		"build": "建立播放清单",
@@ -48,6 +62,7 @@
 	"nav": {
 		"browse": "浏览",
 		"build": "建立",
+		"generate": "生成",
 		"home": "家",
 		"login": "登录",
 		"profile": "仪表板"
