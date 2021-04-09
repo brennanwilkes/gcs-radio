@@ -46,9 +46,8 @@ export function PlaylistModelFromPlaylist (playlist: Playlist): InstanceType<typ
 export function PlaylistObjFromQuery (docs: PlaylistDoc, renderSongs = true): Promise<Playlist> {
 	return new Promise<Playlist>((resolve, reject) => {
 		const songs = renderSongs ? docs.songs.map(id => SongModel.findOne({ _id: id })) : [];
-
 		Promise.all(songs).then(results => {
-			if (!renderSongs || (results && results.length > 0)) {
+			if (!renderSongs || results.length > 0) {
 				const filtered: SongDoc[] = results.filter((song): song is SongDoc => song !== null);
 				resolve(new PlaylistObj(
 					filtered.map(song => new SongObjFromQuery(song)),
@@ -65,7 +64,7 @@ export function PlaylistObjFromQuery (docs: PlaylistDoc, renderSongs = true): Pr
 					docs.private
 				));
 			} else {
-				reject(new Error("No results found!"));
+				reject(new Error(`${docs._id} ${docs.name}`));// "No results found!"));
 			}
 		}).catch(reject);
 	});

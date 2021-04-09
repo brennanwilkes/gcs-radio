@@ -5,6 +5,7 @@ import path from "path";
 import { Server } from "http";
 
 import { CONFIG, print } from "./util/util";
+import logger from "./logging/logger";
 
 /**
 	Server abstration object
@@ -66,7 +67,31 @@ export default class RadioServer {
 			print("Received invalid GET request for", req.url);
 
 			res.writeHead(404, { "Content-Type": "text/html" });
-			res.write("<h1>404: If you see this, it's already too late!</h1>");
+			res.write(`
+			<html>
+				<head>
+					<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+					<style>
+						body{
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							background-color: #1c2630;
+						}
+						h1:first-of-type{
+							color: #f2542d;
+						}
+						h1:last-of-type{
+							color: #c8c1f5ff;
+						}
+					</style>
+				</head>
+				<body>
+					<h1>404</h1><h1>: If you see this, it's already too late!</h1>
+				</body>
+			</html>
+			`);
+			logger.logApiCall("404");
 			res.end();
 		});
 
@@ -75,6 +100,7 @@ export default class RadioServer {
 			if (this.server) {
 				const address = this.server?.address();
 				print("server is listening", (address && !(typeof address === "string")) ? `on port ${address.port}` : "");
+				logger.logServerUp();
 			}
 		});
 

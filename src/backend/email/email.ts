@@ -1,6 +1,7 @@
 import sgMail from "@sendgrid/mail";
 import { ClientResponse } from "@sendgrid/client/src/response";
 import { CONFIG, print } from "../util/util";
+import logger from "../logging/logger";
 
 export interface Mail{
 	email: string,
@@ -28,6 +29,7 @@ const MailServiceObj = new Promise<MailService>((resolve, reject) => {
 						text: htmlEnable ? " " : message,
 						html: htmlEnable ? message : " "
 					};
+					logger.logEmail(subject, email);
 					sgMail.send(msg).then(resolve).catch(reject);
 				});
 			}

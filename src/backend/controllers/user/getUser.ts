@@ -4,6 +4,7 @@ import { UserFromDoc } from "../../../types/user";
 import notFoundErrorHandler from "../../errorHandlers/notFoundErrorHandler";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../../auth/getUser";
+import logger from "../../logging/logger";
 
 export default (req: Request, res: Response): void => {
 	getUserFromToken(req.header("token") as string).then(user => {
@@ -13,6 +14,7 @@ export default (req: Request, res: Response): void => {
 				if (userObj.refreshToken) {
 					res.cookie("srt", userObj.refreshToken, { httpOnly: false });
 				}
+				logger.logSuccessfulAuth();
 				res.status(200).json({
 					users: [userObj]
 				});

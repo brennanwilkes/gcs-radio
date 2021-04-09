@@ -6,6 +6,11 @@ import { UserType } from "../../types/user";
 /* eslint-disable no-unused-vars */
 export enum EventType{
 	SIGNUP = "SIGNUP",
+	AUTH = "AUTH",
+	EMAIL = "EMAIL",
+	SPOTIFY_CONNECTION = "SPOTIFY_CONNECTION",
+	DB_CONNECTION = "DB_CONNECTION",
+	SERVER_UP = "SERVER_UP"
 }
 /* eslint-enable no-unused-vars */
 
@@ -19,11 +24,9 @@ export class Logger {
 		this.tracker = ua(trackingId);
 	}
 
-	errorHandler (error: any, response: any, body: any): void {
+	errorHandler (error: any, _response: any, _body: any): void {
 		if (error) {
 			console.error(error);
-			console.dir(response);
-			console.dir(body);
 		}
 	}
 
@@ -32,8 +35,38 @@ export class Logger {
 		this.tracker.exception(`${err.error}: ${err.message}`, fatal).send(this.errorHandler);
 	}
 
+	logServerUp () {
+		this.logEvent(EventType.SERVER_UP);
+	}
+
+	logSpotifyConnection () {
+		this.logEvent(EventType.SPOTIFY_CONNECTION);
+	}
+
+	logDBConnection () {
+		this.logEvent(EventType.DB_CONNECTION);
+	}
+
+	logEmail (subject: string, address: string) {
+		this.logEvent(EventType.EMAIL, subject, address);
+	}
+
+	logSuccessfulAuth () {
+		this.logEvent(EventType.AUTH);
+	}
+
 	logSignup (email: string, type: UserType) {
-		this.tracker.event(EventType.SIGNUP, type, email, 42).send();
+		this.logEvent(EventType.SIGNUP, type, email);
+	}
+
+	logEvent (category: string, action?: string, label?: string) {
+		if (!action) {
+			action = category;
+		}
+		if (!label) {
+			label = action;
+		}
+		this.tracker.event(category, action, label, 42).send();
 	}
 
 	logApiCall (path: string) {
