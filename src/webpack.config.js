@@ -1,6 +1,9 @@
 const path = require("path");
 module.exports = {
 	mode: "development",
+	stats: {
+		warnings:false
+	},
 	devtool: "source-map",
 	entry: {
 		app: "./src/frontend/entryPoints/app.tsx",
