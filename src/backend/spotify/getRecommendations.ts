@@ -78,8 +78,6 @@ export default async (options: RecommendationOptions, userAccessToken?: string):
 		options.max_acousticness = getMinMax(options.target_acousticness)[1];
 	}
 
-	console.dir(options);
-
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
 		generateRefreshedCredential().then(async spotifyApi => {
 			if (userAccessToken) {

@@ -5,6 +5,9 @@ import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import RadioServer from "../../server";
 import { VoiceLineTemplateModelFromVoiceLineTemplate } from "../../../database/models/voiceLineTemplate";
 
+// This is just a cache of voice line data so that a new GCS Radio database instance can
+// be spun up. This controller simply pre-loads the database with VoiceLineTemplate documents.
+// Actual voice line requests will query the live database for templates, not pick from here.
 const voiceLines = [
 
 	// INTROS
@@ -115,6 +118,8 @@ const voiceLines = [
 	], "$NEXT_SONG by $NEXT_ARTIST is so good we have to play it again!", VoiceLineType.parallel)
 ];
 
+// This controller is only meant to be activated as part of the
+// generateVoiceTemplates dev script
 export default (server: RadioServer) => (req: Request, res: Response): void => {
 	const processing = voiceLines.map(line => VoiceLineTemplateModelFromVoiceLineTemplate(line).save());
 	Promise.all(processing).then(data => {

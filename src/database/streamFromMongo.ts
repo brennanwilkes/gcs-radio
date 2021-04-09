@@ -1,7 +1,7 @@
 import { Writable } from "stream";
 import { mongoose } from "./connection";
 
-export default function async (id:string, stdout: Writable, bucketName = "audio"): Promise<void> {
+export default function (id:string, stdout: Writable, bucketName = "audio"): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
 			bucketName,

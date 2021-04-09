@@ -2,6 +2,7 @@ import "dotenv/config";
 import SpotifyWebApi from "spotify-web-api-node";
 import { CONFIG, print } from "../util/util";
 import dayjs from "dayjs";
+import logger from "../logging/logger";
 
 /* eslint-disable camelcase */
 interface ClientCredentialsGrantResponse {
@@ -39,6 +40,7 @@ const generateAccessToken = (api?: SpotifyWebApi):Promise<ClientCredentialsGrant
 			return spotifyApi.clientCredentialsGrant();
 		}).then(data => {
 			print("Generated new spotify access token");
+			logger.logSpotifyConnection();
 			resolve(data.body);
 		}, err => {
 			print("Something went wrong when retrieving an access token", err);
@@ -60,6 +62,9 @@ export const generateRefreshedCredential = (): Promise<SpotifyWebApi> => {
 	});
 };
 
+// Generates a rolling spotify connection
+// Caches an existing token for as long as possible,
+// then renews it when needed
 const generateClientCredential = () => new Promise<SpotifyWebApi>((resolve, reject) => {
 	generateWebApi().then(api => {
 		generateAccessToken(api).then(data => {

@@ -5,6 +5,7 @@ import { mongoose } from "../database/connection";
 import mainRouter from "./routes/index";
 import generateDefaultAudio from "./controllers/dev/generateDefaultAudioController";
 import generateVoiceTemplates from "./controllers/dev/generateVoiceTemplatesController";
+import logger from "./logging/logger";
 
 const server = new RadioServer();
 
@@ -19,5 +20,6 @@ if (process.env.ENABLE_GENERATE_TEMPLATES) {
 
 mongoose.connection.on("error", console.error.bind(console, "connection error:"));
 mongoose.connection.once("open", function callback () {
+	logger.logDBConnection();
 	server.start();
 });

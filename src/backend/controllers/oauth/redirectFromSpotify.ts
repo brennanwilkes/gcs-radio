@@ -11,6 +11,7 @@ import { fireAndForgetMail } from "../../email/email";
 import logger from "../../logging/logger";
 import { getUserIdFromToken } from "../../auth/getUser";
 
+// Handles an incoming redirect from spotify oauth
 export default (req: Request, res:Response): void => {
 	const code = req.query.code as string;
 	let user: SpotifyApi.UserObjectPrivate | undefined;
@@ -20,8 +21,12 @@ export default (req: Request, res:Response): void => {
 		spotifyApi.authorizationCodeGrant(code).then(data => {
 			spotifyApi.setAccessToken(data.body.access_token);
 			spotifyApi.setRefreshToken(data.body.refresh_token);
-			res.cookie("sat", data.body.access_token, { httpOnly: false });
+
+			// Cache spotify refresh token
+			// Super important as the spotify player needs this
+			// on the frontend in order to play from the spotify web api
 			res.cookie("srt", data.body.refresh_token, { httpOnly: false });
+			res.cookie("sat", data.body.access_token, { httpOnly: false });
 			refreshToken = data.body.refresh_token;
 
 			return spotifyApi.getMe();
@@ -36,14 +41,18 @@ export default (req: Request, res:Response): void => {
 					const existingUser = await UserModel.findOne({
 						_id: existingUserId
 					});
+
+					// User account already exists, and is being connected to spotify
 					if (existingUser) {
+						// Update user refresh token
 						existingUser.refreshToken = refreshToken;
 						return existingUser.save();
 					} else {
 						throw new Error("Updating existing user account failed");
 					}
 				}
-			} else if (search) {
+			}
+			if (search) {
 				user = userResp.body;
 				return UserModel.find({
 					email: user.email,
@@ -52,9 +61,12 @@ export default (req: Request, res:Response): void => {
 			}
 		}).then(async docs => {
 			const arrDocs = Array.isArray(docs) ? docs : [docs as UserDoc];
+
+			// Login
 			if (docs && arrDocs.length > 0) {
 				return generateToken(arrDocs[0]._id);
 			} else {
+				// Signup
 				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate, refreshToken);
 				logger.logSignup(userObj.email, UserType.SPOTIFY);
 				fireAndForgetMail(welcomeEmail(userObj.email));

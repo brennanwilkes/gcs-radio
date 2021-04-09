@@ -29,6 +29,7 @@ export const verifyUrlExistance = async (url: string): Promise<boolean> => {
 	});
 };
 
+// Some awesome ID regex checks. Hopefully they don't change *crosses fingers*
 export const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
 export const youtubeIdRegex = /^([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]|DEFAULT)$/;
 export const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;

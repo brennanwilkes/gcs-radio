@@ -15,8 +15,12 @@ export default (req: Request, res: Response): void => {
 	Song.find({}).limit(limit).then(result => {
 		if (result) {
 			const songProcessing = result.map(async result => {
+				// Ensure song has a valid audioID
+				// This is so heavy audio resource caches can be periodically cleared out
 				const validResult = await ensureSongValidity(result);
 				const song = new SongObjFromQuery(validResult);
+
+				// Apply HATEOAS links
 				return new SongApiObj(song, [
 					new PlayAudioLink(req, song),
 					new SelfLink(req, result._id, "songs")

@@ -25,7 +25,7 @@ RUN npm install
 # Copy local code to the container image.
 COPY . ./
 
-RUN npm run build
+RUN npm run build:production
 RUN npm prune --production
 
 # Run the web service on container startup.

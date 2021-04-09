@@ -7,6 +7,7 @@ import { CONFIG } from "../util/util";
 const oauth2 = google.oauth2("v2");
 const OAuth2 = google.auth.OAuth2;
 
+// Ensures google credentials are set
 export function getGoogleEnv (): Promise<{id:string, secret: string}> {
 	return new Promise<{id:string, secret: string}>((resolve, reject) => {
 		if (!CONFIG.googleClientId) {
@@ -22,6 +23,7 @@ export function getGoogleEnv (): Promise<{id:string, secret: string}> {
 	});
 }
 
+// Creates a Google OAuth2 instance using the credentials
 export function oath2FromCredentials (redirectUri: string): Promise<OAuth2Client> {
 	return new Promise<OAuth2Client>((resolve, reject) => {
 		getGoogleEnv().then(env => {
@@ -30,6 +32,7 @@ export function oath2FromCredentials (redirectUri: string): Promise<OAuth2Client
 	});
 }
 
+// Extracts and verifies the signed token from a google oauth callback
 export function getTokenFromCode (code: string, redirectURI: string): Promise<Credentials> {
 	return new Promise<Credentials>((resolve, reject) => {
 		oath2FromCredentials(redirectURI).then(authClient => {

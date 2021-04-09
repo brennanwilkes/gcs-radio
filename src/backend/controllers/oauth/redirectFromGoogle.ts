@@ -13,6 +13,7 @@ import logger from "../../logging/logger";
 
 import generateGoogleRedirectURI from "./generateGoogleRedirectURI";
 
+// Handles an incoming redirect from google oauth
 export default async (req: Request, res:Response): Promise<void> => {
 	const code = req.query.code as string;
 
@@ -22,14 +23,18 @@ export default async (req: Request, res:Response): Promise<void> => {
 		return getUserInfoFromToken(token, generateGoogleRedirectURI(req));
 	}).then(userInfo => {
 		info = userInfo;
+
+		// Check for an existing user account
 		return UserModel.find({
 			email: userInfo.email,
 			type: UserType.GOOGLE
 		});
 	}).then(async docs => {
+		// Login
 		if (docs.length > 0) {
 			return generateToken(docs[0]._id);
 		} else {
+			// Signup
 			const user = new UserFromGoogleCredentials(info as GoogleCredential);
 
 			logger.logSignup(user.email, UserType.GOOGLE);

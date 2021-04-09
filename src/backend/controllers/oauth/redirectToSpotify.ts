@@ -5,6 +5,7 @@ import connection from "../../spotify/connection";
 
 import generateSpotifyRedirectURI from "./generateSpotifyRedirectURI";
 
+// Redirect to spotify oauth
 export default (req: Request, res: Response): void => {
 	if (!CONFIG.spotifyClientId) {
 		internalErrorHandler(req, res)("Spotify application ID not set");
