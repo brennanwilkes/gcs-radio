@@ -12,6 +12,7 @@ import getRecommendations from "../../spotify/getRecommendations";
 import cacheSongsFromSpotify from "../../spotify/cacheSongsFromSpotify";
 
 const sendNextSongResponse = (playlistResults: PlaylistDoc, req: Request, res:Response, limit: number) => {
+	// Convert docs to playlist object
 	PlaylistObjFromQuery(playlistResults).then(playlist => {
 		return getRecommendations({
 			seed_tracks: arrayshuffle(playlist.songs).slice(0, 5).map(song => song.spotifyId),
@@ -21,6 +22,8 @@ const sendNextSongResponse = (playlistResults: PlaylistDoc, req: Request, res:Re
 		return cacheSongsFromSpotify(recommendations);
 	}).then(songs => {
 		res.send({
+
+			// Apply HATEOAS links
 			songs: songs.map(song => new SongApiObj(song, [
 				new PlayAudioLink(req, song),
 				new SelfLink(req, String(song.id), "songs")
@@ -34,6 +37,7 @@ export default (req: Request, res: Response): void => {
 	const limit = (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
 	findPlaylistById(String(req.query.playlist)).then(playlistResults => {
 		if (playlistResults) {
+			// Confirm playlist is either public or owned by requesting user
 			getUserIdFromToken(req.header("token") ?? "INVALID").then(user => {
 				if (!playlistResults.private || user === String(playlistResults.user)) {
 					sendNextSongResponse(playlistResults, req, res, limit);

@@ -14,13 +14,16 @@ export default (req: Request, res: Response): void => {
 
 	getUserFromToken(req.header("token") as string).then(user => {
 		getUserAccessToken(user.refreshToken ?? "ERROR").then(async accessToken => {
+			// Getting made-for-me requires spotify authentication
 			Promise.all([
 				getForMePlaylist(accessToken, "short_term", limit),
 				getForMePlaylist(accessToken, "medium_term", limit),
 				getForMePlaylist(accessToken, "long_term", limit)
 			]).then(spotifyResults => {
+				// Post songs to database
 				return Promise.all(spotifyResults.map(cacheSongsFromSpotify));
 			}).then(songsArrs => {
+				// Map each array of songs into an actual playlist
 				return Promise.all(songsArrs.map((songs, i) => {
 					const songIds = songs.map(song => String(song.id));
 					return new Playlist({

@@ -11,6 +11,8 @@ export default (render: VoiceLineRender, req: Request, res: Response, errorHandl
 	print(`Rendered voice line "${render.text}"`);
 
 	translateVoiceLine(render).then(render => {
+		// Ensure not to re-render an existing voiceline
+		// Saves money with the Google Text to Speech API
 		VoiceLineRenderModel.findOne({
 			text: render.text,
 			type: render.type,
@@ -31,6 +33,8 @@ export default (render: VoiceLineRender, req: Request, res: Response, errorHandl
 				}).then(resp => {
 					print(`Saved Voice line to cache - ${resp._id}`);
 					res.status(200).send({
+
+						// Apply HATEOAS links
 						voiceLines: [new VoiceLineRenderApiObj(render, [
 							new PlayAudioLink(req, render),
 							new SelfLink(req, resp._id, "voiceLines")

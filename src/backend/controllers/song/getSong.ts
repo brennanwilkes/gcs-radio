@@ -13,9 +13,14 @@ export default (req: Request, res: Response): void => {
 
 	Song.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) }).then(async result => {
 		if (result) {
+			// Ensure song has a valid audioID
+			// This is so heavy audio resource caches can be periodically cleared out
 			const validResult = await ensureSongValidity(result);
 			const song = new SongObjFromQuery(validResult);
+
 			res.send({
+
+				// Apply HATEOAS links
 				songs: [
 					new SongApiObj(song, [
 						new PlayAudioLink(req, song),

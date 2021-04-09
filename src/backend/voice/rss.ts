@@ -11,6 +11,7 @@ interface RSSResponse{
 	details: string
 }
 
+// Want your own RSS feed added to GCS radio? Submit a PR at https://gitlab.com/brennanwilkes/gcs-radio/-/merge_requests
 export const feeds: Feed[] = [
 	{ name: "BBC News", url: "http://feeds.bbci.co.uk/news/world/rss.xml" },
 	{ name: "BBC Sports", url: "https://feeds.bbci.co.uk/sport/rss.xml" },

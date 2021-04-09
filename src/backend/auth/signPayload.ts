@@ -2,7 +2,10 @@ import jwt from "jsonwebtoken";
 import { CONFIG } from "../util/util";
 
 /* eslint-disable @typescript-eslint/ban-types */
+
+// Encrypts a payload using configuration settings
 export default function (payload: string | Buffer | object): Promise<string> {
+	// Promise API Wrapper for callbacks
 	return new Promise<string>((resolve, reject) => {
 		if (!CONFIG.encryptionSecret) {
 			reject(new Error("Token secret not set"));
@@ -18,7 +21,9 @@ export default function (payload: string | Buffer | object): Promise<string> {
 	});
 }
 
+// Decrypts a payload using configuration settings
 export function resolveSignedPayload (payload: string): Promise<string | object> {
+	// Promise API Wrapper for callbacks
 	return new Promise<string | object>((resolve, reject) => {
 		if (!CONFIG.encryptionSecret) {
 			reject(new Error("Token secret not set"));

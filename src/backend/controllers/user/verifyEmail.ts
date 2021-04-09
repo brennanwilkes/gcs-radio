@@ -4,6 +4,7 @@ import notFoundErrorHandler from "../../errorHandlers/notFoundErrorHandler";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../../auth/getUser";
 
+// Route controller for the encyrpted user id URL emailed to users
 export default (req: Request, res: Response): void => {
 	const id = String(req.params.id);
 	getUserFromToken(id as string).then((user) => {

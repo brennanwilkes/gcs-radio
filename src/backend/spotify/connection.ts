@@ -62,6 +62,9 @@ export const generateRefreshedCredential = (): Promise<SpotifyWebApi> => {
 	});
 };
 
+// Generates a rolling spotify connection
+// Caches an existing token for as long as possible,
+// then renews it when needed
 const generateClientCredential = () => new Promise<SpotifyWebApi>((resolve, reject) => {
 	generateWebApi().then(api => {
 		generateAccessToken(api).then(data => {

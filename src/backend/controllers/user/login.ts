@@ -5,6 +5,7 @@ import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import invalidLoginErrorHandler from "../../errorHandlers/invalidLoginErrorHandler";
 import generateToken from "../../auth/generateToken";
 
+// Login with password
 export default async (req: Request, res: Response): Promise<void> => {
 	const { email, password } = req.body;
 	User.findOne({

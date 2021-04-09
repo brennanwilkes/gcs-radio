@@ -27,6 +27,8 @@ export default (req: Request, res: Response): void => {
 				SongModelFromSong(newSong).save().then((resp) => {
 					print(`Created song resource ${resp}`);
 					res.send({
+
+						// Apply HATEOAS links
 						songs: [
 							new SongApiObj(new SongObjFromQuery(resp), [
 								new PlayAudioLink(req, newSong),

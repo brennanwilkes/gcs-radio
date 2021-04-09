@@ -5,6 +5,7 @@ import { oath2FromCredentials } from "../../auth/googleOauth";
 
 import generateGoogleRedirectURI from "./generateGoogleRedirectURI";
 
+// Redirect to google oauth
 export default (req: Request, res: Response): void => {
 	oath2FromCredentials(generateGoogleRedirectURI(req)).then(oauthClient => {
 		res.redirect(oauthClient.generateAuthUrl({

@@ -9,6 +9,7 @@ import { mongoVerifyBucketExistance } from "../validators/validatorUtil";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { mongoose } from "../../database/connection";
 
+// Ensures a song has a valid audio ID
 export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]): Promise<SongDoc> => {
 	return new Promise<SongDoc>((resolve, reject) => {
 		mongoVerifyBucketExistance(String(song.audioId), (CONFIG.defaultAudioId && String(song.audioId) === CONFIG.defaultAudioId) ? "defaultAudio" : "audio").then(exists => {
@@ -57,6 +58,12 @@ const cacheSong = (_youtubeId: string, _formats: ytdl.videoFormat[], _title: str
 		}
 		return Promise.reject(new Error("Default audio ID is not set"));
 	}
+
+	/*
+		Here is where further modules can be added for different players
+		If you want to directly cache the audio to the audio endpoint of the server,
+		do it here, and resolve the promise to the audioID
+	*/
 	return Promise.reject(new Error("Match with youtube must be set to false in current repo state"));
 };
 

@@ -9,13 +9,16 @@ export default (playlistResults: PlaylistDoc[], req: Request, res:Response, user
 	const noRender = !!req.query.noRender;
 
 	const playlists = playlistResults.map(async result => {
+		// Render out into playlist object
 		const playlist = await PlaylistObjFromQuery(result, !noRender);
 
+		// Apply song HATEOAS links
 		playlist.songs = playlist.songs.map(song => new SongApiObj(song, [
 			new PlayAudioLink(req, song),
 			new SelfLink(req, song.id ?? "UNKNOWN", "songs")
 		]));
 
+		// Apply playlist HATEOAS links
 		const links = [new SelfLink(req, result._id, "playlists")];
 		if (userId && playlist.details?.user === userId) {
 			links.push(new PatchLink(req, result._id, "playlists"));
