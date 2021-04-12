@@ -13,11 +13,10 @@ import cacheSongsFromSpotify from "../../spotify/cacheSongsFromSpotify";
 
 const sendNextSongResponse = (playlistResults: PlaylistDoc, req: Request, res:Response, limit: number) => {
 	// Convert docs to playlist object
-	PlaylistObjFromQuery(playlistResults).then(playlist => {
-		return getRecommendations({
-			seed_tracks: arrayshuffle(playlist.songs).slice(0, 5).map(song => song.spotifyId),
-			limit
-		});
+	const playlist = PlaylistObjFromQuery(playlistResults);
+	getRecommendations({
+		seed_tracks: arrayshuffle(playlist.songs).slice(0, 5).map(song => song.spotifyId),
+		limit
 	}).then(recommendations => {
 		return cacheSongsFromSpotify(recommendations);
 	}).then(songs => {

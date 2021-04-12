@@ -57,11 +57,22 @@ export default async (req: Request, res: Response): Promise<void> => {
 		}
 		: namedQuery;
 
-	Playlist.find(query).limit(getLimit(req)).skip(getLimit(req) * (getPage(req) - 1)).then(playlistResults => {
-		if (playlistResults.length > 0) {
-			sendPlaylistResponse(playlistResults, req, res, id);
-		} else {
-			notFoundErrorHandler(req, res)("playlist");
-		}
-	}).catch(internalErrorHandler(req, res));
+	Playlist.find(query)
+		.limit(getLimit(req))
+		.skip(getLimit(req) * (getPage(req) - 1))
+		.populate({
+			path: "songs",
+			populate: { path: "song" }
+		})
+		.populate({
+			path: "features",
+			populate: { path: "song" }
+		})
+		.then(playlistResults => {
+			if (playlistResults.length > 0) {
+				sendPlaylistResponse(playlistResults, req, res, id);
+			} else {
+				notFoundErrorHandler(req, res)("playlist");
+			}
+		}).catch(internalErrorHandler(req, res));
 };

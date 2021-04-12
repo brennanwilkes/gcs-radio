@@ -38,6 +38,7 @@ export interface SongDoc extends mongoose.Document {
 }
 
 const SongModel = mongoose.model<SongDoc>("song", SongSchema);
+mongoose.model<SongDoc>("songs", SongSchema);
 export default SongModel;
 
 export function SongModelFromSong (song: Song): InstanceType<typeof SongModel> {
