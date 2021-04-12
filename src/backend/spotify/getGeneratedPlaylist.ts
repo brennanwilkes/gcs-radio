@@ -12,7 +12,7 @@ import SpotifyApi from "spotify-web-api-node";
 import arrayshuffle from "array-shuffle";
 
 import getRecommendations, { RecommendationOptions } from "./getRecommendations";
-import { CONFIG } from "../util/util";
+import { getLimit } from "../util/util";
 import { mongoose } from "../../database/connection";
 
 export const getForMePlaylist = async (userAccessToken: string, time_range: "long_term" | "medium_term" | "short_term" = "long_term", limit = 30): Promise<SpotifyResult[]> => {
@@ -60,7 +60,7 @@ export default (req: Request): Promise<SpotifyResult[]> => {
 	if (req.body.valence !== undefined) {
 		options.target_valence = req.body.valence;
 	}
-	options.limit = ((req.query.limit as unknown) as number | undefined) ?? CONFIG.defaultApiLimit;
+	options.limit = getLimit(req);
 
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
 		Promise.all((req.body.songs as string[]).map(id => Song.findOne({
