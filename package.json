@@ -13,7 +13,7 @@
         "build:backend": "tsc",
         "build:backend:serve": "npm run build:backend && node build/backend/index.js",
         "build": "npm run build:frontend && npm run build:backend",
-        "clean": "rimraf build",
+        "clean": "rimraf build && rimraf public-frontend/dist",
         "rebuild": "npm run build",
         "prerebuild": "npm run clean",
         "prebuild": "npm run lint",
