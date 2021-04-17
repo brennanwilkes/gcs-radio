@@ -58,7 +58,7 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: [".tsx", ".js", ".ts"]
+		extensions: [".tsx", ".js", ".d.ts", ".ts"]
 	},
 	externals: {
 		jquery: "jQuery"
