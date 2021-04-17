@@ -4,6 +4,7 @@ import redirectFromGoogle from "../controllers/oauth/redirectFromGoogle";
 import redirectFromSpotify from "../controllers/oauth/redirectFromSpotify";
 import redirectToGoogle from "../controllers/oauth/redirectToGoogle";
 import redirectToSpotify from "../controllers/oauth/redirectToSpotify";
+import getMusicKitDeveloperToken from "../controllers/oauth/getMusicKitDeveloperToken";
 import getUser from "../controllers/user/getUser";
 import login from "../controllers/user/login";
 import refreshTokenController from "../controllers/user/refreshTokenController";
@@ -27,5 +28,7 @@ authRouter.post("/", signUpValidator, signUp);
 authRouter.post("/login", loginValidator, login);
 authRouter.get("/", tokenValidator, getUser);
 authRouter.get("/:id", verifyEmailValidator, verifyEmail);
+
+authRouter.post("/musicKit", getMusicKitDeveloperToken);
 
 export default authRouter;
