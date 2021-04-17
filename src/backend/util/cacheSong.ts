@@ -51,7 +51,7 @@ export const cacheSongFromResults = (youtubeResults: YoutubeResult, spotifyResul
 	return cacheSong(youtubeResults.youtubeId, youtubeResults.formats, spotifyResults.title, spotifyResults.artist, spotifyResults.album);
 };
 
-const cacheSong = (_youtubeId: string, _formats: ytdl.videoFormat[], _title: string, _artist: string, _album: string): Promise<string> => {
+const cacheSong = (_youtubeId: string | undefined, _formats: ytdl.videoFormat[], _title: string, _artist: string, _album: string): Promise<string> => {
 	if (!CONFIG.matchWithYoutube) {
 		if (CONFIG.defaultAudioId) {
 			return Promise.resolve(CONFIG.defaultAudioId);

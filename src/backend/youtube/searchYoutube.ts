@@ -21,9 +21,12 @@ export function searchYoutubeSimple (query: string, limit = 5): Promise<string[]
 	});
 }
 
-export function searchYoutubeDetailed (id: string): Promise<YoutubeResult> {
+export function searchYoutubeDetailed (id?: string): Promise<YoutubeResult> {
 	if (!CONFIG.matchWithYoutube) {
 		return Promise.resolve(new DummyYoutubeResult(id));
+	}
+	if (!id) {
+		return Promise.reject(new Error("Youtube ID not provided"));
 	}
 	return new Promise((resolve, reject) => {
 		getInfo(`https://www.youtube.com/watch?v=${id}`, cookieParams)
