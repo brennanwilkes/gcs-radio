@@ -13,6 +13,9 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback, isReady as spotifyIsReady} from "../spotifyWebSDK/spotify";
+
+import musicKit from "../musicKitSDK/musicKitSDK";
+
 import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
 
 const bufferSize = 10;
@@ -43,6 +46,10 @@ interface IState extends HasResponse{
 export default class App extends React.Component<IProps, IState> {
 
 	constructor(props: IProps) {
+
+		musicKit().then(console.dir).catch(console.error);
+
+
 		super(props);
 		this.togglePause = this.togglePause.bind(this);
 		this.transitionSong = this.transitionSong.bind(this);

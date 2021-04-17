@@ -38,7 +38,9 @@ export const spotifySeek = (position: number = -1): number => {
 }
 
 export const spotifyVolume = (value: number): void => {
-	spotifyPlayer.setVolume(value);
+	if(spotifyPlayer && isReady){
+		spotifyPlayer.setVolume(value);
+	}
 }
 
 var transitionCallback: (() => void) | undefined;
