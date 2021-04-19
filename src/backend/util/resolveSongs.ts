@@ -21,9 +21,11 @@ const converters = (): basePlayableConverter<Song>[] => conversions.filter(conve
 export default function (spotifyResults: SpotifyResult[]): Promise<Song[]> {
 	return Promise.all(spotifyResults.map(async spotify => {
 		let song: Song = new SongFromSpotify(spotify);
-		const upgrades = await Promise.all(converters().map(converter => converter.upgradeToPlayable(song)));
+		const upgrades = await Promise.all(converters().map(converter => converter.upgradeToPlayable(song).catch(() => undefined)));
 		upgrades.forEach(upgrade => {
-			song = { ...song, ...upgrade };
+			if (upgrade) {
+				song = { ...song, ...upgrade };
+			}
 		});
 		return song;
 	}));

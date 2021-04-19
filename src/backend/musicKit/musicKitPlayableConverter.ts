@@ -2,8 +2,8 @@ import { isEquivalentToSong, isPlayable, upgradeToPlayable, playableConverter } 
 import { MusicKitPlayable } from "../../types/playables/musicKitPlayable";
 import { Song } from "../../types/song";
 import { MusicKitResult } from "../../types/musicKitResult";
-import { xOrMore, thresholdDistance } from "../util/util";
-import searchMusicKit from "./searchMusicKit";
+import { xOrMore, thresholdDistance, titleSanitizer } from "../util/util";
+import { determinedSearchMusicKit } from "./searchMusicKit";
 
 export class MusicKitPlayableConverter implements playableConverter<MusicKitPlayable, MusicKitResult> {
 	isPlayable: isPlayable<MusicKitPlayable> = (song: Song): song is MusicKitPlayable => {
@@ -12,22 +12,22 @@ export class MusicKitPlayableConverter implements playableConverter<MusicKitPlay
 
 	isEquivalentToSong:isEquivalentToSong<MusicKitResult> = (song: Song, data: MusicKitResult) => {
 		return xOrMore([
-			thresholdDistance(song.title, data.title, 2),
-			thresholdDistance(song.artist, data.artist, 2),
-			thresholdDistance(song.album, data.album, 2)
+			thresholdDistance(song.title, data.title),
+			thresholdDistance(song.artist, data.artist),
+			thresholdDistance(song.album, data.album)
 		]) && Math.abs(song.duration - data.duration) <= song.duration * 0.1;
 	}
 
 	upgradeToPlayable: upgradeToPlayable<MusicKitPlayable> = (base: Song): Promise<MusicKitPlayable> => {
 		return new Promise<MusicKitPlayable>((resolve, reject) => {
-			searchMusicKit(`${base.title} by ${base.artist}`).then(results => {
+			determinedSearchMusicKit(titleSanitizer(base.title)).then(results => {
 				for (let i = 0; i < results.length; i++) {
 					if (this.isEquivalentToSong(base, results[i])) {
 						base.musicKitId = results[i].musicKitId;
 						return Promise.resolve(base as MusicKitPlayable);
 					}
 				}
-				return Promise.reject(new Error("No Youtube matches were found"));
+				return Promise.reject(new Error("No MusicKit matches were found"));
 			}).then(resolve).catch(reject);
 		});
 	}

@@ -34,7 +34,7 @@ export const print = function (...content: string[]): void {
 export const generateDashboardRedirect = (req: Request): string => `${req.protocol}://${req.get("host")}/dashboard`;
 
 export const titleSanitizer = (str: string) => {
-	return str.toLowerCase().replace(/[Vv][Ee][Vv][Oo]| - topic|[^a-zA-Z .0-9-()]|video ?|lyric ?|with ?|feat.?u?r?e?s?i?n?g? ?|official ?|audio ?|performance ?/g, "");
+	return str.toLowerCase().replace(/[Vv][Ee][Vv][Oo]| - topic|[^a-zA-Z .0-9-()]|video ?|lyric ?|with ?|feat.?u?r?e?s?i?n?g? ?|official ?|audio ?|performance ?|\([^)]+\)/g, "");
 };
 export const thresholdDistance = (
 	str1: string,
