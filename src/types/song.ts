@@ -78,6 +78,28 @@ export class SongObj implements Song {
 	}
 }
 
+export class SongFromSpotify extends SongObj implements Song {
+	constructor (spotifyResult: SpotifyResult, audioId?: string, id?: string) {
+		super(
+			spotifyResult.title,
+			spotifyResult.artist,
+			spotifyResult.album,
+			spotifyResult.duration,
+			spotifyResult.explicit,
+			spotifyResult.spotifyId,
+			spotifyResult.artistSpotifyId,
+			spotifyResult.albumSpotifyId,
+			{
+			},
+			[],
+			spotifyResult.thumbnailUrl,
+			spotifyResult.releaseDate,
+			audioId,
+			id
+		);
+	}
+}
+
 export class SongFromSearch extends SongObj implements Song {
 	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string, id?: string) {
 		super(
