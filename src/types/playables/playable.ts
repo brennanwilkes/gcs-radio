@@ -15,10 +15,12 @@ export interface isEquivalentToSong<T>{
 	(song: Song, data: T): boolean
 }
 
-export interface playableConverter<T1 extends Song, T2>{
-	isPlayable: isPlayable<T1>
-	upgradeToPlayable: upgradeToPlayable<T1>
-	directUpgradeToPlayable: directUpgradeToPlayable<T1>
+export interface basePlayableConverter<T extends Song>{
+	isPlayable: isPlayable<T>
+	upgradeToPlayable: upgradeToPlayable<T>
+	directUpgradeToPlayable: directUpgradeToPlayable<T>
+}
+export interface playableConverter<T1 extends Song, T2> extends basePlayableConverter<T1>{
 	isEquivalentToSong: isEquivalentToSong<T2>
 }
 

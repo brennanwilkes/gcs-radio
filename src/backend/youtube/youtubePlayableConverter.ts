@@ -26,11 +26,11 @@ export class YoutubePlayableConverter implements playableConverter<YoutubePlayab
 
 					if (youtubeDetails && this.isEquivalentToSong(base, youtubeDetails)) {
 						base.youtubeId = youtubeIds[i];
-						resolve(base as YoutubePlayable);
+						return Promise.resolve(base as YoutubePlayable);
 					}
 				}
-				reject(new Error("No Youtube matches were found"));
-			}).catch(reject);
+				return Promise.reject(new Error("No Youtube matches were found"));
+			}).then(resolve).catch(reject);
 		});
 	}
 
