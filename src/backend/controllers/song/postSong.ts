@@ -1,32 +1,26 @@
 import { Request, Response } from "express";
 import { SongModelFromSong } from "../../../database/models/song";
-import { Song, SongApiObj, SongFromSpotify, SongObjFromQuery } from "../../../types/song";
+import { Song, SongApiObj, SongObjFromQuery } from "../../../types/song";
 import { CONFIG } from "../../util/util";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { getSpotifyTrack } from "../../spotify/searchSpotify";
 import { PlayAudioLink, SelfLink } from "../../../types/link";
 import { cacheSongFromSong } from "../../util/cacheSong";
-import youtubePlayableConverter from "../../youtube/youtubePlayableConverter";
+import resolveSongs from "../../util/resolveSongs";
 
 export default (req: Request, res: Response): void => {
-	const youtubeId = String(req.query.youtubeId);
 	const spotifyId = String(req.query.spotifyId);
 
 	let songCache: Song | undefined;
 	getSpotifyTrack(spotifyId).then(spotifyInfo => {
-		const newSong = new SongFromSpotify(spotifyInfo);
-		if (CONFIG.matchWithYoutube) {
-			if (youtubeId) {
-				return Promise.resolve(youtubePlayableConverter.directUpgradeToPlayable(newSong, youtubeId));
-			} else {
-				return youtubePlayableConverter.upgradeToPlayable(newSong);
-			}
+		return resolveSongs([spotifyInfo]);
+	}).then((songs: Song[]) => {
+		if (songs.length === 0) {
+			return Promise.reject(new Error("Failed to resolve songs"));
 		}
-		return Promise.resolve(newSong);
-	}).then((song: Song) => {
-		songCache = song;
+		songCache = songs[0];
 		if (CONFIG.matchWithYoutube) {
-			return cacheSongFromSong(song);
+			return cacheSongFromSong(songCache);
 		} else {
 			return Promise.resolve(CONFIG.defaultAudioId);
 		}

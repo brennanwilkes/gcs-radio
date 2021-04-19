@@ -7,6 +7,7 @@ import { mongoVerifyBucketExistance } from "../validators/validatorUtil";
 import { searchYoutubeDetailed } from "../youtube/searchYoutube";
 import { mongoose } from "../../database/connection";
 import youtubePlayableConverter from "../youtube/youtubePlayableConverter";
+import { DummyYoutubeResult } from "../../types/youtubeResult";
 
 // Ensures a song has a valid audio ID
 export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]): Promise<SongDoc> => {
@@ -36,15 +37,33 @@ export const ensureSongValidity = (song: SongDoc, formats?: ytdl.videoFormat[]):
 };
 
 export const cacheSongFromSong = (song: Song, formats?: ytdl.videoFormat[]): Promise<string> => {
+	let upgradedSongCache: Song | undefined;
 	if (formats) {
 		return cacheSong(song.youtubeId, formats, song.title, song.artist, song.album);
 	} else {
 		return new Promise<string>((resolve, reject) => {
-			(youtubePlayableConverter.isPlayable(song) ? Promise.resolve(song) : youtubePlayableConverter.upgradeToPlayable(song)).then(upgradedSong => {
-				searchYoutubeDetailed(upgradedSong.youtubeId).then(info => {
-					cacheSong(upgradedSong.youtubeId, info.formats, song.title, song.artist, upgradedSong.album).then(resolve).catch(reject);
-				}).catch(reject);
-			}).catch(reject);
+			(youtubePlayableConverter.isPlayable(song)
+				? Promise.resolve(song)
+				: youtubePlayableConverter.upgradeToPlayable(song)
+			).then(upgradedSong => {
+				upgradedSongCache = upgradedSong;
+				if (!CONFIG.matchWithYoutube) {
+					return Promise.resolve(new DummyYoutubeResult(upgradedSong.youtubeId));
+				} else {
+					return searchYoutubeDetailed(upgradedSong.youtubeId);
+				}
+			}).then(info => {
+				if (!upgradedSongCache) {
+					return Promise.reject(new Error("Something went wrong upgrading song"));
+				}
+				return cacheSong(
+					upgradedSongCache.youtubeId,
+					info.formats,
+					song.title,
+					song.artist,
+					upgradedSongCache.album
+				);
+			}).then(resolve).catch(reject);
 		});
 	}
 };

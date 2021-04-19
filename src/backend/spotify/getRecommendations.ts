@@ -77,15 +77,18 @@ export default async (options: RecommendationOptions, userAccessToken?: string):
 		options.min_acousticness = getMinMax(options.target_acousticness)[0];
 		options.max_acousticness = getMinMax(options.target_acousticness)[1];
 	}
+	console.dir("11");
 
 	return new Promise<SpotifyResult[]>((resolve, reject) => {
 		generateRefreshedCredential().then(async spotifyApi => {
+			console.dir("12");
 			if (userAccessToken) {
 				spotifyApi.setAccessToken(userAccessToken);
 			}
 
 			return spotifyApi.getRecommendations(options);
 		}).then(recommendationData => {
+			console.dir("13");
 			return Promise.all(recommendationData.body.tracks.map(s => getSpotifyTrack(s.id)));
 		}).then(resolve).catch(reject);
 	});

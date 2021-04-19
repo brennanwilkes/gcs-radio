@@ -22,7 +22,8 @@ export default (spotifyResults: SpotifyResult[]):Promise<Song[]> => {
 				song.artistSpotifyId,
 				song.albumSpotifyId,
 				{
-					youtubeId: song.youtubeId
+					youtubeId: song.youtubeId,
+					musicKitId: song.musicKitId
 				},
 				song.tags,
 				song.thumbnailUrl,
