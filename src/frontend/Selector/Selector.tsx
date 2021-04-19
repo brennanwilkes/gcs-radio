@@ -190,7 +190,7 @@ export default class Selector extends React.Component<IProps, IState> {
 						isDeletable={true}
 						onClick={(toDelete: Song) => {
 							this.setState({
-								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId || s.youtubeId !== toDelete.youtubeId)
+								songs: this.state.songs.filter(s => s.spotifyId !== toDelete.spotifyId || s.youtubeId !== toDelete.youtubeId || s.musicKitId !== doDelete.musicKitId)
 							});
 						}}
 						keyExtension="selected" />)

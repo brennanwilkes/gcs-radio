@@ -17,7 +17,10 @@ export const musicKitPlayId = (id: string): Promise<void> => {
 	return new Promise<void>((resolve, reject) => {
 		musicKit().then(kit => {
 			songEnded = false;
-			// set song id
+			kit.setQueue({
+				items: [id],
+				song: id
+			});
 			kit.play();
 		}).catch(reject);
 	});

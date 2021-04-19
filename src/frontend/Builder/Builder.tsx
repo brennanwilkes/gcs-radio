@@ -145,7 +145,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			let features = this.state.details?.selected ?? [];
 			features = features.map(id =>
 				this.state.completeSongs?.filter(
-					s => s.spotifyId === id.split(":")[0] && s.youtubeId === id.split(":")[1]
+					s => s.spotifyId === id.split(":")[0] && s.youtubeId === id.split(":")[1] && s.musicKitId === id.split(":")[2]
 				)[0]?.id ?? "UNDEFINED"
 			);
 			features = [...features, ...((this.state.completeSongs ?? []).filter(
@@ -190,7 +190,7 @@ export default class Builder extends React.Component<IProps, IState> {
 			});
 
 			//Gotta love ES6 amiright??
-			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
+			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId && t.musicKitId === v.musicKitId)) === i);
 			new PlaylistObj(songs).render(song => {
 				if(printMessage){
 					successResponseHandler(this)(`Loaded "${song.title}"`);

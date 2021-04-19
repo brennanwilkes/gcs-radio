@@ -147,16 +147,16 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 						song={song}
 						isHoverable={true}
 						isSelectable={true}
-						selected={this.state.selected.includes(`${song.spotifyId}:${song.youtubeId}`)}
+						selected={this.state.selected.includes(`${song.spotifyId}:${song.youtubeId}:${song.musicKitId}`)}
 						onClick={(toSelect: Song) => {
-							if(this.state.selected.includes(`${toSelect.spotifyId}:${toSelect.youtubeId}`)){
+							if(this.state.selected.includes(`${toSelect.spotifyId}:${toSelect.youtubeId}:${toSelect.musicKitId}`)){
 								this.setState({
-									selected: this.state.selected.filter(s => s !== `${toSelect.spotifyId}:${toSelect.youtubeId}`)
+									selected: this.state.selected.filter(s => s !== `${toSelect.spotifyId}:${toSelect.youtubeId}:${toSelect.musicKitId}`)
 								});
 							}
 							else if(this.state.selected.length < 3){
 								this.setState({
-									selected: [...this.state.selected, `${toSelect.spotifyId}:${toSelect.youtubeId}`]
+									selected: [...this.state.selected, `${toSelect.spotifyId}:${toSelect.youtubeId}:${toSelect.musicKitId}`]
 								});
 							}
 						}}

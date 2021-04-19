@@ -25,7 +25,7 @@ export default class SongPolaroid extends React.Component<IProps, IState> {
 		super(props);
 
 		this.state = {
-			key: this.props.song.id ?? `${this.props.song.spotifyId}:${this.props.song.youtubeId}` + this.props.keyExtension ?? ""
+			key: this.props.song.id ?? `${this.props.song.spotifyId}:${this.props.song.youtubeId}:${this.props.song.musicKitId}` + this.props.keyExtension ?? ""
 		}
 	}
 
