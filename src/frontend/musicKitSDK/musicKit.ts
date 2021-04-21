@@ -1,76 +1,99 @@
 import musicKit from "./musicKitSDK";
+import { Player, DefaultPlayer } from "../../types/player";
+import { Song } from "../../types/song";
+
 /* eslint-disable no-undef */
+export class MusicKitPlayer extends DefaultPlayer implements Player {
+	currentSong?: Song;
+	progress = 0;
 
-export const musicKitAuth = ():Promise<MusicKit.MusicKitInstance> => {
-	return new Promise<MusicKit.MusicKitInstance>((resolve, reject) => {
-		let kitCache: MusicKit.MusicKitInstance | undefined;
-		musicKit().then(kit => {
-			kitCache = kit;
-			return kit.authorize();
-		}).then(id => {
-			resolve(kitCache as MusicKit.MusicKitInstance);
-		}).catch(reject);
-	});
-};
+	songEnded = false;
+	musicKit?: MusicKit.MusicKitInstance;
+	userToken?: string;
 
-export const musicKitPlayId = (id: string): Promise<void> => {
-	return new Promise<void>((resolve, reject) => {
-		musicKit().then(kit => {
-			songEnded = false;
-			kit.setQueue({
-				items: [id],
-				song: id
-			});
-			kit.play();
-		}).catch(reject);
-	});
-};
+	initialize (): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			musicKit().then(kit => {
+				this.musicKit = kit;
+				return this.musicKit.authorize();
+			}).then(token => {
+				this.userToken = token;
 
-export const musickitPause = () => {
-	musicKit().then(kit => {
-		kit.pause();
-	}).catch(console.error);
-};
+				this.musicKit.addEventListener("playbackStateDidChange", () => {
+					if (this.musicKit.playbackState === MusicKit.PlaybackStates.ended) {
+						this.songEnded = true;
+						if (this.songEndHandler) {
+							this.songEndHandler();
+						}
+					}
+					if (this.musicKit.playbackState === MusicKit.PlaybackStates.waiting && this.songEnded) {
+						this.musicKit.stop();
+					}
+				});
+				resolve();
+			}).catch(reject);
+		});
+	}
 
-export const musicKitSeek = (position = -1): Promise<number> => {
-	return new Promise<number>((resolve, reject) => {
-		musicKit().then(kit => {
-			if (position > -1) {
-				kit.seekToTime(position);
-				resolve(position + 1);
+	seek (newPosition?: number): Promise<number> {
+		if (!this.musicKit) {
+			return Promise.reject(new Error("Player not ready"));
+		}
+		return new Promise<number>((resolve, reject) => {
+			if (newPosition > -1) {
+				this.musicKit.seekToTime(newPosition).then(() => {
+					resolve(newPosition + 1);
+				}).catch(reject);
 			} else {
-				resolve(kit.player.currentPlaybackTime);
+				resolve(this.musicKit.player.currentPlaybackTime);
 			}
-		}).catch(reject);
-	});
-};
+		});
+	}
 
-export const musicKitVolume = (value: number): Promise<void> => {
-	return new Promise<void>((resolve, reject) => {
-		musicKit().then(kit => {
-			kit.player.volume = value;
-			resolve();
-		}).catch(reject);
-	});
-};
+	setSong (song: Song): Promise<void> {
+		if (song.musicKitId) {
+			this.currentSong = song;
+			return Promise.resolve();
+		}
+		return Promise.reject(new Error("Song must have a MusicKit ID"));
+	}
 
-let transitionCallback: (() => void) | undefined;
-export const setTransitionCallback = (callback: () => void) => {
-	transitionCallback = callback;
-};
+	play (): Promise<void> {
+		if (!this.musicKit) {
+			return Promise.reject(new Error("Player not ready"));
+		}
+		if (!this.currentSong) {
+			return Promise.reject(new Error("Song not set"));
+		}
+		if (!this.currentSong.musicKitId) {
+			return Promise.reject(new Error("Song must contain a MusicKit ID"));
+		}
 
-var songEnded = false;
-musicKit().then(kit => {
-	kit.addEventListener("playbackStateDidChange", () => {
-		if (kit.playbackState === MusicKit.PlaybackStates.ended) {
-			songEnded = true;
-			if (transitionCallback) {
-				transitionCallback();
+		this.songEnded = false;
+		this.musicKit.setQueue({
+			items: [this.currentSong.musicKitId],
+			song: this.currentSong.musicKitId
+		});
+		return new Promise<void>((resolve, reject) => this.musicKit.play().then(() => resolve()).catch(reject));
+	}
+
+	pause (): Promise<void> {
+		if (this.musicKit) {
+			this.musicKit.pause();
+			return Promise.resolve();
+		}
+		return Promise.reject(new Error("Player not ready"));
+	}
+
+	volume (newVolume = -1): Promise<number> {
+		if (this.musicKit) {
+			if (newVolume > -1) {
+				this.musicKit.player.volume = newVolume;
 			}
+			return Promise.resolve(this.musicKit.player.volume);
 		}
-		if (kit.playbackState === MusicKit.PlaybackStates.waiting && songEnded) {
-			kit.stop();
-		}
-	});
-});
+		return Promise.reject(new Error("Player not ready"));
+	}
+}
+
 /* eslint-enable no-undef */
