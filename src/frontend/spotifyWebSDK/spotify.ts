@@ -104,17 +104,22 @@ export class SpotifyPlayer extends DefaultPlayer implements Player{
 		}
 		return new Promise<void>((resolve, reject) => {
 			getAccessToken().then(() => {
-				if(!this.isPlaying && this.currentSong?.spotifyId === this.playingId){
-					this.spotifyPlayer.resume();
+				if(!this.spotifyPlayer){
+					reject(new Error("Player is not ready"));
 				}
 				else{
-					play({
-						playerInstance: this.spotifyPlayer,
-						spotify_uri: `spotify:track:${this.currentSong?.spotifyId}`,
-					});
-					this.playingId = this.currentSong?.spotifyId;
+					if(!this.isPlaying && this.currentSong?.spotifyId === this.playingId){
+						this.spotifyPlayer.resume();
+					}
+					else{
+						play({
+							playerInstance: this.spotifyPlayer,
+							spotify_uri: `spotify:track:${this.currentSong?.spotifyId}`,
+						});
+						this.playingId = this.currentSong?.spotifyId;
+					}
+					resolve();
 				}
-				resolve();
 			}).catch(reject);
 		});
 	}
@@ -131,12 +136,12 @@ export class SpotifyPlayer extends DefaultPlayer implements Player{
 		if(this.spotifyPlayer && this.ready){
 			return new Promise<number>((resolve, reject) => {
 				if(newVolume > -1){
-					this.spotifyPlayer.setVolume(newVolume).then(() => {
-						this.spotifyPlayer.getVolume().then(resolve).catch(reject);
+					(this.spotifyPlayer as Spotify.SpotifyPlayer).setVolume(newVolume).then(() => {
+						(this.spotifyPlayer as Spotify.SpotifyPlayer).getVolume().then(resolve).catch(reject);
 					})
 				}
 				else{
-					this.spotifyPlayer.getVolume().then(resolve).catch(reject);
+					(this.spotifyPlayer as Spotify.SpotifyPlayer).getVolume().then(resolve).catch(reject);
 				}
 			});
 		}

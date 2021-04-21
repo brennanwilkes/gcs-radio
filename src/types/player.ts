@@ -1,14 +1,7 @@
 import { Song } from "./song";
 
-/* eslint-disable no-unused-vars */
-export enum PlayerEvent{
-	end = "end",
-	error = "error"
-}
-/* eslint-enable no-unused-vars */
-
 export interface Player{
-	on(event: PlayerEvent, callback: (data?: Error) => void): Promise<void>
+	on(event: string, callback: (data?: Error) => void): Promise<void>
 	initialize(): Promise<void>
 	seek(newPosition?: number): Promise<number>
 	setSong(song: Song): Promise<void>
@@ -22,10 +15,10 @@ export abstract class DefaultPlayer implements Player {
 	songEndHandler?: () => void;
 	on (event: string, callback: (data?: Error) => void): Promise<void> {
 		if (event === "end") {
-			this.errorHandler = callback;
+			this.songEndHandler = callback;
 			return Promise.resolve();
 		} else if (event === "error") {
-			this.songEndHandler = callback;
+			this.errorHandler = callback;
 			return Promise.resolve();
 		} else {
 			return Promise.reject(new Error(`Invalid event type ${event}`));

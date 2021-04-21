@@ -26,24 +26,32 @@ export class DirectAudioPlayer extends DefaultPlayer implements Player {
 	}
 
 	setSong (song: Song): Promise<void> {
+		if (this.currentSong && song.audioId === this.currentSong?.audioId) {
+			return Promise.resolve();
+		}
+
 		this.currentSong = song;
 		this.currentHowl = new SongHowl(song);
 
 		return new Promise<void>((resolve, reject) => {
-			this.currentHowl.on("end", () => {
-				if (this.songEndHandler) {
-					this.songEndHandler();
-				}
-			});
+			if (!this.currentHowl) {
+				reject(new Error("Something went wrong"));
+			} else {
+				this.currentHowl.on("end", () => {
+					if (this.songEndHandler) {
+						this.songEndHandler();
+					}
+				});
 
-			this.currentHowl.on("load", () => {
-				resolve();
-			});
+				this.currentHowl.on("load", () => {
+					resolve();
+				});
 
-			this.currentHowl.on("loaderror", () => {
-				reject(new Error(`${this.currentSong?.title} failed to load`));
-			});
-			this.currentHowl.load();
+				this.currentHowl.on("loaderror", () => {
+					reject(new Error(`${this.currentSong?.title} failed to load`));
+				});
+				this.currentHowl.load();
+			}
 		});
 	}
 

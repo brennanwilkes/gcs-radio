@@ -18,34 +18,41 @@ export class MusicKitPlayer extends DefaultPlayer implements Player {
 				return this.musicKit.authorize();
 			}).then(token => {
 				this.userToken = token;
-
-				this.musicKit.addEventListener("playbackStateDidChange", () => {
-					if (this.musicKit.playbackState === MusicKit.PlaybackStates.ended) {
-						this.songEnded = true;
-						if (this.songEndHandler) {
-							this.songEndHandler();
+				if (this.musicKit) {
+					this.musicKit.addEventListener("playbackProgressDidChange", () => {
+						const remaining = this.musicKit?.player?.currentPlaybackTimeRemaining ?? 0;
+						if (remaining <= 1 && this.musicKit) {
+							this.songEnded = true;
+							if (remaining > 0) {
+								this.musicKit.stop();
+							}
+							if (this.songEndHandler) {
+								this.songEndHandler();
+							}
 						}
-					}
-					if (this.musicKit.playbackState === MusicKit.PlaybackStates.waiting && this.songEnded) {
-						this.musicKit.stop();
-					}
-				});
-				resolve();
+					});
+
+					resolve();
+				} else {
+					reject(new Error("Something went wrong"));
+				}
 			}).catch(reject);
 		});
 	}
 
-	seek (newPosition?: number): Promise<number> {
+	seek (newPosition = -1): Promise<number> {
 		if (!this.musicKit) {
 			return Promise.reject(new Error("Player not ready"));
 		}
 		return new Promise<number>((resolve, reject) => {
-			if (newPosition > -1) {
-				this.musicKit.seekToTime(newPosition).then(() => {
+			if (!this.musicKit) {
+				reject(new Error("Something went wrong"));
+			} else if (newPosition > -1) {
+				this.musicKit.seekToTime(Math.floor(newPosition / 1000)).then(() => {
 					resolve(newPosition + 1);
 				}).catch(reject);
 			} else {
-				resolve(this.musicKit.player.currentPlaybackTime);
+				resolve(this.musicKit.player.currentPlaybackTime * 1000);
 			}
 		});
 	}
@@ -53,7 +60,16 @@ export class MusicKitPlayer extends DefaultPlayer implements Player {
 	setSong (song: Song): Promise<void> {
 		if (song.musicKitId) {
 			this.currentSong = song;
-			return Promise.resolve();
+			return new Promise<void>((resolve, reject) => {
+				if (!this.musicKit) {
+					reject(new Error("Player not ready"));
+				} else {
+					this.musicKit.setQueue({
+						items: [song.musicKitId as string],
+						song: song.musicKitId
+					}).then(() => resolve()).catch(reject);
+				}
+			});
 		}
 		return Promise.reject(new Error("Song must have a MusicKit ID"));
 	}
@@ -65,16 +81,15 @@ export class MusicKitPlayer extends DefaultPlayer implements Player {
 		if (!this.currentSong) {
 			return Promise.reject(new Error("Song not set"));
 		}
-		if (!this.currentSong.musicKitId) {
-			return Promise.reject(new Error("Song must contain a MusicKit ID"));
-		}
 
 		this.songEnded = false;
-		this.musicKit.setQueue({
-			items: [this.currentSong.musicKitId],
-			song: this.currentSong.musicKitId
+		return new Promise<void>((resolve, reject) => {
+			if (this.musicKit) {
+				this.musicKit.play().then(() => resolve()).catch(reject);
+			} else {
+				reject(new Error("Player is not ready"));
+			}
 		});
-		return new Promise<void>((resolve, reject) => this.musicKit.play().then(() => resolve()).catch(reject));
 	}
 
 	pause (): Promise<void> {
