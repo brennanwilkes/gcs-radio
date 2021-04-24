@@ -57,3 +57,10 @@ export const limitValidator = (limit: number = CONFIG.defaultApiLimit): Validati
 	.escape()
 	.isNumeric()
 	.toInt();
+
+export const paginateValidator = query("page").optional()
+	.default(1)
+	.trim()
+	.escape()
+	.isNumeric()
+	.toInt();

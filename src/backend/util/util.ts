@@ -28,4 +28,7 @@ export const print = function (...content: string[]): void {
 	if (CONFIG.verbose) console.log(...content);
 };
 
+export const getPage = (req: Request):number => (req.query.page as number | undefined) ?? 1;
+export const getLimit = (req: Request):number => (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
+
 export const generateDashboardRedirect = (req: Request): string => `${req.protocol}://${req.get("host")}/dashboard`;

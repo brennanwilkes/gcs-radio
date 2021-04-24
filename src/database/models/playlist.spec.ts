@@ -35,56 +35,47 @@ test("Playlist Model is correctly initialized from playlist type", () => {
 	} as any);
 });
 
-const queryResults = {
-	songs: {
-		map: () => {
-			if(shouldEmpty){
-				return [];
-			}
-			return [
-				new Promise((resolve, reject) => {
-					if(shouldErr){
-						reject("ERROR");
-					}
-					else{
-						resolve(1);
-					}
-				})
-			]
+const fakeSongs = {
+	filter: () => fakeSongs,
+	map: () => {
+		if(shouldEmpty){
+			return [];
 		}
+		return [
+			new Promise((resolve, reject) => {
+				if(shouldErr){
+					reject("ERROR");
+				}
+				else{
+					resolve(1);
+				}
+			})
+		]
 	}
+}
+
+const queryResults = {
+	songs: fakeSongs,
+	features: fakeSongs
 };
 
 test("Playlist from Query extracts data", done => {
 	shouldErr = false;
 	shouldEmpty = false;
-	PlaylistObjFromQuery(queryResults as any).then(res => {
-		expect(res).toMatchObject({
-			songs: expect.any(Array),
-			id: expect.any(String)
-		});
-		done();
+	const res = PlaylistObjFromQuery(queryResults as any);
+	expect(res).toMatchObject({
+		songs: expect.any(Array),
+		id: expect.any(String)
 	});
+	done();
 });
-
-
-test("Playlist from Query rejects on error", done => {
-	shouldErr = true;
-	shouldEmpty = false;
-	PlaylistObjFromQuery(queryResults as any).catch(err => {
-		expect(err).toBe("ERROR");
-		done();
-	});
-});
-
 
 test("Playlist from Query rejects on no results", done => {
 	shouldErr = false;
 	shouldEmpty = true;
-	PlaylistObjFromQuery(queryResults as any).catch(err => {
-		expect(err).toBeTruthy();
-		done();
-	});
+	const err = PlaylistObjFromQuery(queryResults as any);
+	expect(err).toBeTruthy();
+	done();
 });
 
 afterAll(async () => {

@@ -19,6 +19,9 @@ export interface Song{
 	thumbnailUrl: string,
 	releaseDate: string
 }
+export interface SongWithId extends Song{
+	id: string
+}
 
 export interface SongApi extends Song{
 	links: Link[]

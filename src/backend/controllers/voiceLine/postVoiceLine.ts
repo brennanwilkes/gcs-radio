@@ -35,7 +35,7 @@ const getPlaylistFromId = async (id: string | undefined, errorHandler: (err: str
 	if (id) {
 		const res = await Playlist.findOne({ _id: new mongoose.Types.ObjectId(id) }).catch(errorHandler);
 		if (res) {
-			const obj = await PlaylistObjFromQuery(res).catch(errorHandler);
+			const obj = PlaylistObjFromQuery(res);
 			if (obj) {
 				playlist = obj;
 			}

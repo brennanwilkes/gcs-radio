@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Playlist from "../../../database/models/playlist";
-import { CONFIG } from "../../util/util";
+import { getLimit } from "../../util/util";
 import internalErrorHandler from "../../errorHandlers/internalErrorHandler";
 import { getUserFromToken } from "../../auth/getUser";
 import { getForMePlaylist } from "../../spotify/getGeneratedPlaylist";
@@ -10,7 +10,7 @@ import cacheSongsFromSpotify from "../../spotify/cacheSongsFromSpotify";
 import sendPlaylistResponse from "./sendPlaylistResponse";
 
 export default (req: Request, res: Response): void => {
-	const limit = (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
+	const limit = getLimit(req);
 
 	getUserFromToken(req.header("token") as string).then(user => {
 		getUserAccessToken(user.refreshToken ?? "ERROR").then(async accessToken => {
