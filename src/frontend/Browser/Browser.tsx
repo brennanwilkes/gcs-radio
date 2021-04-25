@@ -1,4 +1,3 @@
-import * as React from "react";
 import axios from "axios";
 import "./browser.css";
 import arrayshuffle from "array-shuffle";

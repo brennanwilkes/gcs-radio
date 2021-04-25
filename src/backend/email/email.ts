@@ -1,5 +1,4 @@
 import sgMail from "@sendgrid/mail";
-import { ClientResponse } from "@sendgrid/client/src/response";
 import { CONFIG, print } from "../util/util";
 import logger from "../logging/logger";
 
@@ -10,8 +9,9 @@ export interface Mail{
 	htmlEnable?: boolean
 }
 /* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface MailService{
-	send: (mail: Mail) => Promise<[ClientResponse, {}]>;
+	send: (mail: Mail) => Promise<[any, {}]>;
 	fromEmail: string;
 }
 
@@ -22,7 +22,7 @@ const MailServiceObj = new Promise<MailService>((resolve, reject) => {
 		resolve({
 			fromEmail: CONFIG.fromEmail,
 			send: ({ email, subject, message, htmlEnable = false }) => {
-				return new Promise<[ClientResponse, {}]>((resolve, reject) => {
+				return new Promise<[any, {}]>((resolve, reject) => {
 					const msg = {
 						to: email,
 						from: CONFIG.fromEmail,
@@ -40,6 +40,7 @@ const MailServiceObj = new Promise<MailService>((resolve, reject) => {
 	}
 });
 /* eslint-enable @typescript-eslint/ban-types */
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export default MailServiceObj;
 

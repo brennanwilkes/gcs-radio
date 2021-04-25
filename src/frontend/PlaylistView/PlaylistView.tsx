@@ -1,4 +1,3 @@
-import * as React from "react";
 import axios from "axios";
 
 import {Playlist} from '../../types/playlist';

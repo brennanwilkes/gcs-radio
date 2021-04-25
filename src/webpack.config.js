@@ -1,10 +1,17 @@
 const path = require("path");
+
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+const mode = "development";
+
 module.exports = {
-	mode: "development",
+	mode,
 	stats: {
 		warnings:false
 	},
-	devtool: "source-map",
+	...(mode === "development" ? {} : {
+		devtool: "source-map",
+	}),
 	entry: {
 		app: "./src/frontend/entryPoints/app.tsx",
 		landing: "./src/frontend/entryPoints/landing.tsx",
@@ -29,7 +36,7 @@ module.exports = {
 		          "css-loader",
 		          // Compiles Sass to CSS
 		          "sass-loader",
-		        ],
+              ]
 			},
 			{
 				test: /\.css$/,
@@ -42,7 +49,8 @@ module.exports = {
 					options: {
 						presets: ["@babel/preset-env", "@babel/preset-react"]
 					}
-				}
+				},
+				exclude: [/node_modules/,/backend/]
 			},
 			{
 				test: /\.(png|jpg|otf)$/,
@@ -52,8 +60,13 @@ module.exports = {
 			},
 			{
 				test: /\.tsx?$/,
-				use: "ts-loader",
-				exclude: /node_modules/
+				exclude: [/node_modules/,/backend/],
+				use: {
+					loader: "ts-loader",
+					options: {
+						transpileOnly: true
+					}
+				}
 			}
 		]
 	},
@@ -61,6 +74,11 @@ module.exports = {
 		extensions: [".tsx", ".js", ".d.ts", ".ts"]
 	},
 	externals: {
-		jquery: "jQuery"
-	}
+		jquery: "jQuery",
+		react: "React",
+		'react-dom': 'ReactDOM'
+	},
+	plugins: [
+		new ForkTsCheckerWebpackPlugin(),
+	]
 };

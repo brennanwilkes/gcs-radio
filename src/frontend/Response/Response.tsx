@@ -1,4 +1,3 @@
-import * as React from "react";
 import StatusIcon, {StatusType} from "./sumi9xmIcon";
 import {Error} from "../../types/error";
 

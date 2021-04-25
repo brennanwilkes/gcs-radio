@@ -11,8 +11,8 @@ ARG SENDGRID_API_KEY=$SENDGRID_API_KEY
 ARG MATCH_WITH_YOUTUBE=$MATCH_WITH_YOUTUBE
 ARG DEFAULT_AUDIO_ID=$DEFAULT_AUDIO_ID
 
-RUN apk add --no-cache python py-pip
-RUN apk add  --no-cache ffmpeg
+RUN apk add curl
+RUN curl -f https://get.pnpm.io/v6.js | node - add --global pnpm
 
 WORKDIR /usr/src/app
 
@@ -20,13 +20,12 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install production dependencies.
-RUN npm install
+RUN pnpm install
 
 # Copy local code to the container image.
 COPY . ./
 
 RUN npm run build:production
-RUN npm prune --production
 
 # Run the web service on container startup.
 CMD [ "npm", "start" ]

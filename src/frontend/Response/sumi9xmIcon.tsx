@@ -1,7 +1,5 @@
 //https://bootsnipp.com/snippets/2eEjz
 
-import * as React from "react";
-
 import "./sumi9xmIcon.css";
 
 export enum StatusType{

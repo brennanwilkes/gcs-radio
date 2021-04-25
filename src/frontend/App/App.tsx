@@ -1,4 +1,3 @@
-import * as React from "react";
 import axiosPure, { AxiosResponse } from "axios";
 import rateLimit from "axios-rate-limit";
 const axios = rateLimit(axiosPure.create(), { maxRequests: 5, perMilliseconds: 1000 });

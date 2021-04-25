@@ -1,4 +1,3 @@
-import * as React from "react";
 import {Song} from '../../types/song';
 import SongHowl, { iOS } from '../../types/songHowl';
 import { FaRegPlayCircle, FaRegPauseCircle, FaStepForward, FaStepBackward } from 'react-icons/fa';

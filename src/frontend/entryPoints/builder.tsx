@@ -1,9 +1,5 @@
 // Brennan Wilkes
 
-// Imports
-import * as React from "react";
-import * as ReactDOM from "react-dom";
-
 import Builder from "../Builder/Builder";
 import "../scss/index.scss";
 import Translator from "../Translator";

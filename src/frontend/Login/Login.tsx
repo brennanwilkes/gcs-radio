@@ -1,4 +1,3 @@
-import * as React from "react";
 import "./login.css";
 import axios from "axios";
 import FloatingLabel from "react-bootstrap-floating-label";

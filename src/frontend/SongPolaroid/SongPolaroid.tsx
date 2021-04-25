@@ -1,4 +1,3 @@
-import * as React from "react";
 import {Song} from '../../types/song';
 
 import "./songPolaroid.css";

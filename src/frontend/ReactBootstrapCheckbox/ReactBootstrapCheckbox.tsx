@@ -1,4 +1,3 @@
-import * as React from "react";
 import "./reactBootstrapCheckbox.css";
 import {FaCheckCircle, FaTimesCircle} from "react-icons/fa";
 
