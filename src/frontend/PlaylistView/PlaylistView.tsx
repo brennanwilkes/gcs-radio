@@ -38,16 +38,12 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 	}
 
 	componentDidMount(){
-		Promise.all((this.props.playlist.details?.features ?? []).map(id => axios.get(`../api/v1/songs/${encodeURIComponent(id)}`))).then(res => {
-			let features: Song[] = res.filter(data => data.data.songs && data.data.songs.length > 0).map(data => data.data.songs[0]);
-			features = arrayShuffle(features);
-			this.setState({
-				features
-			});
-			if(this.props.last){
-				$("body").css("cursor","inherit");
-			}
+		this.setState({
+			features: arrayShuffle(this.props.playlist.details?.features ?? [])
 		});
+		if(this.props.last){
+			$("body").css("cursor","inherit");
+		}
 	}
 
 	render(){
