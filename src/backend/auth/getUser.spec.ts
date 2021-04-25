@@ -16,7 +16,7 @@ const foundUser1 = {
 	type: "PASSWORD",
 	password: pass,
 	createdAt: new Date(),
-	refreshToken: "TOKEN",
+	spotifyRefreshToken: "TOKEN",
 	verifiedEmail: true
 } as UserDoc;
 
