@@ -31,6 +31,7 @@ export default class SongPolaroid extends React.Component<IProps, IState> {
 
 	render(){
 
+
 		const title = this.props.cutoff ? this.props.song.title.slice(0,this.props.cutoff) + (this.props.song.title.length > this.props.cutoff ? "..." : "") : this.props.song.title;
 		const artist = this.props.cutoff ? this.props.song.artist.slice(0,this.props.cutoff) + (this.props.song.artist.length > this.props.cutoff ? "..." : "") : this.props.song.artist;
 

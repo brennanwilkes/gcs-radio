@@ -190,6 +190,7 @@ export default class App extends React.Component<IProps, IState> {
 		}
 	}
 
+
 	componentDidMount(){
 		$("body").css("cursor","wait");
 		axios.get("../auth").then(data => {
@@ -201,6 +202,7 @@ export default class App extends React.Component<IProps, IState> {
 					this.player = spotifyPlayer;
 				}
 			}
+		}).catch(axiosErrorResponseHandler(this)).finally(() => {
 			this.player.initialize().then(() => {
 				this.setState({
 					playerInitialized: true
@@ -217,7 +219,7 @@ export default class App extends React.Component<IProps, IState> {
 			setInterval(this.updateProgress, 1000);
 			this.player.on("end", () => this.transitionSong(1));
 			this.player.on("error", err => errorResponseHandler(this)(String(err)));
-		}).catch(axiosErrorResponseHandler(this));
+		});
 	}
 
 	playSong(index: number = this.state.index){

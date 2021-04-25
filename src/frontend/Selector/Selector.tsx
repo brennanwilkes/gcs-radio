@@ -108,6 +108,8 @@ export default class Selector extends React.Component<IProps, IState> {
 			}}
 		/> );
 
+		console.dir(this.state.songs);
+
 		return <>
 			<div className={`Selector container-lg${this.state.cogs.reduce((prev, cur) => prev || cur) ? " SelectorProcessing" : ""}`}>
 				<HrWrapper style={{

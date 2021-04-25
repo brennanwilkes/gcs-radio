@@ -49,6 +49,11 @@ export default class PlaylistView extends React.Component<IProps, IState> {
 	render(){
 		const playlist = this.props.playlist;
 		const ext = this.props.keyExtension;
+
+		console.dir('-');
+		console.dir(this.state);
+		console.dir('-');
+
 		return <>
 			<div
 				key={`${playlist.id}${ext}`}

@@ -84,8 +84,6 @@ export default class PlaylistDetailAdder extends React.Component<IProps, IState>
 	}
 
 	render(){
-
-
 		return <>
 			<div className="DetailAdder container-lg">
 
