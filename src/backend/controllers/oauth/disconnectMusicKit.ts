@@ -12,8 +12,7 @@ export default (req: Request, res:Response): void => {
 			});
 		}).then(existingUser => {
 			if (existingUser) {
-				// Delete the user's refresh token
-				existingUser.spotifyRefreshToken = undefined;
+				existingUser.musicKitToken = undefined;
 				existingUser.save().then(() => {
 					res.status(200).end();
 				}).catch(internalErrorHandler(req, res));

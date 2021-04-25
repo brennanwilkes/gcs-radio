@@ -28,7 +28,7 @@ export class DownloadLink extends LinkObj implements Link {
 		super(
 			"Download",
 			"POST",
-			`${req.baseUrl}/songs?youtubeId=${song.youtubeId}&spotifyId=${song.spotifyId}`,
+			`${req.baseUrl}/songs?spotifyId=${song.spotifyId}`,
 			["application/json"]
 		);
 	}

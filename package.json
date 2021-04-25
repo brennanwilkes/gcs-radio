@@ -82,6 +82,7 @@
         "miniget": "^4.2.0",
         "mongoose": "^5.11.15",
         "multer": "^1.4.2",
+        "musickit-typescript": "^1.2.4",
         "prop-types": "^15.7.2",
         "querystring": "^0.2.1",
         "rc-slider": "^9.7.1",

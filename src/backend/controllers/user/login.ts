@@ -17,8 +17,11 @@ export default async (req: Request, res: Response): Promise<void> => {
 			bcrypt.compare(password, user.password).then(match => {
 				if (match) {
 					generateToken(user.id).then(token => {
-						if (user.refreshToken) {
-							res.cookie("srt", user.refreshToken, { httpOnly: false });
+						if (user.spotifyRefreshToken) {
+							res.cookie("srt", user.spotifyRefreshToken, { httpOnly: false });
+						}
+						if (user.musicKitToken) {
+							res.cookie("mkt", user.musicKitToken, { httpOnly: false });
 						}
 						res.cookie("jwt", token, { httpOnly: false });
 						res.status(200).json({ token });

@@ -1,4 +1,5 @@
 import { Request } from "express";
+import levenshtein from "fast-levenshtein";
 
 // Store all backend config vars here
 import "dotenv/config";
@@ -8,6 +9,7 @@ import emailConfig from "../../config/email";
 import googleConfig from "../../config/google";
 import spotifyConfig from "../../config/spotify";
 import miscConfig from "../../config/miscellaneous";
+import musicKitConfig from "../../config/musicKit";
 
 export const CONFIG = {
 	...miscConfig,
@@ -16,7 +18,8 @@ export const CONFIG = {
 	spotifyOauth2Credentials: spotifyConfig.oauth2,
 	...spotifyConfig.credentials,
 	...emailConfig,
-	...analyticsConfig
+	...analyticsConfig,
+	...musicKitConfig
 };
 
 /**
@@ -32,3 +35,17 @@ export const getPage = (req: Request):number => (req.query.page as number | unde
 export const getLimit = (req: Request):number => (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
 
 export const generateDashboardRedirect = (req: Request): string => `${req.protocol}://${req.get("host")}/dashboard`;
+
+export const titleSanitizer = (str: string) => {
+	return str.toLowerCase().replace(/[Vv][Ee][Vv][Oo]| - topic|[^a-zA-Z .0-9-()]|video ?|lyric ?|with ?|feat.?u?r?e?s?i?n?g? ?|official ?|audio ?|performance ?|\([^)]+\)/g, "");
+};
+export const thresholdDistance = (
+	str1: string,
+	str2: string,
+	threshold = 1,
+	sanitizer: ((str: string) => string) = titleSanitizer
+) => {
+	return levenshtein.get(sanitizer(str1), sanitizer(str2)) <= ((str1.length + str2.length) / 2 / threshold);
+};
+
+export const xOrMore = (vals: boolean[], x = 1) => vals.reduce((a, v) => a + (v ? 1 : 0), 0) >= x;

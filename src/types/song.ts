@@ -1,5 +1,4 @@
 import { SongDoc } from "../database/models/song";
-import { YoutubeResult } from "./youtubeResult";
 import { SpotifyResult } from "./spotifyResult";
 import { Link } from "./link";
 
@@ -12,7 +11,8 @@ export interface Song{
 	spotifyId: string,
 	artistSpotifyId: string,
 	albumSpotifyId: string,
-	youtubeId: string,
+	youtubeId?: string,
+	musicKitId?: string,
 	audioId?: string,
 	id?: string,
 	tags: string[],
@@ -36,7 +36,8 @@ export class SongObj implements Song {
 	spotifyId: string;
 	artistSpotifyId: string;
 	albumSpotifyId: string;
-	youtubeId: string;
+	youtubeId?: string;
+	musicKitId?: string;
 	audioId?: string;
 	id?:string;
 	tags: string[];
@@ -51,7 +52,10 @@ export class SongObj implements Song {
 		spotifyId: string,
 		artistSpotifyId: string,
 		albumSpotifyId: string,
-		youtubeId: string,
+		ids: {
+			youtubeId?: string,
+			musicKitId?: string,
+		},
 		tags: string[],
 		thumbnailUrl: string,
 		releaseDate: string,
@@ -66,7 +70,8 @@ export class SongObj implements Song {
 		this.spotifyId = spotifyId;
 		this.artistSpotifyId = artistSpotifyId;
 		this.albumSpotifyId = albumSpotifyId;
-		this.youtubeId = youtubeId;
+		this.youtubeId = ids.youtubeId;
+		this.musicKitId = ids.musicKitId;
 		this.tags = tags;
 		this.thumbnailUrl = thumbnailUrl;
 		this.releaseDate = releaseDate;
@@ -75,8 +80,8 @@ export class SongObj implements Song {
 	}
 }
 
-export class SongFromSearch extends SongObj implements Song {
-	constructor (youtubeResult: YoutubeResult, spotifyResult: SpotifyResult, audioId?: string, id?: string) {
+export class SongFromSpotify extends SongObj implements Song {
+	constructor (spotifyResult: SpotifyResult, audioId?: string, id?: string) {
 		super(
 			spotifyResult.title,
 			spotifyResult.artist,
@@ -86,8 +91,8 @@ export class SongFromSearch extends SongObj implements Song {
 			spotifyResult.spotifyId,
 			spotifyResult.artistSpotifyId,
 			spotifyResult.albumSpotifyId,
-			youtubeResult.youtubeId,
-			youtubeResult.tags,
+			{},
+			[],
 			spotifyResult.thumbnailUrl,
 			spotifyResult.releaseDate,
 			audioId,
@@ -107,7 +112,10 @@ export class SongObjFromQuery extends SongObj implements Song {
 			results.spotifyId,
 			results.artistSpotifyId,
 			results.albumSpotifyId,
-			results.youtubeId,
+			{
+				youtubeId: results.youtubeId,
+				musicKitId: results.musicKitId
+			},
 			results.tags,
 			results.thumbnailUrl,
 			results.releaseDate,
@@ -129,7 +137,10 @@ export class SongApiObj extends SongObj implements SongApi {
 			songBase.spotifyId,
 			songBase.artistSpotifyId,
 			songBase.albumSpotifyId,
-			songBase.youtubeId,
+			{
+				youtubeId: songBase.youtubeId,
+				musicKitId: songBase.musicKitId
+			},
 			songBase.tags,
 			songBase.thumbnailUrl,
 			songBase.releaseDate,

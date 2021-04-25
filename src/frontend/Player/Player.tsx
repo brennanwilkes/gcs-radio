@@ -12,10 +12,20 @@ import jscookie from "js-cookie";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {spotifyPause, spotifyPlayId, spotifySeek, spotifyVolume, setTransitionCallback, isReady as spotifyIsReady} from "../spotifyWebSDK/spotify";
-import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
+import {DirectAudioPlayer} from "./DirectAudioPlayer";
+import {SpotifyPlayer} from "../spotifyWebSDK/spotify";
+import {MusicKitPlayer} from "../musicKitSDK/musicKit";
+
+const directAudioPlayer = new DirectAudioPlayer();
+const spotifyPlayer = new SpotifyPlayer();
+const musicKitPlayer = new MusicKitPlayer();
+
+import Response, {HasResponse, successResponseHandler, errorResponseHandler, axiosErrorResponseHandler} from "../Response/Response";
+import { Player } from "../../types/player";
+import axios from "axios";
 
 const bufferSize = 10;
+
 
 interface IProps {
 	songs: Song[],
@@ -26,7 +36,6 @@ interface IProps {
 }
 interface IState extends HasResponse{
 	paused: boolean,
-	queue: Howl[],
 	transitions: Howl[],
 	progress: number,
 	maxProgress: number,
@@ -37,10 +46,13 @@ interface IState extends HasResponse{
 	lastTransition: number,
 	playedIntro: boolean,
 	volume: number,
-	voice: string
+	voice: string,
+	playerInitialized: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
+
+	player: Player = directAudioPlayer;
 
 	constructor(props: IProps) {
 		super(props);
@@ -51,18 +63,16 @@ export default class App extends React.Component<IProps, IState> {
 		this.rewind = this.rewind.bind(this);
 		this.initializeSongs = this.initializeSongs.bind(this);
 		this.initializeTransitions = this.initializeTransitions.bind(this);
-		this.loadedSongCallback = this.loadedSongCallback.bind(this);
 		this.loadedTransitionCallback = this.loadedTransitionCallback.bind(this);
 		this.unlockMobileAudio = this.unlockMobileAudio.bind(this);
 		this.playSong = this.playSong.bind(this);
 		this.pauseSong = this.pauseSong.bind(this);
-		this.getProgress = this.getProgress.bind(this);
 		this.setVolume = this.setVolume.bind(this);
 		this.changeVoice = this.changeVoice.bind(this);
 		this.updateVolume = this.updateVolume.bind(this);
 
 		this.state = {
-			queue: [],
+			playerInitialized: false,
 			transitions: [],
 			paused: true,
 			progress: 0,
@@ -76,62 +86,42 @@ export default class App extends React.Component<IProps, IState> {
 			volume: 100,
 			voice: jscookie.get("voice") ?? "en-AU-Wavenet-B"
 		};
-
-		setInterval(this.updateProgress, 1000);
-		setTransitionCallback(() => this.transitionSong(1));
 	}
 
 	updateProgress(){
-		if(this.state.index < this.state.queue.length){
-			this.setState({
-				progress: this.getProgress()
+		if(this.state.playerInitialized){
+			this.player.seek().then(progress => {
+				this.setState({
+					progress
+				});
 			});
-		}
-	}
-
-	loadedSongCallback(i: number, queue: Howl[]){
-		if(i === 0){
-			this.setState({
-				ready: true,
-				maxProgress: this.props.songs[0].duration
-			});
-		}
-		if(i + 1 < queue.length){
-			queue[i + 1].load();
 		}
 	}
 
 	initializeSongs(){
-		const queue: Howl[] = this.props.songs.map((song: Song) => new SongHowl(song));
-
-		queue.forEach((audio,i) => {
-			audio.on("end", () => this.transitionSong(1));
-			audio.on("load", () => {
-				this.loadedSongCallback(i, queue);
-				if(!this.props.spotifySDKMode && i === queue.length - 1){
-					successResponseHandler(this)(`Loaded ${queue.length} songs`);
-				}
+		if(this.state.index < this.props.songs.length){
+			this.player.setSong(this.props.songs[this.state.index]).then(() => {
+				successResponseHandler(this)(`Loaded ${this.props.songs[this.state.index].title}`);
 				this.updateVolume();
+				this.setState({
+					ready: true,
+					maxProgress: this.props.songs[0].duration
+				});
 			});
-		});
-		if(queue.length){
-			queue[this.state.index || 0].load();
 		}
-
-		this.setState({
-			queue : [...this.state.queue, ...queue.slice(this.state.queue.length)],
-		});
 	}
 
 	unlockMobileAudio(){
 		document.body.addEventListener('touchstart', () => {
 			if(!this.state.unlocked){
 				successResponseHandler(this)(`Mobile audio unlocked`);
-				this.state.queue.forEach(audio => {
-					audio.play();
-					audio.pause();
-					audio.seek(0);
-				});
+				this.player.setSong(this.props.songs[this.state.index]).then(() => {
+					return this.player.play();
+				}).then(() => {
+					return this.player.pause();
+				}).then(() => {
+					this.player.seek(0);
+				}).catch(errorResponseHandler(this));
 				this.state.transitions.forEach(audio => {
 					audio.play();
 					audio.pause();
@@ -174,14 +164,8 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	updateVolume(){
-		this.state.transitions.forEach(audio => {
-			audio.volume(this.state.volume > 0.05 ? Math.min(0.99,(this.state.volume / 100) + 0.1) : 0.01);
-		});
-		this.state.queue.forEach(audio => {
-			audio.volume(this.state.volume > 0.05 ? Math.max(0.01,(this.state.volume / 100) - 0.25) : 0.01);
-		});
-		if(this.props.spotifySDKMode){
-			spotifyVolume(this.state.volume > 0.05 ? Math.max(0.01,(this.state.volume / 100) - 0.25) : 0.01);
+		if(this.state.playerInitialized){
+			this.player.volume(this.state.volume > 0.05 ? Math.min(0.99,(this.state.volume / 100) + 0.1) : 0.01);
 		}
 	}
 
@@ -208,66 +192,59 @@ export default class App extends React.Component<IProps, IState> {
 
 	componentDidMount(){
 		$("body").css("cursor","wait");
-
-		this.initializeSongs();
-		this.initializeTransitions();
-		if(iOS()){
-			this.unlockMobileAudio();
-		}
-		else if(!this.state.unlocked){
-			this.setState({unlocked:true});
-		}
+		axios.get("../auth").then(data => {
+			if(data.data?.users?.length){
+				if(data.data.users[0].musicKitToken){
+					this.player = musicKitPlayer;
+				}
+				if(data.data.users[0].spotifyRefreshToken && !iOS()){
+					this.player = spotifyPlayer;
+				}
+			}
+			this.player.initialize().then(() => {
+				this.setState({
+					playerInitialized: true
+				});
+				this.initializeSongs();
+				this.initializeTransitions();
+				if(iOS()){
+					this.unlockMobileAudio();
+				}
+				else if(!this.state.unlocked){
+					this.setState({unlocked:true});
+				}
+			});
+			setInterval(this.updateProgress, 1000);
+			this.player.on("end", () => this.transitionSong(1));
+			this.player.on("error", err => errorResponseHandler(this)(String(err)));
+		}).catch(axiosErrorResponseHandler(this));
 	}
 
 	playSong(index: number = this.state.index){
-		if(this.props.spotifySDKMode){
-			spotifyPlayId(this.props.songs[index].spotifyId);
-		}
-		else{
-			this.state.queue[index].play();
-		}
+		this.player.setSong(this.props.songs[index]).then(() => {
+			return this.player.play();
+		}).catch(errorResponseHandler(this));
 
 		if(index + (bufferSize - 1) > this.props.songs.length){
 			this.props.requestMoreSongs(bufferSize);
 		}
 	}
 
-	pauseSong(index: number = this.state.index){
-		if(this.props.spotifySDKMode){
-			spotifyPause();
-		}
-		else{
-			this.state.queue[index].pause();
-		}
-	}
-
-	getProgress(): number{
-		if(this.props.spotifySDKMode){
-			return spotifySeek();
-		}
-		else{
-			return (this.state.queue[this.state.index].seek() as number) * 1000;
-		}
+	pauseSong(){
+		this.player.pause().catch(errorResponseHandler(this));
 	}
 
 	transitionSong(direction: number = 1){
-
 		this.setState({seekLock: true});
 		setTimeout(() => this.setState({seekLock: false}), 150);
 
 		if(
-			this.state.index + direction < this.state.queue.length &&
+			this.state.index + direction < this.props.songs.length &&
 			this.state.index + direction < this.state.transitions.length &&
 			this.state.index + direction >= 0){
 
 			//Reset current audio
-			if(this.props.spotifySDKMode){
-				this.pauseSong();
-				this.setProgress(0);
-			}
-			else{
-				this.state.queue[this.state.index].stop();
-			}
+			this.player.pause().catch(errorResponseHandler(this));
 			this.state.transitions[this.state.lastTransition].stop();
 
 			//Play transition audio
@@ -278,7 +255,6 @@ export default class App extends React.Component<IProps, IState> {
 						lastTransition : this.state.index + direction
 					});
 				}
-
 
 				//Using the enum completely breaks webpack 5
 				if(this.props.transitions[this.state.index + direction].type === "PARALLEL"){//VoiceLineType.parallel){
@@ -291,6 +267,7 @@ export default class App extends React.Component<IProps, IState> {
 					);
 				}
 			}
+
 			this.setState({
 				index: this.state.index + direction,
 				maxProgress: this.props.songs[this.state.index + direction].duration
@@ -318,19 +295,13 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	setProgress(value: number){
-		if(this.state.index < this.state.queue.length && !this.state.seekLock){
-			if(this.props.spotifySDKMode){
-				spotifySeek(value);
-			}
-			else{
-				this.state.queue[this.state.index].seek(value / 1000);
-			}
-			this.updateProgress();
+		if(this.state.index < this.props.songs.length && !this.state.seekLock && this.state.playerInitialized){
+			this.player.seek(value).then(this.updateProgress).catch(errorResponseHandler(this));
 		}
 	}
 
 	togglePause(){
-		if(this.state.queue[this.state.index]){
+		if(this.props.songs[this.state.index]){
 			if(!this.state.playedIntro){
 				this.state.transitions[0].play();
 				this.state.transitions[0].on("end", () => {
@@ -383,11 +354,11 @@ export default class App extends React.Component<IProps, IState> {
 						<button className="btn btn-lg btn-gcs-alpine" onClick={() => {
 							window.location.href = `../build?${window.location.href.split("?")[1]}`;
 						}}>Edit</button>
-						<button disabled={!this.state.ready || !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.rewind}><FaStepBackward /></button>
-						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={this.togglePause}>{
+						<button disabled={!this.state.ready || !this.state.unlocked || !this.state.playerInitialized } onClick={this.rewind}><FaStepBackward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked || !this.state.playerInitialized } onClick={this.togglePause}>{
 							this.state.paused ? <FaRegPlayCircle /> : <FaRegPauseCircle />
 						}</button>
-						<button disabled={!this.state.ready|| !this.state.unlocked || (this.props.spotifySDKMode && !spotifyIsReady)} onClick={() => this.transitionSong(1)}><FaStepForward /></button>
+						<button disabled={!this.state.ready|| !this.state.unlocked || !this.state.playerInitialized } onClick={() => this.transitionSong(1)}><FaStepForward /></button>
 						<select
 							className="form-select form-control btn btn-lg btn-gcs-alpine"
 							value={this.state.voice}

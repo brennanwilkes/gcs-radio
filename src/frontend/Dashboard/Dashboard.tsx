@@ -4,10 +4,12 @@ import {Playlist} from "../../types/playlist";
 import {User} from "../../types/user";
 import jscookie from "js-cookie";
 import arrayshuffle from "array-shuffle";
-import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler} from "../Response/Response";
+import Response, {HasResponse, axiosErrorResponseHandler, successResponseHandler, errorResponseHandler} from "../Response/Response";
 import NavBar from "../Navbar/Navbar";
 import HrWrapper from "../HrWrapper/HrWrapper";
 import PlaylistView from "../PlaylistView/PlaylistView";
+import {FaSpotify, FaApple} from "react-icons/fa";
+import musicKit from "../musicKitSDK/musicKitSDK";
 
 import "./dashboard.scss";
 
@@ -77,34 +79,24 @@ export default class Dashboard extends React.Component<IProps, IState> {
 
 	render(){
 
-		const connected = !!this.state.user?.refreshToken;
+		const spotifyConnected = !!this.state.user?.spotifyRefreshToken;
+		const musicKitConnected = !!this.state.user?.musicKitToken;
 
 		return <>
 			<NavBar />
 			<div className="Dashboard container-lg mt-md-5">
-
-				<button
-					disabled={connected}
-					className={`col-12 col-md-5 mr-md-4 mb-2 btn btn-lg btn-${connected ? "gcs-elevated" : "gcs-faded" }`}
-					onClick={() => {
-						window.location.href = "../auth/spotify";
-					}}
-				>{
-					connected ? <Connected /> : <Disconnected />
-				}</button>
-
-				<button
-					className="col-12 col-md-5 ml-md-4 mb-2 btn btn-lg btn-gcs-bright"
-					onClick={() => {
-						window.location.href = "../build";
-					}}
-				>
-					<Create />
-				</button>
-
-				<div className="col-12 col-md-6 ml-md-3 mb-2 mb-lg-4 h6"><div className="w-100">
+				<div className="col-12 col-md-5 mr-md-4 mb-2 d-inline-flex flex-column">
+					<button
+						disabled={spotifyConnected}
+						className={`btn btn-lg btn-${spotifyConnected ? "gcs-elevated" : "gcs-faded" }`}
+						onClick={() => {
+							window.location.href = "../auth/spotify";
+						}}
+					><div className="d-flex justify-content-center"><FaSpotify size={30} /> {
+						spotifyConnected ? <Connected /> : <Disconnected />
+					}</div></button>
 					<a
-						className={`${connected ? "" : "anchorDisabled"}`}
+						className={`h6 mt-1 d-inline-block ${spotifyConnected ? "" : "anchorDisabled"}`}
 						onClick={() => {
 							axios.delete("../auth/spotify").then(() => {
 								successResponseHandler(this)(`Spotify Disconnected from ${this.state.user?.email}`);
@@ -117,8 +109,58 @@ export default class Dashboard extends React.Component<IProps, IState> {
 								});
 							}).catch(axiosErrorResponseHandler(this));
 					}}><Disconnect /></a>
-					<h6 className="text-gcs-alpine mx-2 my-0">|</h6>
+				</div>
+
+				<div className="col-12 col-md-5 ml-md-4 mb-2 d-inline-flex flex-column">
+					<button
+						disabled={musicKitConnected}
+						className={`btn btn-lg btn-${musicKitConnected ? "gcs-elevated" : "gcs-faded" }`}
+						onClick={() => {
+							musicKit().then(kit => {
+								return kit.authorize();
+							}).then(token => {
+								return axios.patch(`../auth/musicKit?musicKitToken=${encodeURIComponent(token)}`).catch(axiosErrorResponseHandler(this));
+							}).then(data => {
+								if(data && data.data?.users?.length){
+									jscookie.set("mkt", data.data.users[0].musicKitToken);
+									this.setState({
+										user: data.data.users[0]
+									});
+									console.dir(data.data);
+								}
+								else if(data){
+									errorResponseHandler(this)("Something went wrong");
+								}
+							}).catch(errorResponseHandler(this));
+						}}
+					><div className="d-flex justify-content-center"><FaApple size={30} /> {
+						musicKitConnected ? "Apple Music Connected" : "Connect Apple Music"
+					}</div></button>
 					<a
+						className={`h6 mt-1 d-inline-block ${musicKitConnected ? "" : "anchorDisabled"}`}
+						onClick={() => {
+							axios.delete("../auth/musicKit").then(() => {
+								successResponseHandler(this)(`Apple Music Disconnected from ${this.state.user?.email}`);
+								jscookie.remove("mkt");
+								axios.get("/auth").then(resp => {
+									this.setState({
+										user: resp.data.users[0]
+									});
+								});
+							}).catch(axiosErrorResponseHandler(this));
+					}}><Disconnect /></a>
+				</div>
+
+				<div className="col-12 col-md-5 mr-md-4 mb-2 d-inline-flex flex-column">
+					<button
+						className="btn btn-lg btn-gcs-bright"
+						onClick={() => {
+							window.location.href = "../build";
+						}}
+					><Create />
+					</button>
+					<a
+						className="text-gcs-elevated"
 						href="../login"
 						onClick={() => {
 							jscookie.remove("jwt");
@@ -126,11 +168,27 @@ export default class Dashboard extends React.Component<IProps, IState> {
 							jscookie.remove("srt");
 							window.location.href = "../login";
 					}}><Signout /></a>
-				</div></div>
+				</div>
 
+				<div className="col-12 col-md-5 ml-md-4 mb-2 d-inline-flex flex-column">
+					<button
+						className={`btn btn-lg btn-gcs-${this.state.fromSpotify.length === 0 && spotifyConnected ? "faded" : "elevated"}`}
+						disabled={!(this.state.fromSpotify.length === 0 && spotifyConnected)}
+						onClick={() => {
+							$("body").css("cursor","wait");
+							axios.post("/api/v1/playlists/made-for-me?limit=30").then(response => {
+								this.setState({
+									fromSpotify: response.data.playlists
+								});
+							}).catch(axiosErrorResponseHandler(this)).finally(() => {
+								$("body").css("cursor","inherit");
+							});
+					}}><Generate /></button>
+				</div>
 
 				<HrWrapper style={{
-					borderBottomColor: "var(--gcs-faded)"
+					borderBottomColor: "var(--gcs-faded)",
+					marginTop: "2vh"
 				}} children={
 					<h2 className="text-gcs-faded" ><Playlists /></h2>
 				} />
@@ -146,7 +204,7 @@ export default class Dashboard extends React.Component<IProps, IState> {
 					/>)
 				}
 				{
-				this.state.user?.refreshToken? <>
+				this.state.user?.spotifyRefreshToken? <>
 					<HrWrapper style={{
 						borderBottomColor: "var(--gcs-faded)"
 					}} children={

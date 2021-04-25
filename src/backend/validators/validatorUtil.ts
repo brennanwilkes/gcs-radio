@@ -31,15 +31,9 @@ export const verifyUrlExistance = async (url: string): Promise<boolean> => {
 
 // Some awesome ID regex checks. Hopefully they don't change *crosses fingers*
 export const mongoIdRegex = /^[a-fA-F0-9]{24}$/;
-export const youtubeIdRegex = /^([0-9A-Za-z_-]{10}[048AEIMQUYcgkosw]|DEFAULT)$/;
 export const spotifyIdRegex = /^[0-9A-Za-z]{22}$/;
 export const spotifyWebRegex = /^https?:\/\/open.spotify.com\/[a-zA-Z]+\/([0-9A-Za-z]{22})\?si=.*$/;
 export const spotifyURIRegex = /^spotify:[a-zA-Z]+:([0-9A-Za-z]{22})$/;
-
-export const youtubeIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
-	.trim()
-	.matches(youtubeIdRegex)
-	.withMessage("Youtube ID is not valid");
 
 export const mongoIdValidator = (variable: ValidationChain): ValidationChain => variable.exists()
 	.trim()

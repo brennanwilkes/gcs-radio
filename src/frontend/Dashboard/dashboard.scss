@@ -9,29 +9,23 @@
 	text-align: center;
 }
 
-.Dashboard > div:first-of-type > div{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-}
-
-.Dashboard > div:first-of-type > div > a:not(.anchorDisabled){
+.Dashboard > div > a:not(.anchorDisabled){
 	color: $gcs-alpine !important;
 }
-.Dashboard > div:first-of-type > div > a:hover{
+
+.Dashboard > div > a:hover{
 	color: $gcs-alpine-hover !important;
 }
-.Dashboard > div:first-of-type > div > a:not(.anchorDisabled):hover{
+
+.Dashboard > div > a:not(.anchorDisabled):hover{
 	cursor: pointer !important;
 }
-.Dashboard > div:first-of-type > div > a.anchorDisabled{
+
+.Dashboard > div > a.anchorDisabled{
 	color: $gcs-alpine-hover !important;
 	pointer-events: none;
 }
 
-@media (min-width: 768px) {
-	.Dashboard > div:first-of-type{
-
-	}
+.Dashboard > div > button > div > svg{
+	margin-right: 6px;
 }

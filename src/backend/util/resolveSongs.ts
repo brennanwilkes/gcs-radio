@@ -1,37 +1,32 @@
-import { Song, SongFromSearch } from "../../types/song";
+import { Song, SongFromSpotify } from "../../types/song";
 import { SpotifyResult } from "../../types/spotifyResult";
-import resultMatches from "./resultMatches";
-import { CONFIG, print } from "./util";
-import { searchYoutubeDetailed, searchYoutubeSimple } from "../youtube/searchYoutube";
+import { CONFIG } from "./util";
+import youtubePlayableConverter from "../youtube/youtubePlayableConverter";
+import musicKitPlayableConverter from "../musicKit/musicKitPlayableConverter";
+import { basePlayableConverter } from "../../types/playables/playable";
 
-export default function (spotifyResults: SpotifyResult[], searchAttempts = 10): Promise<Song[]> {
-	return new Promise<Song[]>((resolve, reject) => {
-		const songResults: Promise<(Song | void)>[] = spotifyResults.map(async spotifySong => {
-			print(`Querying youtube for ${spotifySong.title} by ${spotifySong.artist}`);
-			const youtubeIds = await searchYoutubeSimple(`song ${spotifySong.title} by ${spotifySong.artist} official`, searchAttempts).catch(reject);
-			if (youtubeIds) {
-				for (let i = 0; i < youtubeIds.length; i++) {
-					print(`Querying youtube for ${youtubeIds[i]} metadata`);
-					const youtubeDetails = await searchYoutubeDetailed(youtubeIds[i]).catch(reject);
+const conversions = [
+	{
+		flag: CONFIG.matchWithYoutube,
+		converter: youtubePlayableConverter
+	},
+	{
+		flag: CONFIG.matchWithMusicKit,
+		converter: musicKitPlayableConverter
+	}
+];
 
-					if (youtubeDetails && (youtubeDetails.formats.length || (!CONFIG.matchWithYoutube)) > 0 && resultMatches(spotifySong, youtubeDetails)) {
-						print(`Success finding match on try ${i + 1} for ${spotifySong.title}`);
-						return new SongFromSearch(youtubeDetails, spotifySong);
-					}
-				}
-				print(`Failure finding match for ${spotifySong.title}`);
+const converters = (): basePlayableConverter<Song>[] => conversions.filter(conversionMapping => conversionMapping.flag).map(conversionMapping => conversionMapping.converter);
+
+export default function (spotifyResults: SpotifyResult[]): Promise<Song[]> {
+	return Promise.all(spotifyResults.map(async spotify => {
+		let song: Song = new SongFromSpotify(spotify);
+		const upgrades = await Promise.all(converters().map(converter => converter.upgradeToPlayable(song).catch(() => undefined)));
+		upgrades.forEach(upgrade => {
+			if (upgrade) {
+				song = { ...song, ...upgrade };
 			}
 		});
-
-		Promise.all(songResults).then(results => {
-			const filtered: Song[] = [];
-			results.forEach(res => {
-				if (res) {
-					filtered.push(res);
-				}
-			});
-
-			resolve(filtered);
-		}).catch(reject);
-	});
+		return song;
+	}));
 }

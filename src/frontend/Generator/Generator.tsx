@@ -198,7 +198,7 @@ export default class Generator extends React.Component<IProps, IState> {
 			});
 
 			//Gotta love ES6 amiright??
-			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId)) === i);
+			const songs = this.state.songs.filter((v,i,a) => a.findIndex(t => (t.spotifyId === v.spotifyId && t.youtubeId===v.youtubeId && t.musicKitId === v.musicKitId)) === i);
 			new PlaylistObj(songs).render().then(complete => {
 				this.setState({
 					completeSongs: complete.songs

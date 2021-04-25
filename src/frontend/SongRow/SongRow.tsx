@@ -32,5 +32,5 @@ export default class Builder extends React.Component<IProps, IState> {
 }
 
 export function getSongKey(song: Song, shift: number | string = 0){
-	return `${song.id ?? `${song.spotifyId}:${song.youtubeId}`}-${shift}`;
+	return `${song.id ?? `${song.spotifyId}:${song.youtubeId}:${song.musicKitId}`}-${shift}`;
 }

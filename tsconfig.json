@@ -15,12 +15,14 @@
         "esModuleInterop": true,
         "jsx": "react",
         "allowSyntheticDefaultImports": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "skipLibCheck": true
     },
     "exclude": [
         "build/**/*",
         "src/frontend/**/*",
         "**/*.spec.ts",
-        "config"
+        "config",
+        "node_modules/musickit-typescript/"
     ]
 }

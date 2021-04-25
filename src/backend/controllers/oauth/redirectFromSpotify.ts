@@ -15,7 +15,7 @@ import { getUserIdFromToken } from "../../auth/getUser";
 export default (req: Request, res:Response): void => {
 	const code = req.query.code as string;
 	let user: SpotifyApi.UserObjectPrivate | undefined;
-	let refreshToken: string | undefined;
+	let spotifyRefreshToken: string | undefined;
 
 	connection.then(spotifyApi => {
 		spotifyApi.authorizationCodeGrant(code).then(data => {
@@ -27,7 +27,7 @@ export default (req: Request, res:Response): void => {
 			// on the frontend in order to play from the spotify web api
 			res.cookie("srt", data.body.refresh_token, { httpOnly: false });
 			res.cookie("sat", data.body.access_token, { httpOnly: false });
-			refreshToken = data.body.refresh_token;
+			spotifyRefreshToken = data.body.refresh_token;
 
 			return spotifyApi.getMe();
 		}).then(async userResp => {
@@ -45,7 +45,7 @@ export default (req: Request, res:Response): void => {
 					// User account already exists, and is being connected to spotify
 					if (existingUser) {
 						// Update user refresh token
-						existingUser.refreshToken = refreshToken;
+						existingUser.spotifyRefreshToken = spotifyRefreshToken;
 						return existingUser.save();
 					} else {
 						throw new Error("Updating existing user account failed");
@@ -67,7 +67,7 @@ export default (req: Request, res:Response): void => {
 				return generateToken(arrDocs[0]._id);
 			} else {
 				// Signup
-				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate, refreshToken);
+				const userObj = new UserFromSpotifyCredentials(user as SpotifyApi.UserObjectPrivate, spotifyRefreshToken);
 				logger.logSignup(userObj.email, UserType.SPOTIFY);
 				fireAndForgetMail(welcomeEmail(userObj.email));
 				const doc = await userDocFromUser(userObj).save();

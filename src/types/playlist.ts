@@ -54,7 +54,7 @@ export class PlaylistObj implements Playlist {
 		return new Promise<PlaylistObj>((resolve, reject) => {
 			const requests = this.songs.map(song => {
 				return axios.post(
-					`/api/v1/songs?youtubeId=${encodeURIComponent(song.youtubeId)}&spotifyId=${encodeURIComponent(song.spotifyId)}`
+					`/api/v1/songs?spotifyId=${encodeURIComponent(song.spotifyId)}`
 				).then(resp => {
 					if (songResponseCallback) {
 						songResponseCallback(resp.data.songs[0]);
