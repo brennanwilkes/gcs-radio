@@ -13,7 +13,7 @@ export default (req: Request, res: Response): void => {
 	const limit = (req.query.limit as number | undefined) ?? CONFIG.defaultApiLimit;
 
 	getUserFromToken(req.header("token") as string).then(user => {
-		getUserAccessToken(user.refreshToken ?? "ERROR").then(async accessToken => {
+		getUserAccessToken(user.spotifyRefreshToken ?? "ERROR").then(async accessToken => {
 			// Getting made-for-me requires spotify authentication
 			Promise.all([
 				getForMePlaylist(accessToken, "short_term", limit),

@@ -14,12 +14,16 @@ export default (req: Request, res: Response): void => {
 		User.findById(user.id).then(userDoc => {
 			if (userDoc) {
 				const userObj = new UserFromDoc(userDoc);
-				if (userObj.refreshToken) {
+				if (userObj.spotifyRefreshToken) {
 					// Ensure srt cookie is set
 					// This is required by the frontend in order to
 					// play music with the spotify web api
-					res.cookie("srt", userObj.refreshToken, { httpOnly: false });
+					res.cookie("srt", userObj.spotifyRefreshToken, { httpOnly: false });
 				}
+				if (userObj.musicKitToken) {
+					res.cookie("mkt", userObj.musicKitToken, { httpOnly: false });
+				}
+
 				logger.logSuccessfulAuth();
 				res.status(200).json({
 					users: [userObj]

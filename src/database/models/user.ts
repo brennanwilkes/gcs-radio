@@ -20,7 +20,10 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	refreshToken: {
+	spotifyRefreshToken: {
+		type: String
+	},
+	musicKitToken: {
 		type: String
 	},
 	createdAt: {
@@ -38,7 +41,8 @@ export interface UserDoc extends mongoose.Document {
 	type: string,
 	password?: string,
 	createdAt: Date,
-	refreshToken?: string,
+	spotifyRefreshToken?: string,
+	musicKitToken?: string,
 	verifiedEmail?: boolean
 }
 
@@ -49,7 +53,8 @@ export function userDocFromUser (user: UserType, password?: string): UserDoc {
 	return new User({
 		email: user.email,
 		type: user.type,
-		refreshToken: user.refreshToken,
+		spotifyRefreshToken: user.spotifyRefreshToken,
+		musicKitToken: user.musicKitToken,
 		password: password,
 		verifiedEmail: user.verifiedEmail
 	});

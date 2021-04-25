@@ -13,6 +13,8 @@ import verifyEmail from "../controllers/user/verifyEmail";
 import { existingTokenRedirect, oauthValidator } from "../validators/auth/oauthValidator";
 import refreshTokenValidator from "../validators/auth/refreshTokenValidator";
 import { loginValidator, signUpValidator, tokenValidator, verifyEmailValidator } from "../validators/auth/userValidator";
+import connectMusicKitValidator from "../validators/auth/connectMusicKitValidator";
+import connectMusicKit from "../controllers/oauth/connectMusicKit";
 
 const authRouter = Router();
 
@@ -30,5 +32,6 @@ authRouter.get("/", tokenValidator, getUser);
 authRouter.get("/:id", verifyEmailValidator, verifyEmail);
 
 authRouter.post("/musicKit", getMusicKitDeveloperToken);
+authRouter.patch("/musicKit", [...tokenValidator, ...connectMusicKitValidator], connectMusicKit);
 
 export default authRouter;

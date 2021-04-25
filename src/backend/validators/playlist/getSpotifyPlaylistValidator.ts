@@ -9,7 +9,7 @@ export default [
 	validationErrorHandler,
 	(req: Request, res: Response, next: NextFunction): void => {
 		getUserFromToken(req.header("token") as string).then(user => {
-			if (user.refreshToken) {
+			if (user.spotifyRefreshToken) {
 				next();
 			} else {
 				accessDeniedErrorHandler(req, res)("Spotify Playlists");
