@@ -15,6 +15,7 @@ import refreshTokenValidator from "../validators/auth/refreshTokenValidator";
 import { loginValidator, signUpValidator, tokenValidator, verifyEmailValidator } from "../validators/auth/userValidator";
 import connectMusicKitValidator from "../validators/auth/connectMusicKitValidator";
 import connectMusicKit from "../controllers/oauth/connectMusicKit";
+import disconnectMusicKit from "../controllers/oauth/disconnectMusicKit";
 
 const authRouter = Router();
 
@@ -33,5 +34,6 @@ authRouter.get("/:id", verifyEmailValidator, verifyEmail);
 
 authRouter.post("/musicKit", getMusicKitDeveloperToken);
 authRouter.patch("/musicKit", [...tokenValidator, ...connectMusicKitValidator], connectMusicKit);
+authRouter.delete("/musicKit", tokenValidator, disconnectMusicKit);
 
 export default authRouter;
