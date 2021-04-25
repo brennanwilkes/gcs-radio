@@ -6,7 +6,8 @@ import SpotifyApi from "spotify-web-api-node";
 export enum UserType{
 	PASSWORD = "PASSWORD",
 	GOOGLE = "GOOGLE",
-	SPOTIFY = "SPOTIFY"
+	SPOTIFY = "SPOTIFY",
+	APPLE = "APPLE"
 }
 /* eslint-enable no-unused-vars */
 
@@ -14,7 +15,8 @@ export interface User{
 	email: string,
 	createdAt: Date,
 	type: UserType,
-	refreshToken?: string,
+	spotifyRefreshToken?: string,
+	musicKitToken?: string,
 	id?: string,
 	password?: string,
 	verifiedEmail?: boolean
@@ -32,7 +34,8 @@ export interface UserOptions{
 	email: string,
 	type: UserType,
 	createdAt?: Date,
-	refreshToken?: string,
+	spotifyRefreshToken?: string,
+	musicKitToken?: string,
 	id?: string,
 	verifiedEmail?: boolean
 }
@@ -42,14 +45,18 @@ export class UserObj implements User {
 	createdAt: Date;
 	type: UserType;
 	id?: string;
-	refreshToken?: string;
+	spotifyRefreshToken?: string;
+	musicKitToken?: string;
 	verifiedEmail?: boolean
 	constructor (opts: UserOptions) {
 		if (opts.id) {
 			this.id = opts.id;
 		}
-		if (opts.refreshToken) {
-			this.refreshToken = opts.refreshToken;
+		if (opts.spotifyRefreshToken) {
+			this.spotifyRefreshToken = opts.spotifyRefreshToken;
+		}
+		if (opts.musicKitToken) {
+			this.musicKitToken = opts.musicKitToken;
 		}
 		if (opts.verifiedEmail) {
 			this.verifiedEmail = opts.verifiedEmail;
@@ -68,7 +75,8 @@ export class UserFromDoc extends UserObj implements UserWithId {
 			email: doc.email,
 			type: doc.type as UserType,
 			createdAt: doc.createdAt,
-			refreshToken: doc.refreshToken,
+			spotifyRefreshToken: doc.spotifyRefreshToken,
+			musicKitToken: doc.musicKitToken,
 			verifiedEmail: doc.verifiedEmail
 		});
 		this.id = doc.id;
@@ -86,11 +94,11 @@ export class UserFromGoogleCredentials extends UserObj {
 }
 
 export class UserFromSpotifyCredentials extends UserObj {
-	constructor (credentials: SpotifyApi.UserObjectPrivate, refreshToken?: string) {
+	constructor (credentials: SpotifyApi.UserObjectPrivate, spotifyRefreshToken?: string) {
 		super({
 			email: credentials.email,
 			type: UserType.SPOTIFY,
-			refreshToken,
+			spotifyRefreshToken,
 			verifiedEmail: true
 		});
 	}

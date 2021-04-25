@@ -16,10 +16,16 @@ import {DirectAudioPlayer} from "./DirectAudioPlayer";
 import {SpotifyPlayer} from "../spotifyWebSDK/spotify";
 import {MusicKitPlayer} from "../musicKitSDK/musicKit";
 
-import Response, {HasResponse, successResponseHandler, errorResponseHandler} from "../Response/Response";
+const directAudioPlayer = new DirectAudioPlayer();
+const spotifyPlayer = new SpotifyPlayer();
+const musicKitPlayer = new MusicKitPlayer();
+
+import Response, {HasResponse, successResponseHandler, errorResponseHandler, axiosErrorResponseHandler} from "../Response/Response";
 import { Player } from "../../types/player";
+import axios from "axios";
 
 const bufferSize = 10;
+
 
 interface IProps {
 	songs: Song[],
@@ -41,11 +47,12 @@ interface IState extends HasResponse{
 	playedIntro: boolean,
 	volume: number,
 	voice: string,
-	player: Player,
 	playerInitialized: boolean
 }
 
 export default class App extends React.Component<IProps, IState> {
+
+	player: Player = directAudioPlayer;
 
 	constructor(props: IProps) {
 		super(props);
@@ -65,7 +72,6 @@ export default class App extends React.Component<IProps, IState> {
 		this.updateVolume = this.updateVolume.bind(this);
 
 		this.state = {
-			player: new MusicKitPlayer(),
 			playerInitialized: false,
 			transitions: [],
 			paused: true,
@@ -84,7 +90,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	updateProgress(){
 		if(this.state.playerInitialized){
-			this.state.player.seek().then(progress => {
+			this.player.seek().then(progress => {
 				this.setState({
 					progress
 				});
@@ -94,7 +100,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	initializeSongs(){
 		if(this.state.index < this.props.songs.length){
-			this.state.player.setSong(this.props.songs[this.state.index]).then(() => {
+			this.player.setSong(this.props.songs[this.state.index]).then(() => {
 				successResponseHandler(this)(`Loaded ${this.props.songs[this.state.index].title}`);
 				this.updateVolume();
 				this.setState({
@@ -109,12 +115,12 @@ export default class App extends React.Component<IProps, IState> {
 		document.body.addEventListener('touchstart', () => {
 			if(!this.state.unlocked){
 				successResponseHandler(this)(`Mobile audio unlocked`);
-				this.state.player.setSong(this.props.songs[this.state.index]).then(() => {
-					return this.state.player.play();
+				this.player.setSong(this.props.songs[this.state.index]).then(() => {
+					return this.player.play();
 				}).then(() => {
-					return this.state.player.pause();
+					return this.player.pause();
 				}).then(() => {
-					this.state.player.seek(0);
+					this.player.seek(0);
 				}).catch(errorResponseHandler(this));
 				this.state.transitions.forEach(audio => {
 					audio.play();
@@ -159,7 +165,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	updateVolume(){
 		if(this.state.playerInitialized){
-			this.state.player.volume(this.state.volume > 0.05 ? Math.min(0.99,(this.state.volume / 100) + 0.1) : 0.01);
+			this.player.volume(this.state.volume > 0.05 ? Math.min(0.99,(this.state.volume / 100) + 0.1) : 0.01);
 		}
 	}
 
@@ -186,28 +192,37 @@ export default class App extends React.Component<IProps, IState> {
 
 	componentDidMount(){
 		$("body").css("cursor","wait");
-		this.state.player.initialize().then(() => {
-			this.setState({
-				playerInitialized: true
+		axios.get("../auth").then(data => {
+			if(data.data?.users?.length){
+				if(data.data.users[0].musicKitToken){
+					this.player = musicKitPlayer;
+				}
+				if(data.data.users[0].spotifyRefreshToken && !iOS()){
+					this.player = spotifyPlayer;
+				}
+			}
+			this.player.initialize().then(() => {
+				this.setState({
+					playerInitialized: true
+				});
+				this.initializeSongs();
+				this.initializeTransitions();
+				if(iOS()){
+					this.unlockMobileAudio();
+				}
+				else if(!this.state.unlocked){
+					this.setState({unlocked:true});
+				}
 			});
-			this.initializeSongs();
-			this.initializeTransitions();
-			if(iOS()){
-				this.unlockMobileAudio();
-			}
-			else if(!this.state.unlocked){
-				this.setState({unlocked:true});
-			}
-		});
-		setInterval(this.updateProgress, 1000);
-		this.state.player.on("end", () => this.transitionSong(1));
-		this.state.player.on("error", err => errorResponseHandler(this)(String(err)));
-
+			setInterval(this.updateProgress, 1000);
+			this.player.on("end", () => this.transitionSong(1));
+			this.player.on("error", err => errorResponseHandler(this)(String(err)));
+		}).catch(axiosErrorResponseHandler(this));
 	}
 
 	playSong(index: number = this.state.index){
-		this.state.player.setSong(this.props.songs[index]).then(() => {
-			return this.state.player.play();
+		this.player.setSong(this.props.songs[index]).then(() => {
+			return this.player.play();
 		}).catch(errorResponseHandler(this));
 
 		if(index + (bufferSize - 1) > this.props.songs.length){
@@ -216,7 +231,7 @@ export default class App extends React.Component<IProps, IState> {
 	}
 
 	pauseSong(){
-		this.state.player.pause().catch(errorResponseHandler(this));
+		this.player.pause().catch(errorResponseHandler(this));
 	}
 
 	transitionSong(direction: number = 1){
@@ -229,7 +244,7 @@ export default class App extends React.Component<IProps, IState> {
 			this.state.index + direction >= 0){
 
 			//Reset current audio
-			this.state.player.pause().catch(errorResponseHandler(this));
+			this.player.pause().catch(errorResponseHandler(this));
 			this.state.transitions[this.state.lastTransition].stop();
 
 			//Play transition audio
@@ -281,7 +296,7 @@ export default class App extends React.Component<IProps, IState> {
 
 	setProgress(value: number){
 		if(this.state.index < this.props.songs.length && !this.state.seekLock && this.state.playerInitialized){
-			this.state.player.seek(value).then(this.updateProgress).catch(errorResponseHandler(this));
+			this.player.seek(value).then(this.updateProgress).catch(errorResponseHandler(this));
 		}
 	}
 

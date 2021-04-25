@@ -1,6 +1,7 @@
 import musicKit from "./musicKitSDK";
 import { Player, DefaultPlayer } from "../../types/player";
 import { Song } from "../../types/song";
+import axios from "axios";
 
 /* eslint-disable no-undef */
 export class MusicKitPlayer extends DefaultPlayer implements Player {
@@ -15,8 +16,18 @@ export class MusicKitPlayer extends DefaultPlayer implements Player {
 		return new Promise<void>((resolve, reject) => {
 			musicKit().then(kit => {
 				this.musicKit = kit;
+
+				return axios.get("../auth/");
+			}).then(data => {
+				if (!this.musicKit) {
+					return Promise.reject(new Error("Something went wrong"));
+				}
+				if (this.musicKit && data.data?.users?.length && data.data.users[0]?.musicKitToken) {
+					(this.musicKit.musicUserToken as string) = data.data.users[0].musicKitToken;
+				}
 				return this.musicKit.authorize();
 			}).then(token => {
+				console.dir(token);
 				this.userToken = token;
 				if (this.musicKit) {
 					this.musicKit.addEventListener("playbackProgressDidChange", () => {
