@@ -8,7 +8,7 @@
         "dev:full": "npm-run-all --parallel watch dev",
         "dev": "nodemon -e ts --exec \"npm run build:backend:serve\"",
         "watch": "webpack --config src/webpack.config.js --watch",
-        "build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build ; sed -i 's/production/development/' src/webpack.config.js ;",
+        "build:production": "sed -i 's/development/production/' src/webpack.config.js ; npm run build:frontend && npm run build:backend ; sed -i 's/production/development/' src/webpack.config.js ;",
         "build:frontend": "webpack --config src/webpack.config.js",
         "build:backend": "tsc",
         "build:backend:serve": "npm run build:backend && node build/backend/index.js",
