@@ -11,7 +11,7 @@ ARG SENDGRID_API_KEY=$SENDGRID_API_KEY
 ARG MATCH_WITH_YOUTUBE=$MATCH_WITH_YOUTUBE
 ARG MATCH_WITH_MUSICKIT=$MATCH_WITH_MUSICKIT
 ARG DEFAULT_AUDIO_ID=$DEFAULT_AUDIO_ID
-ARG MUSIC_KIT_SECRET=$MUSIC_KIT_SECRET
+ARG MUSIC_KIT_SECRET_FILE
 ARG MUSIC_KIT_TEAM_ID=$MUSIC_KIT_TEAM_ID
 ARG MUSIC_KIT_KEY_ID=$MUSIC_KIT_KEY_ID
 
@@ -23,11 +23,23 @@ WORKDIR /usr/src/app
 # Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
 
+
 # Install production dependencies.
 RUN pnpm install
 
 # Copy local code to the container image.
 COPY . ./
+
+RUN echo "$MUSIC_KIT_SECRET_FILE"
+RUN cat "$MUSIC_KIT_SECRET" | wc -l
+COPY $MUSIC_KIT_SECRET_FILE ./musicKitFile.p8
+RUN ls -al
+RUN pwd
+
+ARG MUSIC_KIT_SECRET="./musicKitFile.p8"
+
+RUN echo "$MUSIC_KIT_SECRET"
+RUN cat "$MUSIC_KIT_SECRET" | wc -l
 
 RUN npm run build:production
 
